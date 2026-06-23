@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:unec_assistant/presentation/components/cards/current_class_detailed_card.dart';
-
+import 'package:unec_assistant/presentation/components/cards/teaching_materials_card.dart';
 class CurrentClassScreen extends StatelessWidget {
   const CurrentClassScreen({super.key});
 
@@ -13,6 +13,8 @@ class CurrentClassScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CurrentClassDetailedCard(),
+            const SizedBox(height: 20),
+            TeachingMaterialsCard(),
           ],
         ),
       ),
