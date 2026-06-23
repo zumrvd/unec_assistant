@@ -29,12 +29,7 @@ class CurrentClassCard extends StatelessWidget {
             width: 1,
           ),
         ),
-        padding: const EdgeInsets.only(
-          top: 20,
-          right: 20,
-          bottom: 20,
-          left: 25,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
