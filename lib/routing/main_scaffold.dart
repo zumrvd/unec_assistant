@@ -2,6 +2,7 @@
 /// UNEC İnformasiya Texnologiyaları 1-ci kurs.
 /// 2026-ci ildə UNEC Asisstant programını düzəltməyə başladım.
 /// həmin ilin iyun ayında Rektor Cəfərov Elman və UNEC Extern mərkəzindən programı rəsmiləşdirmək üçün icazə aldım.
+library;
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
