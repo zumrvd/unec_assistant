@@ -30,53 +30,61 @@ class TeachingMaterialsCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.subdirectory_arrow_right_outlined,
-                  size: 25,
-                  weight: 0.5,
-                  color: _borderColor,
-                ),
-                const SizedBox(width: 3),
-                Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: iconBg,
-                    borderRadius: BorderRadius.circular(8),
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.subdirectory_arrow_right_outlined,
+                    size: 25,
+                    weight: 0.5,
+                    color: _borderColor,
                   ),
-                  child: Icon(
-                    fileIcon,
-                    size: 20,
-                    color: iconColor,
+                  const SizedBox(width: 3),
+                  Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: iconBg,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      fileIcon,
+                      size: 20,
+                      color: iconColor,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: GoogleFonts.redditSans(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 12,
-                        color: _valueBlack,
-                      ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.redditSans(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 12,
+                            color: _valueBlack,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          meta,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.redditSans(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 12,
+                            color: _labelGrey,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      meta,
-                      style: GoogleFonts.redditSans(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12,
-                        color: _labelGrey,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
             GestureDetector(
               onTap: () {},
@@ -206,26 +214,30 @@ class TeachingMaterialsCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Lecture 7 : JSON faylları...',
-                          style: GoogleFonts.redditSans(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 13,
-                            color: const Color(0xFFFFFFFF),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Lecture 7 : JSON faylları...',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.redditSans(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                              color: const Color(0xFFFFFFFF),
+                            ),
                           ),
-                        ),
-                        Text(
-                          '2.4MB · 1 week ago',
-                          style: GoogleFonts.redditSans(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                            color: _bundleMetaColor,
+                          Text(
+                            '2.4MB · 1 week ago',
+                            style: GoogleFonts.redditSans(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12,
+                              color: _bundleMetaColor,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),

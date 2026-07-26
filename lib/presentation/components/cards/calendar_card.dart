@@ -1,8 +1,12 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/models/calendar_event.dart';
+import 'package:unec_assistant/presentation/components/calendar/event_details_popup.dart';
+import 'package:unec_assistant/presentation/components/calendar/event_editor_sheet.dart';
 import 'package:unec_assistant/providers/calendar_providers.dart';
 
 enum CalendarView { month, week, day }
@@ -27,10 +31,12 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
   DateTime _now = DateTime.now();
   late ScrollController _weekScrollController;
   late ScrollController _dayScrollController;
+  late ScrollController _weekHorizontalController;
+  late ScrollController _weekHeaderHorizontalController;
 
   static const _hourHeight = 65.0;
   static const _weekDayWidth = 68.6;
-  static const _dayColumnWidth = 282.0;
+  static const _totalGridHeight = 24 * _hourHeight;
   static const _borderColor = Color(0xFFE0E4F0);
   static const _primaryBlue = Color(0xFF0569FF);
   static const _textDark = Color(0xFF1F1F1F);
@@ -38,6 +44,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
   static const _textMuted = Color(0x80838A97);
   static const _lightSurface = Color(0xFFF8F9FC);
   static const _nowRed = Color(0xFFF65959);
+  static final _semesterStart = DateTime(2026, 9, 1);
 
   static const _monthNames = [
     'January',
@@ -69,7 +76,10 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     super.initState();
     _nowTimer = Timer.periodic(
       const Duration(minutes: 1),
-      (_) => setState(() => _now = DateTime.now()),
+      (_) {
+        if (!mounted) return;
+        setState(() => _now = DateTime.now());
+      },
     );
     _weekScrollController = ScrollController(
       initialScrollOffset: 8 * _hourHeight,
@@ -77,6 +87,8 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     _dayScrollController = ScrollController(
       initialScrollOffset: 8 * _hourHeight,
     );
+    _weekHorizontalController = ScrollController();
+    _weekHeaderHorizontalController = ScrollController();
   }
 
   @override
@@ -84,43 +96,86 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     _nowTimer.cancel();
     _weekScrollController.dispose();
     _dayScrollController.dispose();
+    _weekHorizontalController.dispose();
+    _weekHeaderHorizontalController.dispose();
     super.dispose();
   }
 
   List<CalendarEvent> _eventsForDate(DateTime d) {
-    final events = ref.watch(calendarEventsProvider);
-    return events
-        .where(
-          (e) =>
-              e.date.year == d.year &&
-              e.date.month == d.month &&
-              e.date.day == d.day,
-        )
-        .toList();
+    return ref.read(calendarEventsProvider.notifier).getEventsForDay(d);
   }
 
   bool _isActiveNow(CalendarEvent e) {
-    final nowMinutes = _now.hour * 60 + _now.minute;
-    final start = e.startHour * 60 + e.startMinute;
-    final end = e.endHour * 60 + e.endMinute;
-    return _now.year == e.date.year &&
-        _now.month == e.date.month &&
-        _now.day == e.date.day &&
-        nowMinutes >= start &&
-        nowMinutes <= end;
+    final now = _now;
+    if (!isSameCalendarDay(now, e.startTime) &&
+        !isSameCalendarDay(now, e.endTime)) {
+      // Cross-midnight: active if now is between start and end.
+      if (!(now.isAfter(e.startTime) && now.isBefore(e.endTime))) {
+        return false;
+      }
+    }
+    return !now.isBefore(e.startTime) && !now.isAfter(e.endTime);
   }
 
-  bool _isSameDay(DateTime a, DateTime b) =>
-      a.year == b.year && a.month == b.month && a.day == b.day;
-
-  bool _isToday(DateTime d) => _isSameDay(d, _now);
+  bool _isToday(DateTime d) => isSameCalendarDay(d, _now);
 
   DateTime _weekStart(DateTime d) {
-    final weekday = d.weekday; // Mon=1 ... Sun=7
-    return DateTime(d.year, d.month, d.day - (weekday - 1));
+    final weekday = d.weekday;
+    return normalizeDay(d).subtract(Duration(days: weekday - 1));
   }
 
   String _monthName(int month) => _monthNames[month - 1];
+
+  String _weekCycleLabel(DateTime weekStart) {
+    final days = normalizeDay(weekStart).difference(_semesterStart).inDays;
+    final cycleIndex = (days ~/ 7) % 2;
+    return cycleIndex == 0 ? 'Üst həftə' : 'Alt həftə';
+  }
+
+  double _topForTime(DateTime time) {
+    final minutes = time.hour * 60 + time.minute;
+    return (minutes / (24 * 60)) * _totalGridHeight;
+  }
+
+  double _nowTop() {
+    final topRatio = (_now.hour * 60 + _now.minute) / (24 * 60);
+    return topRatio * _totalGridHeight;
+  }
+
+  /// Visible segment of [event] on [day] for positioning in the grid.
+  (double top, double height) _segmentOnDay(CalendarEvent event, DateTime day) {
+    final dayStart = normalizeDay(day);
+    final dayEnd = dayStart.add(const Duration(days: 1));
+    final start = event.startTime.isBefore(dayStart) ? dayStart : event.startTime;
+    final end = event.endTime.isAfter(dayEnd) ? dayEnd : event.endTime;
+    final top = _topForTime(start);
+    final bottom = _topForTime(end);
+    return (top, math.max(bottom - top, 20));
+  }
+
+  Future<void> _openDetails(CalendarEvent event) async {
+    final isActiveClass =
+        _isActiveNow(event) && event.type == EventType.classEvent;
+
+    await showEventDetailsPopup(
+      context,
+      event: event,
+      onActiveClassTap: isActiveClass ? widget.onActiveClassTap : null,
+      onEdit: () async {
+        final updated = await showEventEditorSheet(
+          context,
+          existing: event,
+          initialDay: event.startDay,
+        );
+        if (updated != null && mounted) {
+          ref.read(calendarEventsProvider.notifier).updateEvent(updated);
+        }
+      },
+      onDelete: () {
+        ref.read(calendarEventsProvider.notifier).deleteEvent(event.id);
+      },
+    );
+  }
 
   Widget _navButton({
     required IconData icon,
@@ -135,12 +190,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
           color: Color(0x26838A97),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 25, color: Color(0x80838A97)),
-          ],
-        )
+        child: Icon(icon, size: 25, color: Color(0x80838A97)),
       ),
     );
   }
@@ -189,8 +239,11 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
   }
 
   Widget _buildMonthView() {
+    // Keep provider watched so month cells refresh on CRUD.
+    ref.watch(calendarEventsProvider);
+
     final firstDayOfMonth = DateTime(_focusedDate.year, _focusedDate.month, 1);
-    final startOffset = firstDayOfMonth.weekday - 1; // Monday-based
+    final startOffset = firstDayOfMonth.weekday - 1;
     final gridStart = firstDayOfMonth.subtract(Duration(days: startOffset));
     final days = List.generate(
       42,
@@ -238,52 +291,63 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
           ),
         ),
         const SizedBox(height: 15),
-          Row(mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              for (final day in _weekdayAbbr)
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      day,
-                      style: GoogleFonts.redditSans(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12,
-                        color: _textGrey,
-                      ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (final day in _weekdayAbbr)
+              Expanded(
+                child: Center(
+                  child: Text(
+                    day,
+                    style: GoogleFonts.redditSans(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12,
+                      color: _textGrey,
                     ),
                   ),
                 ),
-            ],
-          ),
+              ),
+          ],
+        ),
         const SizedBox(height: 15),
-          GridView.builder(
-            padding: EdgeInsets.zero,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: days.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 7,
-              childAspectRatio: 7 / 10,
-            ),
-            itemBuilder: (context, index) => _buildMonthCell(days[index]),
+        GridView.builder(
+          padding: EdgeInsets.zero,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: days.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 7,
+            childAspectRatio: 7 / 10,
           ),
+          itemBuilder: (context, index) => _buildMonthCell(days[index]),
+        ),
       ],
     );
+  }
+
+  Color _chipColor(EventType type) {
+    switch (type) {
+      case EventType.classEvent:
+        return _primaryBlue;
+      case EventType.personalEvent:
+        return const Color(0xFF985909);
+      case EventType.exam:
+        return const Color(0xFF534AB7);
+    }
   }
 
   Widget _buildMonthCell(DateTime date) {
     final isCurrentMonth = date.month == _focusedDate.month;
     final isToday = _isToday(date);
     final events = _eventsForDate(date);
-    final isHbd = _isSameDay(date, kHbdDate);
+    final isHbd = isSameCalendarDay(date, kHbdDate);
 
     return GestureDetector(
       onTap: () {
         setState(() {
           _selectedDate = date;
-          if (_isToday(date)) {
-            _view = CalendarView.day;
-          }
+          _focusedDate = date;
+          _view = CalendarView.day;
         });
       },
       child: Container(
@@ -329,16 +393,14 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                   color: const Color(0xFF950031),
                 ),
               ),
-            for (final event in events)
+            for (final event in events.take(3))
               Row(
                 children: [
                   Container(
                     width: 6,
                     height: 6,
                     decoration: BoxDecoration(
-                      color: event.type == EventType.classEvent
-                          ? _primaryBlue
-                          : const Color(0xFF985909),
+                      color: _chipColor(event.type),
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -363,7 +425,52 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
   }
 
   Widget _buildWeekView() {
+    ref.watch(calendarEventsProvider);
     final weekStart = _weekStart(_focusedDate);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _navButton(
+                icon: Icons.chevron_left_rounded,
+                onTap: () => setState(() {
+                  _focusedDate = _focusedDate.subtract(const Duration(days: 7));
+                  _selectedDate = _weekStart(_focusedDate);
+                }),
+              ),
+              Text(
+                _weekCycleLabel(weekStart),
+                style: GoogleFonts.redditSans(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14,
+                  color: _primaryBlue,
+                ),
+              ),
+              _navButton(
+                icon: Icons.chevron_right_rounded,
+                onTap: () => setState(() {
+                  _focusedDate = _focusedDate.add(const Duration(days: 7));
+                  _selectedDate = _weekStart(_focusedDate);
+                }),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
+        SizedBox(
+          height: 540,
+          child: _buildWeekPage(weekStart),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWeekPage(DateTime weekStart) {
     final weekDays = List.generate(
       7,
       (i) => DateTime(weekStart.year, weekStart.month, weekStart.day + i),
@@ -372,75 +479,95 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(width: 50),
-              Text(
-                'Üst həftə',
-                style: GoogleFonts.redditSans(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 12,
-                  color: _primaryBlue,
-                ),
-              ),
-              for (final day in weekDays)
-                SizedBox(
-                  width: _weekDayWidth,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+        // Headers Row
+        Row(
+          children: [
+            const SizedBox(width: 50),
+            Expanded(
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (notification) {
+                  if (notification is ScrollUpdateNotification &&
+                      notification.metrics.axis == Axis.horizontal) {
+                    _weekHorizontalController
+                        .jumpTo(_weekHeaderHorizontalController.offset);
+                  }
+                  return false;
+                },
+                child: SingleChildScrollView(
+                  controller: _weekHeaderHorizontalController,
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
                     children: [
-                      Text(
-                        _weekdayAbbr[day.weekday - 1],
-                        style: GoogleFonts.redditSans(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
-                          color: _isToday(day) ? _primaryBlue : _textGrey,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      if (_isToday(day))
-                        Container(
-                          width: 24,
-                          height: 24,
-                          decoration: const BoxDecoration(
-                            color: _primaryBlue,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: Text(
-                              '${day.day}',
-                              style: GoogleFonts.redditSans(
-                                fontSize: 12,
-                                color: _lightSurface,
-                              ),
+                      for (final day in weekDays)
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedDate = day;
+                              _focusedDate = day;
+                              _view = CalendarView.day;
+                            });
+                          },
+                          child: SizedBox(
+                            width: _weekDayWidth,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  _weekdayAbbr[day.weekday - 1],
+                                  style: GoogleFonts.redditSans(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12,
+                                    color: _isToday(day)
+                                        ? _primaryBlue
+                                        : _textGrey,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                if (_isToday(day))
+                                  Container(
+                                    width: 24,
+                                    height: 24,
+                                    decoration: const BoxDecoration(
+                                      color: _primaryBlue,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        '${day.day}',
+                                        style: GoogleFonts.redditSans(
+                                          fontSize: 12,
+                                          color: _lightSurface,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                else
+                                  Text(
+                                    '${day.day}',
+                                    style: GoogleFonts.redditSans(
+                                      fontSize: 12,
+                                      color: _textDark,
+                                    ),
+                                  ),
+                              ],
                             ),
-                          ),
-                        )
-                      else
-                        Text(
-                          '${day.day}',
-                          style: GoogleFonts.redditSans(
-                            fontSize: 12,
-                            color: _textDark,
                           ),
                         ),
                     ],
                   ),
                 ),
-            ],
-          ),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 8),
-        SizedBox(
-          height: 500,
+        Expanded(
           child: SingleChildScrollView(
             controller: _weekScrollController,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Time column
                 SizedBox(
                   width: 50,
                   child: Column(
@@ -462,60 +589,88 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                     ],
                   ),
                 ),
+                // Grid and events
                 Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        for (final day in weekDays)
-                          SizedBox(
-                            width: _weekDayWidth,
-                            height: 24 * _hourHeight,
-                            child: Stack(
-                              children: [
-                                Column(
+                  child: NotificationListener<ScrollNotification>(
+                    onNotification: (notification) {
+                      if (notification is ScrollUpdateNotification &&
+                          notification.metrics.axis == Axis.horizontal) {
+                        _weekHeaderHorizontalController
+                            .jumpTo(_weekHorizontalController.offset);
+                      }
+                      return false;
+                    },
+                    child: SingleChildScrollView(
+                      controller: _weekHorizontalController,
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          for (final day in weekDays)
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _selectedDate = day;
+                                  _focusedDate = day;
+                                  _view = CalendarView.day;
+                                });
+                              },
+                              child: SizedBox(
+                                width: _weekDayWidth,
+                                height: _totalGridHeight,
+                                child: Stack(
+                                  clipBehavior: Clip.hardEdge,
                                   children: [
-                                    for (var h = 0; h < 24; h++)
-                                      Container(
-                                        height: _hourHeight,
-                                        decoration: const BoxDecoration(
-                                          border: Border(
-                                            top: BorderSide(
-                                              color: _borderColor,
-                                              width: 0.5,
+                                    Column(
+                                      children: [
+                                        for (var h = 0; h < 24; h++)
+                                          Container(
+                                            height: _hourHeight,
+                                            decoration: const BoxDecoration(
+                                              border: Border(
+                                                top: BorderSide(
+                                                  color: _borderColor,
+                                                  width: 0.5,
+                                                ),
+                                              ),
                                             ),
+                                          ),
+                                      ],
+                                    ),
+                                    for (final event in _eventsForDate(day))
+                                      Builder(
+                                        builder: (context) {
+                                          final (top, height) =
+                                              _segmentOnDay(event, day);
+                                          return Positioned(
+                                            top: top,
+                                            left: 2,
+                                            child: SizedBox(
+                                              height: height,
+                                              child: _buildWeekEventTile(
+                                                event,
+                                                height: height,
+                                                isActive: _isActiveNow(event),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    if (_isToday(day))
+                                      Positioned(
+                                        top: _nowTop() - 4,
+                                        left: 0,
+                                        child: IgnorePointer(
+                                          child: _buildNowIndicator(
+                                            width: _weekDayWidth,
                                           ),
                                         ),
                                       ),
                                   ],
                                 ),
-                                for (final event in _eventsForDate(day))
-                                  Positioned(
-                                    top: (event.startHour * 60 +
-                                            event.startMinute) /
-                                        60 *
-                                        _hourHeight,
-                                    left: 2,
-                                    child: _buildWeekEventTile(
-                                      event,
-                                      isActive: _isActiveNow(event),
-                                    ),
-                                  ),
-                                if (_isToday(day))
-                                  Positioned(
-                                    top: (_now.hour * 60 + _now.minute) /
-                                            60 *
-                                            _hourHeight -
-                                        1,
-                                    left: 0,
-                                    child: _buildNowIndicator(
-                                      width: _weekDayWidth,
-                                    ),
-                                  ),
-                              ],
+                              ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -528,58 +683,66 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
   }
 
   Color _tileBackground(EventType type, bool isActive) {
-    if (type == EventType.classEvent) {
-      return isActive ? _primaryBlue : const Color(0xFFE8F0FE);
+    switch (type) {
+      case EventType.classEvent:
+        return isActive ? _primaryBlue : const Color(0xFFE8F0FE);
+      case EventType.personalEvent:
+        return isActive ? const Color(0xFFE3993C) : const Color(0xFFF0EAE0);
+      case EventType.exam:
+        return isActive ? const Color(0xFF534AB7) : const Color(0xFFE8E6F8);
     }
-    return isActive ? const Color(0xFFE3993C) : const Color(0xFFF0EAE0);
   }
 
   Color _barColor(EventType type, bool isActive) {
-    if (type == EventType.classEvent) {
-      return isActive ? const Color(0xFF0052CE) : _primaryBlue;
+    switch (type) {
+      case EventType.classEvent:
+        return isActive ? const Color(0xFF0052CE) : _primaryBlue;
+      case EventType.personalEvent:
+        return isActive ? const Color(0xFFC27719) : const Color(0xFFE3993C);
+      case EventType.exam:
+        return isActive ? const Color(0xFF3D3690) : const Color(0xFF534AB7);
     }
-    return isActive ? const Color(0xFFC27719) : const Color(0xFFE3993C);
   }
 
   Color _titleColor(bool isActive) =>
       isActive ? const Color(0xFFF8F9FC) : _textDark;
 
   Color _detailColor(EventType type, bool isActive) {
-    if (type == EventType.classEvent) {
-      return isActive
-          ? const Color(0x80F8F9FC)
-          : const Color(0x800569FF);
+    switch (type) {
+      case EventType.classEvent:
+        return isActive
+            ? const Color(0x80F8F9FC)
+            : const Color(0x800569FF);
+      case EventType.personalEvent:
+        return isActive
+            ? const Color(0xFFF0EAE0)
+            : const Color(0x80E3993C);
+      case EventType.exam:
+        return isActive
+            ? const Color(0x80F8F9FC)
+            : const Color(0x80534AB7);
     }
-    return isActive
-        ? const Color(0xFFF0EAE0)
-        : const Color(0x80E3993C);
   }
 
-  double _eventHeight(CalendarEvent e) {
-    final durationMinutes =
-        (e.endHour * 60 + e.endMinute) - (e.startHour * 60 + e.startMinute);
-    return durationMinutes / 60 * _hourHeight;
-  }
-
-  Widget _buildWeekEventTile(CalendarEvent e, {required bool isActive}) {
-    final canTap = isActive && e.type == EventType.classEvent;
-
+  Widget _buildWeekEventTile(
+    CalendarEvent e, {
+    required double height,
+    required bool isActive,
+  }) {
     return GestureDetector(
-      onTap: canTap ? widget.onActiveClassTap : null,
+      onTap: () => _openDetails(e),
       child: Container(
         width: 64,
-        height: _eventHeight(e),
+        height: height,
         decoration: BoxDecoration(
           color: _tileBackground(e.type, isActive),
           borderRadius: BorderRadius.circular(6),
         ),
+        clipBehavior: Clip.hardEdge,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              width: 3,
-              color: _barColor(e.type, isActive),
-            ),
+            Container(width: 3, color: _barColor(e.type, isActive)),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(4),
@@ -616,7 +779,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                         ),
                       ),
                     Text(
-                      e.timeRange,
+                      e.displayTimeRange,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.redditSans(
@@ -654,6 +817,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
   }
 
   Widget _buildDayView() {
+    ref.watch(calendarEventsProvider);
     final events = _eventsForDate(_selectedDate);
 
     return Column(
@@ -666,10 +830,11 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
             children: [
               _navButton(
                 icon: Icons.chevron_left_rounded,
-                onTap: () => setState(
-                  () => _selectedDate =
-                      _selectedDate.subtract(const Duration(days: 1)),
-                ),
+                onTap: () => setState(() {
+                  _selectedDate =
+                      _selectedDate.subtract(const Duration(days: 1));
+                  _focusedDate = _selectedDate;
+                }),
               ),
               Text(
                 '${_monthName(_selectedDate.month)} ${_selectedDate.day}',
@@ -681,10 +846,10 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
               ),
               _navButton(
                 icon: Icons.chevron_right_rounded,
-                onTap: () => setState(
-                  () => _selectedDate =
-                      _selectedDate.add(const Duration(days: 1)),
-                ),
+                onTap: () => setState(() {
+                  _selectedDate = _selectedDate.add(const Duration(days: 1));
+                  _focusedDate = _selectedDate;
+                }),
               ),
             ],
           ),
@@ -692,36 +857,84 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
         const SizedBox(height: 15),
         SizedBox(
           height: 500,
-          child: SingleChildScrollView(
-            controller: _dayScrollController,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          child: _buildDayPage(_selectedDate, events),
+        ),
+      ],
+    );
+  }
+
+  /// Assigns columns for overlapping events to avoid RenderFlex overflow.
+  List<(CalendarEvent event, int column, int columnCount)> _layoutOverlaps(
+    List<CalendarEvent> events,
+    DateTime day,
+  ) {
+    if (events.isEmpty) return [];
+
+    final segments = events.map((e) {
+      final (top, height) = _segmentOnDay(e, day);
+      return (event: e, top: top, bottom: top + height);
+    }).toList()
+      ..sort((a, b) => a.top.compareTo(b.top));
+
+    final columnEnds = <double>[];
+    final temp = <(CalendarEvent, int)>[];
+
+    for (final seg in segments) {
+      var col = 0;
+      while (col < columnEnds.length && columnEnds[col] > seg.top + 0.5) {
+        col++;
+      }
+      if (col == columnEnds.length) {
+        columnEnds.add(seg.bottom);
+      } else {
+        columnEnds[col] = seg.bottom;
+      }
+      temp.add((seg.event, col));
+    }
+
+    final maxCols = columnEnds.isEmpty ? 1 : columnEnds.length;
+    return [
+      for (final (event, col) in temp) (event, col, maxCols),
+    ];
+  }
+
+  Widget _buildDayPage(DateTime day, List<CalendarEvent> events) {
+    final laidOut = _layoutOverlaps(events, day);
+
+    return SingleChildScrollView(
+      controller: _dayScrollController,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 50,
+            child: Column(
               children: [
-                SizedBox(
-                  width: 50,
-                  child: Column(
-                    children: [
-                      for (var h = 0; h < 24; h++)
-                        SizedBox(
-                          height: _hourHeight,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Text(
-                              '${h.toString().padLeft(2, '0')}:00',
-                              style: GoogleFonts.redditSans(
-                                fontSize: 10,
-                                color: _textGrey,
-                              ),
-                            ),
-                          ),
+                for (var h = 0; h < 24; h++)
+                  SizedBox(
+                    height: _hourHeight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: Text(
+                        '${h.toString().padLeft(2, '0')}:00',
+                        style: GoogleFonts.redditSans(
+                          fontSize: 10,
+                          color: _textGrey,
                         ),
-                    ],
+                      ),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: _dayColumnWidth,
-                  height: 24 * _hourHeight,
-                  child: Stack(
+              ],
+            ),
+          ),
+          Expanded(
+            child: SizedBox(
+              height: _totalGridHeight,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final fullWidth = constraints.maxWidth;
+                  return Stack(
+                    clipBehavior: Clip.hardEdge,
                     children: [
                       Column(
                         children: [
@@ -739,56 +952,79 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                             ),
                         ],
                       ),
-                      for (final event in events)
+                      if (events.isEmpty)
                         Positioned(
-                          top: (event.startHour * 60 + event.startMinute) /
-                              60 *
-                              _hourHeight,
-                          left: 0,
-                          child: _buildDayEventTile(
-                            event,
-                            isActive: _isActiveNow(event),
+                          top: 8 * _hourHeight,
+                          left: 16,
+                          right: 16,
+                          child: Text(
+                            'No events scheduled for this day',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.redditSans(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                              color: _textGrey,
+                            ),
                           ),
                         ),
-                      if (_isToday(_selectedDate))
+                      for (final (event, col, colCount) in laidOut)
+                        Builder(
+                          builder: (context) {
+                            final (top, height) = _segmentOnDay(event, day);
+                            final width = fullWidth / colCount;
+                            return Positioned(
+                              top: top,
+                              left: col * width,
+                              width: width - 4,
+                              height: height,
+                              child: _buildDayEventTile(
+                                event,
+                                height: height,
+                                isActive: _isActiveNow(event),
+                              ),
+                            );
+                          },
+                        ),
+                      if (_isToday(day))
                         Positioned(
-                          top: (_now.hour * 60 + _now.minute) /
-                                  60 *
-                                  _hourHeight -
-                              1,
+                          top: _nowTop() - 4,
                           left: 0,
-                          child: _buildNowIndicator(width: _dayColumnWidth),
+                          right: 0,
+                          child: IgnorePointer(
+                            child: _buildNowIndicator(
+                              width: fullWidth,
+                            ),
+                          ),
                         ),
                     ],
-                  ),
-                ),
-              ],
+                  );
+                },
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Widget _buildDayEventTile(CalendarEvent e, {required bool isActive}) {
-    final canTap = isActive && e.type == EventType.classEvent;
-
+  Widget _buildDayEventTile(
+    CalendarEvent e, {
+    required double height,
+    required bool isActive,
+  }) {
     return GestureDetector(
-      onTap: canTap ? widget.onActiveClassTap : null,
+      onTap: () => _openDetails(e),
       child: Container(
-        width: _dayColumnWidth,
-        height: _eventHeight(e),
+        height: height,
         decoration: BoxDecoration(
           color: _tileBackground(e.type, isActive),
           borderRadius: BorderRadius.circular(6),
         ),
+        clipBehavior: Clip.hardEdge,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              width: 3,
-              color: _barColor(e.type, isActive),
-            ),
+            Container(width: 3, color: _barColor(e.type, isActive)),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(4),
@@ -825,7 +1061,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                         ),
                       ),
                     Text(
-                      e.timeRange,
+                      e.displayTimeRange,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.redditSans(
@@ -864,7 +1100,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
 
   Widget _buildNowIndicator({required double width}) {
     return SizedBox(
-      width: width,
+      width: width == double.infinity ? null : width,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -878,7 +1114,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
           ),
           const Expanded(
             child: SizedBox(
-              height: 1.5,
+              height: 2,
               child: ColoredBox(color: _nowRed),
             ),
           ),

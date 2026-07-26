@@ -101,12 +101,15 @@ class CurrentClassDetailedCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 6),
-              Text(
-                'on the 3rd floor',
-                style: GoogleFonts.redditSans(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 10,
-                  color: _labelGrey,
+              Flexible(
+                child: Text(
+                  'on the 3rd floor',
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.redditSans(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 10,
+                    color: _labelGrey,
+                  ),
                 ),
               ),
             ],
@@ -252,12 +255,14 @@ class CurrentClassDetailedCard extends StatelessWidget {
 
           const SizedBox(height: 30),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          Wrap(
+            alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
             spacing: 25,
+            runSpacing: 15,
             children: [
               Row(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
@@ -301,6 +306,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
               ),
 
               Row(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(

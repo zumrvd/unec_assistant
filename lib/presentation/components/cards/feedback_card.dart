@@ -79,14 +79,14 @@ class _FeedbackCardState extends State<FeedbackCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          Wrap(
+            alignment: WrapAlignment.start,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 10,
+            runSpacing: 10,
             children: [
               _targetToggle(_targetOptions[0]),
-              const SizedBox(width: 10),
               _targetToggle(_targetOptions[1]),
-              const SizedBox(width: 10),
               _targetToggle(_targetOptions[2]),
             ],
           ),

@@ -1,182 +1,130 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unec_assistant/models/calendar_event.dart';
 
-enum EventType { classEvent, personalEvent }
+class CalendarEventsNotifier extends Notifier<List<CalendarEvent>> {
+  @override
+  List<CalendarEvent> build() {
+    return generateSemesterSchedule(
+      startDate: DateTime(2026, 9, 15),
+      numberOfWeeks: 15,
+    );
+  }
 
-class CalendarEvent {
-  final String title;
-  final String subtype;
-  final String location;
-  final String timeRange;
-  final int startHour;
-  final int startMinute;
-  final int endHour;
-  final int endMinute;
-  final EventType type;
-  final DateTime date;
+  /// Projects the 2-week (Week A / Week B) template across [numberOfWeeks].
+  /// Template day offsets 0–6 = Week A, 7–13 = Week B.
+  List<CalendarEvent> generateSemesterSchedule({
+    required DateTime startDate,
+    required int numberOfWeeks,
+    List<CalendarEvent>? template,
+  }) {
+    final base = normalizeDay(startDate);
+    // Find the Monday of the week containing startDate to align with template (0=Mon)
+    final mondayOfBase = base.subtract(Duration(days: base.weekday - 1));
 
-  const CalendarEvent({
-    required this.title,
-    required this.subtype,
-    required this.location,
-    required this.timeRange,
-    required this.startHour,
-    required this.startMinute,
-    required this.endHour,
-    required this.endMinute,
-    required this.type,
-    required this.date,
-  });
+    final tpl = template ?? kTwoWeekTemplate;
+    final generated = <CalendarEvent>[];
+    final cycles = (numberOfWeeks / 2).ceil();
+
+    final templateAnchor = DateTime(2026, 1, 5);
+
+    for (var cycle = 0; cycle < cycles; cycle++) {
+      final cycleStart = mondayOfBase.add(Duration(days: cycle * 14));
+      for (final event in tpl) {
+        final templateDay =
+            normalizeDay(event.startTime).difference(templateAnchor).inDays;
+        final duration = event.endTime.difference(event.startTime);
+        final start = DateTime(
+          cycleStart.year,
+          cycleStart.month,
+          cycleStart.day + templateDay,
+          event.startTime.hour,
+          event.startTime.minute,
+        );
+        
+        // Skip events that fall before the actual semester start date
+        if (start.isBefore(base)) continue;
+
+        final end = start.add(duration);
+        generated.add(
+          event.copyWith(
+            id: '${event.id}-c$cycle-${start.millisecondsSinceEpoch}',
+            startTime: start,
+            endTime: end,
+            timeRange: event.displayTimeRange,
+            isRecurring: true,
+          ),
+        );
+      }
+    }
+
+    // One-off birthday marker day is handled in UI via kHbdDate.
+    // Seed a few personal one-off events near Nov 2026 for demo.
+    generated.addAll(_demoOneOffs());
+    return generated;
+  }
+
+  List<CalendarEvent> _demoOneOffs() {
+    return [
+      CalendarEvent(
+        id: 'personal-nov-16',
+        title: 'Kitabxana sessiyası',
+        subtype: 'Personal',
+        location: 'Kitabxana',
+        startTime: DateTime(2026, 11, 25, 15, 0),
+        endTime: DateTime(2026, 11, 25, 16, 30),
+        type: EventType.personalEvent,
+        isRecurring: false,
+      ),
+    ];
+  }
+
+  void addEvent(CalendarEvent event) {
+    state = [...state, event];
+  }
+
+  void updateEvent(CalendarEvent event) {
+    state = [
+      for (final e in state)
+        if (e.id == event.id) event else e,
+    ];
+  }
+
+  void deleteEvent(String id) {
+    state = state.where((e) => e.id != id).toList();
+  }
+
+  List<CalendarEvent> getEventsForDay(DateTime day) {
+    final d = normalizeDay(day);
+    final matches = state.where((e) {
+      final start = e.startDay;
+      final end = e.endDay;
+      return !d.isBefore(start) && !d.isAfter(end);
+    }).toList()
+      ..sort((a, b) => a.startTime.compareTo(b.startTime));
+    return matches;
+  }
+
+  void replaceAll(List<CalendarEvent> events) {
+    state = List<CalendarEvent>.from(events);
+  }
+
+  void regenerateSemester({
+    required DateTime startDate,
+    required int numberOfWeeks,
+  }) {
+    state = generateSemesterSchedule(
+      startDate: startDate,
+      numberOfWeeks: numberOfWeeks,
+    );
+  }
 }
 
-final DateTime kHbdDate = DateTime(2026, 11, 16);
+final calendarEventsProvider =
+    NotifierProvider<CalendarEventsNotifier, List<CalendarEvent>>(
+  CalendarEventsNotifier.new,
+);
 
-final List<CalendarEvent> kScheduleEvents = [
-  CalendarEvent(
-    title: 'Programlaşdırmanın əsasları',
-    subtype: 'Mühazirə',
-    location: 'Room 316',
-    timeRange: '09:00-10:20',
-    startHour: 9,
-    startMinute: 0,
-    endHour: 10,
-    endMinute: 20,
-    type: EventType.classEvent,
-    date: DateTime(2026, 11, 16),
-  ),
-  CalendarEvent(
-    title: 'Xətti cəbr və analitik həndəsə',
-    subtype: 'Seminar',
-    location: 'Room 316',
-    timeRange: '11:00-12:20',
-    startHour: 10,
-    startMinute: 30,
-    endHour: 11,
-    endMinute: 50,
-    type: EventType.classEvent,
-    date: DateTime(2026, 11, 17),
-  ),
-  CalendarEvent(
-    title: 'Fizika',
-    subtype: 'Mühazirə',
-    location: 'Room 336',
-    timeRange: '09:00-10:20',
-    startHour: 12,
-    startMinute: 0,
-    endHour: 13,
-    endMinute: 20,
-    type: EventType.classEvent,
-    date: DateTime(2026, 11, 16),
-  ),
-  CalendarEvent(
-    title: 'Layihə görüşü',
-    subtype: 'Personal',
-    location: 'Kitabxana',
-    timeRange: '09:00-10:20',
-    startHour: 9,
-    startMinute: 0,
-    endHour: 10,
-    endMinute: 0,
-    type: EventType.personalEvent,
-    date: DateTime(2026, 11, 14),
-  ),
-  CalendarEvent(
-    title: 'Proqramlaşdırmanın əsasları',
-    subtype: 'Mühazirə',
-    location: 'Room 316',
-    timeRange: '09:00-10:20',
-    startHour: 9,
-    startMinute: 0,
-    endHour: 10,
-    endMinute: 20,
-    type: EventType.classEvent,
-    date: DateTime(2026, 11, 22),
-  ),
-  CalendarEvent(
-    title: 'Xətti cəbr və analitik həndəsə',
-    subtype: 'Seminar',
-    location: 'Room 316',
-    timeRange: '11:00-12:20',
-    startHour: 10,
-    startMinute: 30,
-    endHour: 11,
-    endMinute: 50,
-    type: EventType.classEvent,
-    date: DateTime(2026, 11, 22),
-  ),
-  CalendarEvent(
-    title: 'Informasiya texnologiyalarının əsasları',
-    subtype: 'Mühazirə',
-    location: 'Room 336',
-    timeRange: '09:00-10:20',
-    startHour: 9,
-    startMinute: 0,
-    endHour: 10,
-    endMinute: 20,
-    type: EventType.classEvent,
-    date: DateTime(2026, 11, 17),
-  ),
-  CalendarEvent(
-    title: 'ADIAK',
-    subtype: 'Mühazirə',
-    location: 'Online',
-    timeRange: '09:00-10:20',
-    startHour: 9,
-    startMinute: 0,
-    endHour: 10,
-    endMinute: 20,
-    type: EventType.classEvent,
-    date: DateTime(2026, 11, 17),
-  ),
-  CalendarEvent(
-    title: 'Informasiya texnologiyalarının əsasları',
-    subtype: 'Seminar',
-    location: 'Room 336',
-    timeRange: '13:00-14:20',
-    startHour: 13,
-    startMinute: 0,
-    endHour: 14,
-    endMinute: 20,
-    type: EventType.classEvent,
-    date: DateTime(2026, 11, 17),
-  ),
-  CalendarEvent(
-    title: 'ADIAK',
-    subtype: 'Mühazirə',
-    location: 'Online',
-    timeRange: '09:00-10:20',
-    startHour: 9,
-    startMinute: 0,
-    endHour: 10,
-    endMinute: 20,
-    type: EventType.classEvent,
-    date: DateTime(2026, 11, 18),
-  ),
-  CalendarEvent(
-    title: 'XDIAK',
-    subtype: 'Seminar',
-    location: 'Room 415',
-    timeRange: '11:00-12:20',
-    startHour: 11,
-    startMinute: 0,
-    endHour: 12,
-    endMinute: 20,
-    type: EventType.classEvent,
-    date: DateTime(2026, 11, 18),
-  ),
-  CalendarEvent(
-    title: 'Azərbaycan dili',
-    subtype: 'Seminar',
-    location: 'Room 316',
-    timeRange: '09:00-10:20',
-    startHour: 9,
-    startMinute: 0,
-    endHour: 10,
-    endMinute: 20,
-    type: EventType.classEvent,
-    date: DateTime(2026, 11, 19),
-  ),
-];
-
-final calendarEventsProvider = Provider<List<CalendarEvent>>((ref) {
-  return kScheduleEvents;
-});
+/// Convenience: events for a specific day from the notifier.
+List<CalendarEvent> eventsForDay(WidgetRef ref, DateTime day) {
+  return ref.read(calendarEventsProvider.notifier).getEventsForDay(day);
+}

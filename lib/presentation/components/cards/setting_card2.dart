@@ -149,18 +149,21 @@ class _SettingsCardState extends State<SettingsCard2> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _iconBox(
-                    Icons.palette_rounded,
-                    const Color(0x26E3993C),
-                    const Color(0xFF854F0B),
-                  ),
-                  const SizedBox(width: 12),
-                  Text('App Theme', style: _labelStyle()),
-                ],
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _iconBox(
+                      Icons.palette_rounded,
+                      const Color(0x26E3993C),
+                      const Color(0xFF854F0B),
+                    ),
+                    const SizedBox(width: 12),
+                    Flexible(child: Text('App Theme', style: _labelStyle(), overflow: TextOverflow.ellipsis)),
+                  ],
+                ),
               ),
+              const SizedBox(width: 8),
               Row(
                 children: [
                   _themeToggle(_themeOptions[0]),
@@ -183,18 +186,21 @@ class _SettingsCardState extends State<SettingsCard2> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _iconBox(
-                    Icons.notifications_rounded,
-                    const Color(0x26534AB7),
-                    const Color(0xFF534AB7),
-                  ),
-                  const SizedBox(width: 12),
-                  Text('Notifications', style: _labelStyle()),
-                ],
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _iconBox(
+                      Icons.notifications_rounded,
+                      const Color(0x26534AB7),
+                      const Color(0xFF534AB7),
+                    ),
+                    const SizedBox(width: 12),
+                    Flexible(child: Text('Notifications', style: _labelStyle(), overflow: TextOverflow.ellipsis)),
+                  ],
+                ),
               ),
+              const SizedBox(width: 8),
               Switch(
                 value: _notificationsOn,
                 onChanged: (val) => setState(() => _notificationsOn = val),
@@ -216,32 +222,38 @@ class _SettingsCardState extends State<SettingsCard2> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _iconBox(
-                    Icons.info_rounded,
-                    const Color(0x26DA4979),
-                    const Color(0xFFDA4979),
-                  ),
-                  const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('About App', style: _labelStyle()),
-                      const SizedBox(height: 2),
-                      Text(
-                        'v 1.1.0 IT team inc.',
-                        style: GoogleFonts.redditSans(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 9,
-                          color: _subtitleColor,
-                        ),
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _iconBox(
+                      Icons.info_rounded,
+                      const Color(0x26DA4979),
+                      const Color(0xFFDA4979),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('About App', style: _labelStyle(), overflow: TextOverflow.ellipsis),
+                          const SizedBox(height: 2),
+                          Text(
+                            'v 1.1.0 IT team inc.',
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.redditSans(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 9,
+                              color: _subtitleColor,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
+              const SizedBox(width: 8),
               GestureDetector(
                 onTap: widget.onAboutAppTap,
                 child: Container(
@@ -275,20 +287,23 @@ class _SettingsCardState extends State<SettingsCard2> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _iconBox(
-                    Icons.language_rounded,
-                    const Color(0x260569FF),
-                    const Color(0xFF0569FF),
-                  ),
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _iconBox(
+                      Icons.language_rounded,
+                      const Color(0x260569FF),
+                      const Color(0xFF0569FF),
+                    ),
 
-                  const SizedBox(width: 12),
+                    const SizedBox(width: 12),
 
-                  Text('Language', style: _labelStyle()),
-                ],
+                    Flexible(child: Text('Language', style: _labelStyle(), overflow: TextOverflow.ellipsis)),
+                  ],
+                ),
               ),
+              const SizedBox(width: 8),
               _languageDropdown(),
             ],
           ),

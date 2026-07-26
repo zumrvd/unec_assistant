@@ -53,28 +53,34 @@ class AttendanceButton extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 13),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Attendance',
-                  style: GoogleFonts.redditSans(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 12,
-                    color: _titleColor,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Attendance',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.redditSans(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 12,
+                      color: _titleColor,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  'Absence count',
-                  style: GoogleFonts.redditSans(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 7,
-                    color: _subtitleColor,
+                  const SizedBox(height: 2),
+                  Text(
+                    'Absence count',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.redditSans(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 7,
+                      color: _subtitleColor,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
