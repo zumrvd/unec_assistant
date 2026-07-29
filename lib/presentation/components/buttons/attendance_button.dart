@@ -30,10 +30,10 @@ class AttendanceButton extends StatelessWidget {
           ),
         ),
         padding: const EdgeInsets.only(
-          top: 18,
-          right: 11,
-          bottom: 18,
-          left: 11,
+          left: 10,
+          right: 10,
+          top: 20,
+          bottom: 20,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -48,34 +48,30 @@ class AttendanceButton extends StatelessWidget {
               ),
               child: const Icon(
                 Icons.front_hand_outlined,
-                size: 23,
+                size: 25,
                 color: _primaryRed,
               ),
             ),
-            const SizedBox(width: 13),
+            const SizedBox(width: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Attendance',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    'Atten\u{00AD}dan\u{00AD}ce',
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
-                      fontSize: 12,
+                      fontSize: 14,
                       color: _titleColor,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     'Absence count',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
-                      fontSize: 7,
+                      fontSize: 10,
                       color: _subtitleColor,
                     ),
                   ),

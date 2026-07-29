@@ -159,7 +159,7 @@ class _SettingsCardState extends State<SettingsCard2> {
                       const Color(0xFF854F0B),
                     ),
                     const SizedBox(width: 12),
-                    Flexible(child: Text('App Theme', style: _labelStyle(), overflow: TextOverflow.ellipsis)),
+                    Expanded(child: Text('App Theme', style: _labelStyle())),
                   ],
                 ),
               ),
@@ -196,7 +196,7 @@ class _SettingsCardState extends State<SettingsCard2> {
                       const Color(0xFF534AB7),
                     ),
                     const SizedBox(width: 12),
-                    Flexible(child: Text('Notifications', style: _labelStyle(), overflow: TextOverflow.ellipsis)),
+                    Expanded(child: Text('Notifications', style: _labelStyle())),
                   ],
                 ),
               ),
@@ -236,11 +236,10 @@ class _SettingsCardState extends State<SettingsCard2> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('About App', style: _labelStyle(), overflow: TextOverflow.ellipsis),
+                          Text('About App', style: _labelStyle()),
                           const SizedBox(height: 2),
                           Text(
                             'v 1.1.0 IT team inc.',
-                            overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w400,
                               fontSize: 9,
@@ -299,7 +298,7 @@ class _SettingsCardState extends State<SettingsCard2> {
 
                     const SizedBox(width: 12),
 
-                    Flexible(child: Text('Language', style: _labelStyle(), overflow: TextOverflow.ellipsis)),
+                    Expanded(child: Text('Language', style: _labelStyle())),
                   ],
                 ),
               ),

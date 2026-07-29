@@ -39,48 +39,53 @@ class CurrentClassButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 54,
-                  height: 54,
-                  decoration: BoxDecoration(
-                    color: _iconBackgroundColor,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(
-                    size: 40,
-                    Icons.bolt_outlined,
-                    color: _primaryBlue,
-                  ),
-                ),
-                const SizedBox(width: 15),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Current class',
-                      style: GoogleFonts.redditSans(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                        color: _titleColor,
-                      ),
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 54,
+                    height: 54,
+                    decoration: BoxDecoration(
+                      color: _iconBackgroundColor,
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      "Ongoing class, it's materials and info",
-                      style: GoogleFonts.redditSans(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 8,
-                        color: _subtitleColor,
-                      ),
+                    child: const Icon(
+                      size: 40,
+                      Icons.bolt_outlined,
+                      color: _primaryBlue,
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Current class',
+                          style: GoogleFonts.redditSans(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 16,
+                            color: _titleColor,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          "Ongoing class, it's materials and info",
+                          style: GoogleFonts.redditSans(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 10,
+                            color: _subtitleColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
+            const SizedBox(width: 8),
             Image.asset(
               'assets/images/red_dot.gif',
               width: 30,

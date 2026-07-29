@@ -16,6 +16,12 @@ import 'package:unec_assistant/screens/functions/attendance_screen.dart';
 import 'package:unec_assistant/screens/functions/subjects_screen.dart';
 import 'package:unec_assistant/screens/functions/teaching_materials_screen.dart';
 import 'package:unec_assistant/screens/functions/grades_screen.dart';
+import 'package:unec_assistant/screens/functions/subjects/subject1_screen.dart';
+import 'package:unec_assistant/screens/functions/subjects/subject2_screen.dart';
+import 'package:unec_assistant/screens/functions/subjects/subject3_screen.dart';
+import 'package:unec_assistant/screens/functions/subjects/subject4_screen.dart';
+import 'package:unec_assistant/screens/functions/subjects/subject5_screen.dart';
+import 'package:unec_assistant/screens/functions/subjects/subject6_screen.dart';
 
 
 final GoRouter appRouter = GoRouter(
@@ -75,6 +81,32 @@ final GoRouter appRouter = GoRouter(
                 GoRoute(
                   path: 'subjects',
                   builder: (context, state) => const SubjectsScreen(),
+                  routes: [
+                    GoRoute(
+                      path: '1',
+                      builder: (context, state) => const Subject1Screen(),
+                    ),
+                    GoRoute(
+                      path: '2',
+                      builder: (context, state) => const Subject2Screen(),
+                    ),
+                    GoRoute(
+                      path: '3',
+                      builder: (context, state) => const Subject3Screen(),
+                    ),
+                    GoRoute(
+                      path: '4',
+                      builder: (context, state) => const Subject4Screen(),
+                    ),
+                    GoRoute(
+                      path: '5',
+                      builder: (context, state) => const Subject5Screen(),
+                    ),
+                    GoRoute(
+                      path: '6',
+                      builder: (context, state) => const Subject6Screen(),
+                    ),
+                  ],
                 ),
                 GoRoute(
                   path: 'teaching-materials',

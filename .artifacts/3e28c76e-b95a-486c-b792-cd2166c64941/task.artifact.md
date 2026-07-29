@@ -1,0 +1,6 @@
+- [x] Refine `ClassLoadCard` (Icon bg, filled icon, box borders, full-width divider)
+- [x] Refine `SubjectHoursCard` (Icon bg, full-width dividers, breakdown background)
+- [x] Refine `SubjectCreditCard` (Icon bg, filled icon, gray info icon, info background, full-width divider)
+- [x] Refine `SemesterInfoCard` (Icon backgrounds, full-width divider, breakdown background)
+- [x] Refine `TeacherCard` for consistency
+- [x] Verify identical match with design

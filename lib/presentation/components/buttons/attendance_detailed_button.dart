@@ -30,7 +30,7 @@ class AttendanceButton extends StatelessWidget {
             width: 1,
           ),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -75,7 +75,6 @@ class AttendanceButton extends StatelessWidget {
                         color: _subtitleColor,
                         height: 2,
                       ),
-                      overflow: TextOverflow.ellipsis,
                     ),
 
                     const SizedBox(height: 8),

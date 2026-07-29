@@ -30,10 +30,10 @@ class ScheduleButton extends StatelessWidget {
           ),
         ),
         padding: const EdgeInsets.only(
-          top: 18,
-          right: 11,
-          bottom: 18,
-          left: 11,
+          top: 20,
+          right: 10,
+          bottom: 20,
+          left: 10,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -48,33 +48,35 @@ class ScheduleButton extends StatelessWidget {
               ),
               child: const Icon(
                 Icons.calendar_today_outlined,
-                size: 23,
+                size: 25,
                 color: _primaryGreen,
               ),
             ),
-            const SizedBox(width: 13),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Schedule',
-                  style: GoogleFonts.redditSans(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 12,
-                    color: _titleColor,
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Schedule',
+                    style: GoogleFonts.redditSans(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 14,
+                      color: _titleColor,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  'For the week',
-                  style: GoogleFonts.redditSans(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 7,
-                    color: _subtitleColor,
+                  const SizedBox(height: 2),
+                  Text(
+                    'For the semester',
+                    style: GoogleFonts.redditSans(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 10,
+                      color: _subtitleColor,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
