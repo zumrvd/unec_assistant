@@ -16,7 +16,7 @@ class Subject5Screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const data = kSubject5Detail;
+    const data = kInfoDetail;
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FC),
       appBar: PreferredSize(

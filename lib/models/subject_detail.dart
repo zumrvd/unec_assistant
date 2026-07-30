@@ -1,3 +1,5 @@
+import 'seminar_entry.dart';
+
 class SubjectDetail {
   final String subjectCode;
   final String subjectName;
@@ -24,6 +26,22 @@ class SubjectDetail {
   final String classDays;
   final int subjectCredit;
 
+  // Grade fields
+  final int currentScore;
+  final int maxScore;
+  final String gradeTag;
+  final int midtermScore;
+  final int midtermMax;
+  final String midtermExamCode;
+  final String midtermDate;
+  final int seminarScore;
+  final int seminarMax;
+  final int seminarsGraded;
+  final int seminarsTotal;
+  final List<SeminarEntry> seminarEntries;
+  final bool finalScheduled;
+  final String finalNote;
+
   const SubjectDetail({
     required this.subjectCode,
     required this.subjectName,
@@ -49,5 +67,19 @@ class SubjectDetail {
     required this.hrsPerWeek,
     required this.classDays,
     required this.subjectCredit,
+    required this.currentScore,
+    required this.maxScore,
+    required this.gradeTag,
+    required this.midtermScore,
+    required this.midtermMax,
+    required this.midtermExamCode,
+    required this.midtermDate,
+    required this.seminarScore,
+    required this.seminarMax,
+    required this.seminarsGraded,
+    required this.seminarsTotal,
+    required this.seminarEntries,
+    required this.finalScheduled,
+    required this.finalNote,
   });
 }

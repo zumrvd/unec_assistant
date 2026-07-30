@@ -16,7 +16,7 @@ class Subject2Screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const data = kSubject2Detail;
+    const data = kFizikaDetail;
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FC),
       appBar: PreferredSize(

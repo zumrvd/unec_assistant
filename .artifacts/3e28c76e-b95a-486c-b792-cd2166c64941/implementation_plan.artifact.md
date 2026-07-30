@@ -1,44 +1,56 @@
-# Implementation Plan - Component UI Refinement
+# Implementation Plan - Grade Calculator UI Refinement
 
-This plan details the refinements needed to make the Subject Detail screen components identical to the provided design.
+This plan aims to refine the `GradeCalculatorScreen` and `GradeCalculatorCard` to perfectly match the provided design reference.
 
 ## Proposed Changes
 
-### [MODIFY] [ClassLoadCard](file:///C:/src/unec_assistant/lib/presentation/components/cards/class_load_card.dart)
-- **Icon Update**: Change `Icons.schedule_rounded` to `Icons.access_time_filled_rounded`.
-- **Icon Background**: Wrap the header icon in a styled container (30x30, 8dp radius, 15% opacity background).
-- **Full-width Divider**: Remove card padding and apply horizontal padding (16dp) only to the header and the boxes row, allowing the `Divider` to touch the edges.
-- **Info Boxes**: Add a 1dp solid border (`Color(0xFFE0E4F0)`) to the `_loadBox` containers.
+### 1. Layout Integration
 
-### [MODIFY] [SubjectHoursCard](file:///C:/src/unec_assistant/lib/presentation/components/cards/subject_hours_card.dart)
-- **Icon Background**: Wrap the header icon in a styled container (30x30, 8dp radius, 15% opacity background).
-- **Full-width Dividers**: Remove card padding and apply horizontal padding (16dp) to content rows.
-- **Breakdown Section**:
-    - Add a background `Container` for the breakdown section with a light gray tint (`Color(0xFFF8F9FC)`).
-    - Apply padding (16dp) inside this tinted container.
-    - Ensure the breakdown section spans the full width of the card.
+#### [MODIFY] [grade_calculator_screen.dart](file:///C:/src/unec_assistant/lib/screens/functions/grade_calculator_screen.dart)
+- Remove the vertical gap (`SizedBox(height: 16)`) between the `GradeCalculatorButton` and `GradeCalculatorCard`.
+- Adjust the `GradeCalculatorButton` and `GradeCalculatorCard` to share a common visual boundary (e.g., removing bottom radius of the header and top radius of the card).
 
-### [MODIFY] [SubjectCreditCard](file:///C:/src/unec_assistant/lib/presentation/components/cards/subject_credit_card.dart)
-- **Icon Update**: Change `Icons.diamond_rounded` to `Icons.diamond` (filled).
-- **Icon Background**: Wrap the header icon in a styled container (30x30, 8dp radius, 15% opacity background).
-- **Icon Color**: Change the "info" icon color to gray (`Color(0xFF838A97)`).
-- **Full-width Divider**: Remove card padding and apply horizontal padding (16dp) to content.
-- **Credit Info Background**: Wrap the credit explanation text section in a styled `Container` with a light gray background (`Color(0xFFF8F9FC)`) and 12dp border radius.
+### 2. Component Refinement
 
-### [MODIFY] [SemesterInfoCard](file:///C:/src/unec_assistant/lib/presentation/components/cards/semester_info_card.dart)
-- **Icon Backgrounds**: Apply the 15% opacity background container to all icons in the `_infoRow` and header.
-- **Full-width Divider**: Remove card padding and apply horizontal padding to items.
-- **Breakdown Section**: Similar to `SubjectHoursCard`, wrap the breakdown in a tinted full-width container.
+#### [MODIFY] [grade_calculator_card.dart](file:///C:/src/unec_assistant/lib/presentation/components/cards/grade_calculator_card.dart)
 
-### [MODIFY] [TeacherCard](file:///C:/src/unec_assistant/lib/presentation/components/cards/teacher_card.dart)
-- **Consistency**: While not explicitly mentioned for this card, I will ensure it follows the same padding/border style as the other refined cards.
+**A. Dropdown & Labels**
+- Add a tinted background (`Color(0xFFF8F9FC)`) to the dropdown container.
+- Increase font size for "CALCULATE FOR" and "I want to achieve" labels.
+
+**B. Grade Tiles**
+- Add tinted backgrounds to tiles (15% opacity of the grade color).
+- Add 1dp solid borders matching the grade color when selected.
+- Add horizontal spacing between tiles.
+- Increase text sizes for grade letters and ranges.
+
+**C. Current Score Container**
+- Wrap the entire result section in a styled `Container` with:
+    - Tinted background (`Color(0xFFF8F9FC)`).
+    - 15dp border radius.
+    - 1dp solid border (`#E0E4F0`).
+    - Internal padding (16dp).
+- Increase font sizes for "Current Score" and the score numbers.
+
+**D. Progress Line (Dual Segment)**
+- Implement a three-layered progress bar:
+    - Layer 1 (Background): Gray (`#E0E4F0`).
+    - Layer 2 (Green - Needed): Segment from `currentScore` to `targetMinScore`.
+    - Layer 3 (Blue - Have): Segment from 0 to `currentScore`.
+- Update text colors: "Have: X" in Blue (`#0569FF`), "Need: Y" in Green (`#0F6E11`).
+
+**E. Result Highlight**
+- Refine the green circle:
+    - Background: Faded green (`#0F6E11` at 15% opacity).
+    - Border: 1dp solid matching the circle color.
+    - Text: Dark green (`#0F6E11`), font size 18-20.
+- Update the bottom explanation text to be right-aligned and more prominent.
 
 ## Verification Plan
 
 ### Manual Verification
-- Review each card in the Subject Detail screen to ensure:
-    - Dividers touch the card edges.
-    - Icons are inside rounded rectangular tinted boxes.
-    - Breakdown and credit info sections have the correct background tint.
-    - Info boxes in Class Load have borders.
-    - Icons are correctly filled/colored as requested.
+- Verify that the header and card look like a single unit.
+- Check that selecting a grade updates the tile border and background.
+- Confirm that the progress bar shows two distinct colored segments (Blue and Green).
+- Ensure the result box at the bottom is tinted and clearly separated.
+- Verify text scaling against the reference photo.

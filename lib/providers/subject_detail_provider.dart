@@ -1,6 +1,7 @@
 import '../models/subject_detail.dart';
+import '../models/seminar_entry.dart';
 
-const SubjectDetail kSubject1Detail = SubjectDetail(
+const SubjectDetail kProgDetail = SubjectDetail(
   subjectCode: '00035 - P1',
   subjectName: 'Programlaşdırmanın əsasları',
   teacherName: 'Prof. Əli Böyükkişiyev',
@@ -25,9 +26,26 @@ const SubjectDetail kSubject1Detail = SubjectDetail(
   hrsPerWeek: 6,
   classDays: 'Mon · Fri',
   subjectCredit: 6,
+  currentScore: 48,
+  maxScore: 50,
+  gradeTag: 'Seminar · Midterm',
+  midtermScore: 28,
+  midtermMax: 30,
+  midtermExamCode: '10_25_01_575-1_00035_Proqramlaşdırmanın əsasları_sq',
+  midtermDate: '11/12/2025',
+  seminarScore: 20,
+  seminarMax: 20,
+  seminarsGraded: 2,
+  seminarsTotal: 4,
+  seminarEntries: [
+    SeminarEntry(title: 'Seminar 4 - Dəyişənlər və məlumat tipləri', date: 'Oct 10, 2026', score: 10),
+    SeminarEntry(title: 'Seminar 7 - Funksiyalar və prosedurlar', date: 'Nov 14, 2026', score: 9),
+  ],
+  finalScheduled: false,
+  finalNote: 'Final not scheduled yet',
 );
 
-const SubjectDetail kSubject2Detail = SubjectDetail(
+const SubjectDetail kFizikaDetail = SubjectDetail(
   subjectCode: '00036 - F1',
   subjectName: 'Fizika',
   teacherName: '',
@@ -52,9 +70,23 @@ const SubjectDetail kSubject2Detail = SubjectDetail(
   hrsPerWeek: 0,
   classDays: '',
   subjectCredit: 0,
+  currentScore: 20,
+  maxScore: 20,
+  gradeTag: 'Laboratory',
+  midtermScore: 0,
+  midtermMax: 30,
+  midtermExamCode: '',
+  midtermDate: '',
+  seminarScore: 20,
+  seminarMax: 20,
+  seminarsGraded: 2,
+  seminarsTotal: 4,
+  seminarEntries: [],
+  finalScheduled: false,
+  finalNote: 'Final not scheduled yet',
 );
 
-const SubjectDetail kSubject3Detail = SubjectDetail(
+const SubjectDetail kAzDetail = SubjectDetail(
   subjectCode: '00037 - A1',
   subjectName: 'Azərbaycan dilində işguzar və akademik kommunikasiya',
   teacherName: '',
@@ -79,9 +111,23 @@ const SubjectDetail kSubject3Detail = SubjectDetail(
   hrsPerWeek: 0,
   classDays: '',
   subjectCredit: 0,
+  currentScore: 18,
+  maxScore: 20,
+  gradeTag: 'Seminar',
+  midtermScore: 0,
+  midtermMax: 30,
+  midtermExamCode: '',
+  midtermDate: '',
+  seminarScore: 18,
+  seminarMax: 20,
+  seminarsGraded: 2,
+  seminarsTotal: 4,
+  seminarEntries: [],
+  finalScheduled: false,
+  finalNote: 'Final not scheduled yet',
 );
 
-const SubjectDetail kSubject4Detail = SubjectDetail(
+const SubjectDetail kXettiDetail = SubjectDetail(
   subjectCode: '00038 - X1',
   subjectName: 'Xətti cəbr və analitik həndəsə',
   teacherName: '',
@@ -106,9 +152,23 @@ const SubjectDetail kSubject4Detail = SubjectDetail(
   hrsPerWeek: 0,
   classDays: '',
   subjectCredit: 0,
+  currentScore: 45,
+  maxScore: 50,
+  gradeTag: 'Seminar · Midterm',
+  midtermScore: 25,
+  midtermMax: 30,
+  midtermExamCode: '',
+  midtermDate: '',
+  seminarScore: 20,
+  seminarMax: 20,
+  seminarsGraded: 2,
+  seminarsTotal: 4,
+  seminarEntries: [],
+  finalScheduled: false,
+  finalNote: 'Final not scheduled yet',
 );
 
-const SubjectDetail kSubject5Detail = SubjectDetail(
+const SubjectDetail kInfoDetail = SubjectDetail(
   subjectCode: '00039 - I1',
   subjectName: 'İnformasiya texnologiyalarının əsasları',
   teacherName: '',
@@ -133,9 +193,23 @@ const SubjectDetail kSubject5Detail = SubjectDetail(
   hrsPerWeek: 0,
   classDays: '',
   subjectCredit: 0,
+  currentScore: 17,
+  maxScore: 20,
+  gradeTag: 'Seminar',
+  midtermScore: 0,
+  midtermMax: 30,
+  midtermExamCode: '',
+  midtermDate: '',
+  seminarScore: 17,
+  seminarMax: 20,
+  seminarsGraded: 2,
+  seminarsTotal: 4,
+  seminarEntries: [],
+  finalScheduled: false,
+  finalNote: 'Final not scheduled yet',
 );
 
-const SubjectDetail kSubject6Detail = SubjectDetail(
+const SubjectDetail kXariciDetail = SubjectDetail(
   subjectCode: '00040 - X2',
   subjectName: 'Xarici dildə işguzar və akademik kommunikasiya',
   teacherName: '',
@@ -160,4 +234,18 @@ const SubjectDetail kSubject6Detail = SubjectDetail(
   hrsPerWeek: 0,
   classDays: '',
   subjectCredit: 0,
+  currentScore: 20,
+  maxScore: 20,
+  gradeTag: 'Seminar',
+  midtermScore: 0,
+  midtermMax: 30,
+  midtermExamCode: '',
+  midtermDate: '',
+  seminarScore: 20,
+  seminarMax: 20,
+  seminarsGraded: 2,
+  seminarsTotal: 4,
+  seminarEntries: [],
+  finalScheduled: false,
+  finalNote: 'Final not scheduled yet',
 );

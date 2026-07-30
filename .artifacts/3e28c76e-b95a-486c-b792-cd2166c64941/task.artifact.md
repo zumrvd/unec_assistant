@@ -1,6 +1,7 @@
-- [x] Refine `ClassLoadCard` (Icon bg, filled icon, box borders, full-width divider)
-- [x] Refine `SubjectHoursCard` (Icon bg, full-width dividers, breakdown background)
-- [x] Refine `SubjectCreditCard` (Icon bg, filled icon, gray info icon, info background, full-width divider)
-- [x] Refine `SemesterInfoCard` (Icon backgrounds, full-width divider, breakdown background)
-- [x] Refine `TeacherCard` for consistency
-- [x] Verify identical match with design
+- [ ] Refactor `grade_calculator_screen.dart` for unified header/card
+- [ ] Update `GradeCalculatorCard` dropdown styling
+- [ ] Redesign Grade tiles with selection borders and tints
+- [ ] Rebuild Result section with its own container
+- [ ] Implement dual-color progress bar logic
+- [ ] Finalize result highlight circle and typography
+- [ ] Verify identical match with design

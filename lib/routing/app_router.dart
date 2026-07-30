@@ -16,6 +16,9 @@ import 'package:unec_assistant/screens/functions/attendance_screen.dart';
 import 'package:unec_assistant/screens/functions/subjects_screen.dart';
 import 'package:unec_assistant/screens/functions/teaching_materials_screen.dart';
 import 'package:unec_assistant/screens/functions/grades_screen.dart';
+import 'package:unec_assistant/screens/functions/grade_calculator_screen.dart';
+import 'package:unec_assistant/screens/functions/grades/subject_grades_screen.dart';
+import 'package:unec_assistant/providers/subject_detail_provider.dart';
 import 'package:unec_assistant/screens/functions/subjects/subject1_screen.dart';
 import 'package:unec_assistant/screens/functions/subjects/subject2_screen.dart';
 import 'package:unec_assistant/screens/functions/subjects/subject3_screen.dart';
@@ -115,6 +118,36 @@ final GoRouter appRouter = GoRouter(
                 GoRoute(
                   path: 'grades',
                   builder: (context, state) => const GradesScreen(),
+                  routes: [
+                    GoRoute(
+                      path: 'calculator',
+                      builder: (context, state) => const GradeCalculatorScreen(),
+                    ),
+                    GoRoute(
+                      path: 'subject/prog',
+                      builder: (context, state) => const SubjectGradesScreen(data: kProgDetail),
+                    ),
+                    GoRoute(
+                      path: 'subject/fizika',
+                      builder: (context, state) => const SubjectGradesScreen(data: kFizikaDetail),
+                    ),
+                    GoRoute(
+                      path: 'subject/az',
+                      builder: (context, state) => const SubjectGradesScreen(data: kAzDetail),
+                    ),
+                    GoRoute(
+                      path: 'subject/xetti',
+                      builder: (context, state) => const SubjectGradesScreen(data: kXettiDetail),
+                    ),
+                    GoRoute(
+                      path: 'subject/info',
+                      builder: (context, state) => const SubjectGradesScreen(data: kInfoDetail),
+                    ),
+                    GoRoute(
+                      path: 'subject/xarici',
+                      builder: (context, state) => const SubjectGradesScreen(data: kXariciDetail),
+                    ),
+                  ],
                 ),
               ],
             ),

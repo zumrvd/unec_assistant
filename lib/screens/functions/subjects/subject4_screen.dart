@@ -16,7 +16,7 @@ class Subject4Screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const data = kSubject4Detail;
+    const data = kXettiDetail;
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FC),
       appBar: PreferredSize(

@@ -1,33 +1,39 @@
-# Walkthrough - Subject Detail UI Refinements
+# Walkthrough - Grade Calculator UI Final Refinement
 
-I have refined the Subject Detail components to match the design specifications exactly.
+I have meticulously updated the Grade Calculator to match the provided design reference, ensuring every detail from spacing to color logic is identical.
 
 ## Changes Made
 
-### 1. Header & Icon Enhancements
-- **Themed Icon Backgrounds**: All primary icons in the cards now sit inside a 30x30 rounded rectangular container with 15% opacity of the icon's original color.
-- **Filled Icons**: Switched to filled versions of icons (e.g., `diamond`, `access_time_filled`) to match the design's solid look.
+### 1. Unified Interface Layout
+- **Attached Header**: Removed the vertical gap between the "Grade Goal Calculator" header and the calculation body.
+- **Synchronized Radii**: Adjusted corner radii so the header only has top-rounded corners and the body only has bottom-rounded corners, making them appear as a single connected unit.
 
-### 2. Layout & Divider Improvements
-- **Full-Width Dividers**: Adjusted the padding strategy within all cards (`ClassLoadCard`, `SubjectHoursCard`, `SubjectCreditCard`, `SemesterInfoCard`). Dividers now span the full width of the card, touching the left and right edges.
-- **Content Padding**: Internal content is now wrapped in `Padding` widgets to maintain the correct 16dp horizontal alignment while allowing structural elements like dividers and tinted backgrounds to reach the edges.
+### 2. Enhanced Data Input
+- **Styled Dropdown**: Added a tinted background (`#F8F9FC`) and a subtle border to the subject selector.
+- **Refined Labels**: Increased font sizes for "CALCULATE FOR" and "I want to achieve" to improve hierarchy and readability.
 
-### 3. Styled Sections
-- **Breakdown Tints**: The "BREAKDOWN" sections in `SubjectHoursCard` and `SemesterInfoCard` now have a subtle light gray background (`#F8F9FC`) that fills the bottom area of the card.
-- **Class Load Borders**: Added 1dp solid borders (`#E0E4F0`) to the individual info boxes (sessions/week, etc.) in the `ClassLoadCard`.
-- **Credit Info Background**: The explanatory text under "What are credits?" in `SubjectCreditCard` is now wrapped in a tinted, bordered container for better readability.
+### 3. Interactive Grade Tiles
+- **Horizontal Spacing**: Added proper gaps between the A, B, C, and D tiles.
+- **Selection States**:
+    - **Backgrounds**: Non-selected tiles use a light tint, while the selected tile uses a 10% opacity tint of its specific grade color.
+    - **Borders**: Selected tiles now feature a thicker, colored border matching the grade (e.g., Green for A, Blue for B).
+- **Typography**: Scaled up the grade letters and range text for a more prominent look.
 
-### 4. Detail Refinements
-- **Gray Info Icon**: The "info" icon in the credit card has been changed to gray (`#838A97`) as requested.
-- **Consistent Typography**: Verified that all text uses `Reddit Sans` and matches the design weights.
+### 4. Advanced Result Visualization
+- **Result Container**: Wrapped the calculation results in a new bordered and tinted container, separating it clearly from the inputs.
+- **Dual-Colored Progress Bar**:
+    - **Blue Layer**: Represents your current progress ("Have").
+    - **Green Layer**: Represents the target goal ("Need"), appearing as a faded extension behind the current progress.
+- **Result Highlight**:
+    - Rebuilt the target score circle with a faded green background, dark green text, and a larger font size.
+    - Added a descriptive footer explaining that the result is the points needed on the final exam.
 
 ## Verification Results
 
-### UI and Design
-- **Identical Match**: All 7 identified differences have been addressed.
-- **Visual Structure**: The cards now have a much cleaner, more structured appearance with clearly defined sections and full-width separators.
+### Visual Fidelity
+- **Typography Scale**: Numbers like "48" and target "43" have been significantly enlarged to match the design's emphasis.
+- **Color Coordination**: "Have" text is linked to Blue, and "Need" text is linked to Green, matching the progress bar segments.
+- **Padding & Gaps**: All internal paddings have been synchronized to 20dp/16dp as per the reference.
 
-render_diffs(file:///C:/src/unec_assistant/lib/presentation/components/cards/class_load_card.dart)
-render_diffs(file:///C:/src/unec_assistant/lib/presentation/components/cards/subject_hours_card.dart)
-render_diffs(file:///C:/src/unec_assistant/lib/presentation/components/cards/subject_credit_card.dart)
-render_diffs(file:///C:/src/unec_assistant/lib/presentation/components/cards/semester_info_card.dart)
+render_diffs(file:///C:/src/unec_assistant/lib/presentation/components/cards/grade_calculator_card.dart)
+render_diffs(file:///C:/src/unec_assistant/lib/screens/functions/grade_calculator_screen.dart)
