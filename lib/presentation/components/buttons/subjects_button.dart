@@ -114,7 +114,7 @@ class _SubjectsButtonState extends State<SubjectsButton> with SingleTickerProvid
                             'Subjects',
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w700,
-                              fontSize: 14,
+                              fontSize: 15,
                               color: _titleColor,
                             ),
                           ),
@@ -123,7 +123,7 @@ class _SubjectsButtonState extends State<SubjectsButton> with SingleTickerProvid
                             'For the full academic semester',
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w700,
-                              fontSize: 8,
+                              fontSize: 10,
                               color: _subtitleColor,
                             ),
                           ),
@@ -229,7 +229,7 @@ class _SubjectsButtonState extends State<SubjectsButton> with SingleTickerProvid
                                   'Teaching Materials',
                                   style: GoogleFonts.redditSans(
                                     fontWeight: FontWeight.w700,
-                                    fontSize: 12,
+                                    fontSize: 13,
                                     color: _titleColor,
                                   ),
                                 ),
@@ -238,7 +238,7 @@ class _SubjectsButtonState extends State<SubjectsButton> with SingleTickerProvid
                                   'Lectures, seminars & tests',
                                   style: GoogleFonts.redditSans(
                                     fontWeight: FontWeight.w700,
-                                    fontSize: 8,
+                                    fontSize: 10,
                                     color: _subtitleColor,
                                   ),
                                 ),
@@ -299,7 +299,7 @@ class _SubjectsButtonState extends State<SubjectsButton> with SingleTickerProvid
                                   'Grades',
                                   style: GoogleFonts.redditSans(
                                     fontWeight: FontWeight.w700,
-                                    fontSize: 12,
+                                    fontSize: 13,
                                     color: _titleColor,
                                   ),
                                 ),
@@ -308,7 +308,7 @@ class _SubjectsButtonState extends State<SubjectsButton> with SingleTickerProvid
                                   'Seminars & exam results',
                                   style: GoogleFonts.redditSans(
                                     fontWeight: FontWeight.w700,
-                                    fontSize: 8,
+                                    fontSize: 10,
                                     color: _subtitleColor,
                                   ),
                                 ),

@@ -15,6 +15,8 @@ import 'package:unec_assistant/screens/profile/about_app_screen.dart';
 import 'package:unec_assistant/screens/functions/attendance_screen.dart';
 import 'package:unec_assistant/screens/functions/subjects_screen.dart';
 import 'package:unec_assistant/screens/functions/teaching_materials_screen.dart';
+import 'package:unec_assistant/screens/functions/subject_materials_detail_screen.dart';
+import 'package:unec_assistant/screens/functions/smart_sync_screen.dart';
 import 'package:unec_assistant/screens/functions/grades_screen.dart';
 import 'package:unec_assistant/screens/functions/grade_calculator_screen.dart';
 import 'package:unec_assistant/screens/functions/grades/subject_grades_screen.dart';
@@ -114,6 +116,18 @@ final GoRouter appRouter = GoRouter(
                 GoRoute(
                   path: 'teaching-materials',
                   builder: (context, state) => const TeachingMaterialsScreen(),
+                  routes: [
+                    GoRoute(
+                      path: 'smart-sync',
+                      builder: (context, state) => const SmartSyncScreen(),
+                    ),
+                    GoRoute(
+                      path: 'subject/:subjectId',
+                      builder: (context, state) => SubjectMaterialsDetailScreen(
+                        subjectId: state.pathParameters['subjectId']!,
+                      ),
+                    ),
+                  ],
                 ),
                 GoRoute(
                   path: 'grades',

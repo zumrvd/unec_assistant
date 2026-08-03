@@ -176,9 +176,9 @@ class TeachingMaterialsCard extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  Color(0xE60665F4),
-                  Color(0xE60E6EFF),
-                  Color(0xE6065DE1),
+                  Color(0xFF0569FF),
+                  Color(0xCC0569FF),
+                  Color(0xFF035CE1),
                 ],
                 stops: [0.0, 0.5, 1.0],
               ),

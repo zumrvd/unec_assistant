@@ -3,10 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../providers/subject_detail_provider.dart';
 import '../../../presentation/components/cards/subject_name_card.dart';
-import '../../../presentation/components/buttons/download_curriculum_button.dart';
 import '../../../presentation/components/buttons/open_action_button.dart';
 import '../../../presentation/components/cards/teacher_card.dart';
-import '../../../presentation/components/cards/semester_info_card.dart';
 import '../../../presentation/components/cards/subject_hours_card.dart';
 import '../../../presentation/components/cards/class_load_card.dart';
 import '../../../presentation/components/cards/subject_credit_card.dart';
@@ -78,13 +76,11 @@ class Subject5Screen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SubjectNameCard(data: data),
-            const SizedBox(height: 12),
-            DownloadCurriculumButton(onTap: () {}),
             const SizedBox(height: 12),
             Row(
               children: [
@@ -109,8 +105,6 @@ class Subject5Screen extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             const TeacherCard(data: data),
-            const SizedBox(height: 12),
-            const SemesterInfoCard(data: data),
             const SizedBox(height: 12),
             const SubjectHoursCard(data: data),
             const SizedBox(height: 12),

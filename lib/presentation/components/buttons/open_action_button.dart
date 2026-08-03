@@ -31,6 +31,7 @@ class OpenActionButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap ?? () {},
       child: Container(
+        height: 90,
         width: double.infinity,
         decoration: BoxDecoration(
           gradient: _buttonGradient,
@@ -52,22 +53,22 @@ class OpenActionButton extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    label,
+                    label.replaceFirst(' ', '\n'),
                     textAlign: TextAlign.center,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
-                      fontSize: 15,
+                      fontSize: 14,
                       color: const Color(0xFFF8F9FC),
                       height: 1.1,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 4),
                   Text(
                     sublabel,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
-                      fontSize: 9,
+                      fontSize: 8,
                       color: const Color(0x80F8F9FC),
                     ),
                   ),
