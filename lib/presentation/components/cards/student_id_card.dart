@@ -24,8 +24,17 @@ class StudentIdCard extends StatelessWidget {
   final ImageProvider? profileImage;
 
   static const _textColor = Color(0xFFE0E4F0);
-  static const _backgroundColor = Color(0xFF285395);
-  static const _bubbleColor = Color(0xFF1C488A);
+  static const _backgroundGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      Color(0xFF0569FF),
+      Color(0xCC0569FF),
+      Color(0xFF035CE1),
+    ],
+    stops: [0.0, 0.5, 1.0],
+  );
+  static const _bubbleColor = Color(0xFF2776F3);
   static const _badgeBackgroundColor = Color(0xB56B98DB);
 
   @override
@@ -39,7 +48,13 @@ class StudentIdCard extends StatelessWidget {
           clipBehavior: Clip.hardEdge,
           child: Stack(
             children: [
-              Positioned.fill(child: const ColoredBox(color: _backgroundColor)),
+              Positioned.fill(
+                child: const DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: _backgroundGradient,
+                  ),
+                ),
+              ),
               const Positioned(
                 top: -50,
                 right: 20,

@@ -19,6 +19,7 @@ class GradeCalculatorCard extends StatefulWidget {
 class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
   String? _selectedSubject;
   String? _selectedGrade;
+  String? _hoveredGrade;
   bool _calculated = false;
 
   static const Map<String, String> _gradeRanges = {
@@ -112,46 +113,65 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
           Row(
             children: ['A', 'B', 'C', 'D'].map((grade) {
               final isSelected = _selectedGrade == grade;
+              final isHovered = _hoveredGrade == grade;
               final gradeColor = _gradeColors[grade]!;
+
+              Color bgColor = const Color(0xFFF8F9FC);
+              Color borderColor = const Color(0xFFE0E4F0);
+              double borderWidth = 1.0;
+
+              if (isSelected) {
+                bgColor = gradeColor.withOpacity(0.15);
+                borderColor = gradeColor.withOpacity(0.2);
+              } else if (isHovered) {
+                bgColor = Colors.white;
+                borderColor = gradeColor;
+                borderWidth = 1.5;
+              }
+
               return Expanded(
-                child: GestureDetector(
-                  onTap: () => setState(() {
-                    _selectedGrade = grade;
-                    _calculated = false;
-                  }),
-                  child: Container(
-                    margin: EdgeInsets.only(
-                      right: grade != 'D' ? 8 : 0,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isSelected ? gradeColor.withOpacity(0.1) : const Color(0xFFF8F9FC),
-                      border: Border.all(
-                        color: isSelected ? gradeColor : const Color(0xFFE0E4F0),
-                        width: isSelected ? 1.5 : 1,
+                child: MouseRegion(
+                  onEnter: (_) => setState(() => _hoveredGrade = grade),
+                  onExit: (_) => setState(() => _hoveredGrade = null),
+                  child: GestureDetector(
+                    onTap: () => setState(() {
+                      _selectedGrade = grade;
+                      _calculated = false;
+                    }),
+                    child: Container(
+                      margin: EdgeInsets.only(
+                        right: grade != 'D' ? 8 : 0,
                       ),
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          grade,
-                          style: GoogleFonts.redditSans(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 20,
-                            color: isSelected ? gradeColor : const Color(0xFF838A97),
-                          ),
+                      decoration: BoxDecoration(
+                        color: bgColor,
+                        border: Border.all(
+                          color: borderColor,
+                          width: borderWidth,
                         ),
-                        Text(
-                          _gradeRanges[grade]!,
-                          style: GoogleFonts.redditSans(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 10,
-                            color: const Color(0x80838A97),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            grade,
+                            style: GoogleFonts.redditSans(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 20,
+                              color: gradeColor,
+                            ),
                           ),
-                        ),
-                      ],
+                          Text(
+                            _gradeRanges[grade]!,
+                            style: GoogleFonts.redditSans(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 10,
+                              color: const Color(0x80838A97),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -215,7 +235,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: const Color(0xFFE0E4F0)),
       ),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(18),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -226,7 +246,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                 "Current\nScore",
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
-                  fontSize: 16,
+                  fontSize: 18,
                   color: const Color(0xFF838A97),
                   height: 1.1,
                 ),
@@ -238,7 +258,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                       text: "${subject.currentScore}",
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w800,
-                        fontSize: 28,
+                        fontSize: 36,
                         color: const Color(0xFF1F1F1F),
                       ),
                     ),
@@ -246,7 +266,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                       text: "/${subject.maxScore}",
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
-                        fontSize: 18,
+                        fontSize: 22,
                         color: const Color(0x80838A97),
                       ),
                     ),
@@ -254,7 +274,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                       text: " pts so far",
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
-                        fontSize: 12,
+                        fontSize: 14,
                         color: const Color(0x80838A97),
                       ),
                     ),
@@ -263,40 +283,40 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           Stack(
             children: [
               Container(
-                height: 10,
+                height: 12,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: const Color(0xFFE0E4F0),
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(6),
                 ),
               ),
               FractionallySizedBox(
                 widthFactor: needProgress,
                 child: Container(
-                  height: 10,
+                  height: 12,
                   decoration: BoxDecoration(
                     color: const Color(0xFF0F6E11).withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(5),
+                    borderRadius: BorderRadius.circular(6),
                   ),
                 ),
               ),
               FractionallySizedBox(
                 widthFactor: haveProgress,
                 child: Container(
-                  height: 10,
+                  height: 12,
                   decoration: BoxDecoration(
                     color: const Color(0xFF0569FF),
-                    borderRadius: BorderRadius.circular(5),
+                    borderRadius: BorderRadius.circular(6),
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 18),
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -307,7 +327,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                     "Have: ${subject.currentScore}",
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w800,
-                      fontSize: 12,
+                      fontSize: 14,
                       color: const Color(0xFF0569FF),
                     ),
                   ),
@@ -322,7 +342,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                     "Need: $ptsNeeded",
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w800,
-                      fontSize: 12,
+                      fontSize: 14,
                       color: const Color(0xFF0F6E11),
                     ),
                   ),
@@ -333,19 +353,19 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
               Column(
                 children: [
                   Container(
-                    width: 44,
-                    height: 44,
+                    width: 54,
+                    height: 54,
                     decoration: BoxDecoration(
                       color: const Color(0xFF0F6E11).withOpacity(0.15),
                       shape: BoxShape.circle,
-                      border: Border.all(color: const Color(0xFF0F6E11), width: 1),
+                      border: Border.all(color: const Color(0xFF0F6E11), width: 1.5),
                     ),
                     child: Center(
                       child: Text(
                         "$ptsNeeded",
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w800,
-                          fontSize: 20,
+                          fontSize: 24,
                           color: const Color(0xFF0F6E11),
                         ),
                       ),
@@ -355,14 +375,14 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 6),
           Align(
             alignment: Alignment.centerRight,
             child: Text(
-              "pts needed on Final to reach $targetMin",
+              "pts needed to reach $targetMin",
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w700,
-                fontSize: 10,
+                fontSize: 11,
                 color: const Color(0x80838A97),
               ),
             ),

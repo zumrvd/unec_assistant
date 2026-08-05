@@ -6,6 +6,8 @@ import 'package:unec_assistant/presentation/components/buttons/subjects_button.d
 import 'package:unec_assistant/presentation/components/buttons/attendance_button.dart';
 import 'package:unec_assistant/presentation/components/buttons/notes_button.dart';
 
+import '../../presentation/components/lists/labels.dart';
+
 
 
 class FunctionsMainScreen extends StatelessWidget {
@@ -16,26 +18,18 @@ class FunctionsMainScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FC),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+        padding: const EdgeInsets.symmetric(horizontal: 35.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.only(bottom: 10.0),
-              child: Text(
-                'Class & Attendance',
-                style: TextStyle(
-                  color: Color(0xFF838A97),
-                  fontSize: 15,
-                ),
-              ),
-            ),
+
+            const SectionLabel('Class & Attendance'),
+            const SizedBox(height: 10),
 
             CurrentClassButton(
               onTap: () => context.push('/functions/current_class_function'),
             ),
-
-            const SizedBox(height: 15),
+            const SizedBox(height: 10),
 
             Row(
               children: [
@@ -44,7 +38,7 @@ class FunctionsMainScreen extends StatelessWidget {
                     onTap: () => context.push('/functions/schedule_function'),
                   ),
                 ),
-                const SizedBox(width: 15),
+                const SizedBox(width: 10),
                 Expanded(
                   child: AttendanceButton(
                     onTap: () => context.push('/functions/attendance_function'),
@@ -53,18 +47,9 @@ class FunctionsMainScreen extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 16),
-
-            const Padding(
-              padding: EdgeInsets.only(bottom: 10.0),
-              child: Text(
-                'Academic',
-                style: TextStyle(
-                  color: Color(0xFF838A97),
-                  fontSize: 15,
-                ),
-              ),
-            ),
+            const SizedBox(height: 10),
+            const SectionLabel('Academic'),
+            const SizedBox(height: 10),
 
             SubjectsButton(
               onTapSubjects: () => context.push('/functions/subjects'),
@@ -74,18 +59,9 @@ class FunctionsMainScreen extends StatelessWidget {
               onTapOpen: () {},
             ),
 
-            const SizedBox(height: 16),
-
-            const Padding(
-              padding: EdgeInsets.only(bottom: 10.0),
-              child: Text(
-                'Personal',
-                style: TextStyle(
-                  color: Color(0xFF838A97),
-                  fontSize: 15,
-                ),
-              ),
-            ),
+            const SizedBox(height: 10),
+            const SectionLabel('Personal'),
+            const SizedBox(height: 10),
 
             NotesButton(
               onTap: () => context.push('/functions/notes_function'),

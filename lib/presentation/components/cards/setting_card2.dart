@@ -218,44 +218,46 @@ class _SettingsCardState extends State<SettingsCard2> {
             height: 1,
           ),
           const SizedBox(height: 15),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    _iconBox(
-                      Icons.info_rounded,
-                      const Color(0x26DA4979),
-                      const Color(0xFFDA4979),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('About App', style: _labelStyle()),
-                          const SizedBox(height: 2),
-                          Text(
-                            'v 1.1.0 IT team inc.',
-                            style: GoogleFonts.redditSans(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 9,
-                              color: _subtitleColor,
-                            ),
-                          ),
-                        ],
+          GestureDetector(
+            onTap: widget.onAboutAppTap,
+            behavior: HitTestBehavior.opaque,
+            child:
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      _iconBox(
+                        Icons.info_rounded,
+                        const Color(0x26DA4979),
+                        const Color(0xFFDA4979),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('About App', style: _labelStyle()),
+                            const SizedBox(height: 2),
+                            Text(
+                              'v 1.1.0 IT team inc.',
+                              style: GoogleFonts.redditSans(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 9,
+                                color: _subtitleColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              GestureDetector(
-                onTap: widget.onAboutAppTap,
-                child: Container(
+                const SizedBox(width: 8),
+                Container(
                   width: 28,
                   height: 28,
                   decoration: BoxDecoration(
@@ -268,10 +270,9 @@ class _SettingsCardState extends State<SettingsCard2> {
                     color: _labelGrey,
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-
           const SizedBox(height: 15),
 
           const Divider(

@@ -3,30 +3,25 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:unec_assistant/routing/main_scaffold.dart';
 import 'package:unec_assistant/screens/feed/feed_main_screen.dart';
 import 'package:unec_assistant/screens/feed/post1_screen.dart';
-import 'package:unec_assistant/screens/functions/current_class_screen.dart';
-import 'package:unec_assistant/screens/functions/notes_screen.dart';
-import 'package:unec_assistant/screens/functions/schedule_screen.dart';
+import 'package:unec_assistant/screens/functions/current%20class/current_class_screen.dart';
+import 'package:unec_assistant/screens/functions/notes/notes_screen.dart';
+import 'package:unec_assistant/screens/functions/schedule/schedule_screen.dart';
 import 'package:unec_assistant/screens/functions/functions_main_screen.dart';
 import 'package:unec_assistant/screens/home/home_screen.dart';
 import 'package:unec_assistant/screens/profile/change_pass_screen.dart';
 import 'package:unec_assistant/screens/profile/profile_info_screen.dart';
 import 'package:unec_assistant/screens/profile/profile_screen.dart';
 import 'package:unec_assistant/screens/profile/about_app_screen.dart';
-import 'package:unec_assistant/screens/functions/attendance_screen.dart';
-import 'package:unec_assistant/screens/functions/subjects_screen.dart';
-import 'package:unec_assistant/screens/functions/teaching_materials_screen.dart';
-import 'package:unec_assistant/screens/functions/subject_materials_detail_screen.dart';
-import 'package:unec_assistant/screens/functions/smart_sync_screen.dart';
-import 'package:unec_assistant/screens/functions/grades_screen.dart';
-import 'package:unec_assistant/screens/functions/grade_calculator_screen.dart';
-import 'package:unec_assistant/screens/functions/grades/subject_grades_screen.dart';
+import 'package:unec_assistant/screens/functions/attendance/attendance_screen.dart';
+import 'package:unec_assistant/screens/functions/subjects/subjects_screen.dart';
+import 'package:unec_assistant/screens/functions/subjects/teaching%20materials/teaching_materials_screen.dart';
+import 'package:unec_assistant/screens/functions/subjects/teaching%20materials/subject_materials_detail_screen.dart';
+import 'package:unec_assistant/screens/functions/subjects/teaching%20materials/smart_sync_screen.dart';
+import 'package:unec_assistant/screens/functions/subjects/grades/grades_screen.dart';
+import 'package:unec_assistant/screens/functions/subjects/grades/grade_calculator_screen.dart';
+import 'package:unec_assistant/screens/functions/subjects/grades/subject_grades_screen.dart';
 import 'package:unec_assistant/providers/subject_detail_provider.dart';
-import 'package:unec_assistant/screens/functions/subjects/subject1_screen.dart';
-import 'package:unec_assistant/screens/functions/subjects/subject2_screen.dart';
-import 'package:unec_assistant/screens/functions/subjects/subject3_screen.dart';
-import 'package:unec_assistant/screens/functions/subjects/subject4_screen.dart';
-import 'package:unec_assistant/screens/functions/subjects/subject5_screen.dart';
-import 'package:unec_assistant/screens/functions/subjects/subject6_screen.dart';
+import 'package:unec_assistant/screens/functions/subjects/subject_detail_screen.dart';
 
 
 final GoRouter appRouter = GoRouter(
@@ -89,27 +84,27 @@ final GoRouter appRouter = GoRouter(
                   routes: [
                     GoRoute(
                       path: '1',
-                      builder: (context, state) => const Subject1Screen(),
+                      builder: (context, state) => const SubjectDetailScreen(data: kProgDetail),
                     ),
                     GoRoute(
                       path: '2',
-                      builder: (context, state) => const Subject2Screen(),
+                      builder: (context, state) => const SubjectDetailScreen(data: kFizikaDetail),
                     ),
                     GoRoute(
                       path: '3',
-                      builder: (context, state) => const Subject3Screen(),
+                      builder: (context, state) => const SubjectDetailScreen(data: kAzDetail),
                     ),
                     GoRoute(
                       path: '4',
-                      builder: (context, state) => const Subject4Screen(),
+                      builder: (context, state) => const SubjectDetailScreen(data: kXettiDetail),
                     ),
                     GoRoute(
                       path: '5',
-                      builder: (context, state) => const Subject5Screen(),
+                      builder: (context, state) => const SubjectDetailScreen(data: kInfoDetail),
                     ),
                     GoRoute(
                       path: '6',
-                      builder: (context, state) => const Subject6Screen(),
+                      builder: (context, state) => const SubjectDetailScreen(data: kXariciDetail),
                     ),
                   ],
                 ),

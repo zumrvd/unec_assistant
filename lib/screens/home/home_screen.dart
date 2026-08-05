@@ -5,6 +5,8 @@ import 'package:unec_assistant/presentation/components/cards/current_class_card.
 import 'package:unec_assistant/presentation/components/cards/feed_post_card.dart';
 import 'package:unec_assistant/providers/dashboard_providers.dart';
 
+import '../../presentation/components/lists/labels.dart';
+
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -17,31 +19,17 @@ class HomeScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 35),
         children: [
-          const Text(
-            'Class & Attendance',
-            style: TextStyle(
-              color: Color(0xFF838A97),
-              fontSize: 15,
-            ),
-          ),
 
-          const SizedBox(height: 5),
+          const SectionLabel('Class & Attendance'),
+          const SizedBox(height: 10),
 
           CurrentClassCard(
             onTap: () => context.go('/functions/${recentFunction.title}'),
           ),
 
-          const SizedBox(height: 5),
-
-          const Text(
-            'News Feed',
-            style: TextStyle(
-              color: Color(0xFF838A97),
-              fontSize: 15,
-            ),
-          ),
-
-          const SizedBox(height: 5),
+          const SizedBox(height: 10),
+          const SectionLabel('News Feed'),
+          const SizedBox(height: 10),
 
           if (posts.isNotEmpty)
             FeedPostCard(
