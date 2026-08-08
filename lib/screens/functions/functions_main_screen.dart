@@ -64,7 +64,7 @@ class FunctionsMainScreen extends StatelessWidget {
             const SizedBox(height: 10),
 
             NotesButton(
-              onTap: () => context.push('/functions/notes_function'),
+              onTap: () => context.push('/notes'),
             ),
           ],
         ),

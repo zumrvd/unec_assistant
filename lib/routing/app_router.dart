@@ -24,6 +24,9 @@ import 'package:unec_assistant/providers/subject_detail_provider.dart';
 import 'package:unec_assistant/screens/functions/subjects/subject_detail_screen.dart';
 
 
+import 'package:unec_assistant/screens/functions/notes/note_files_screen.dart';
+import 'package:unec_assistant/screens/functions/notes/note_editor_screen.dart';
+
 final GoRouter appRouter = GoRouter(
   initialLocation: '/home',
   redirect: (context, state) {
@@ -54,6 +57,24 @@ final GoRouter appRouter = GoRouter(
                 ),
               ],
             ),
+            GoRoute(
+              path: '/notes',
+              builder: (context, state) => const NotesScreen(),
+              routes: [
+                GoRoute(
+                  path: 'folder/:folderId',
+                  builder: (context, state) => NoteFilesScreen(
+                    folderId: state.pathParameters['folderId']!,
+                  ),
+                ),
+                GoRoute(
+                  path: 'editor/:noteId',
+                  builder: (context, state) => NoteEditorScreen(
+                    noteId: state.pathParameters['noteId']!,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
         StatefulShellBranch(
@@ -76,7 +97,7 @@ final GoRouter appRouter = GoRouter(
                 ),
                 GoRoute(
                   path: 'notes_function',
-                  builder: (context, state) => const NotesScreen(),
+                  redirect: (context, state) => '/notes',
                 ),
                 GoRoute(
                   path: 'subjects',
@@ -160,6 +181,24 @@ final GoRouter appRouter = GoRouter(
                 ),
               ],
             ),
+            GoRoute(
+              path: '/notes',
+              builder: (context, state) => const NotesScreen(),
+              routes: [
+                GoRoute(
+                  path: 'folder/:folderId',
+                  builder: (context, state) => NoteFilesScreen(
+                    folderId: state.pathParameters['folderId']!,
+                  ),
+                ),
+                GoRoute(
+                  path: 'editor/:noteId',
+                  builder: (context, state) => NoteEditorScreen(
+                    noteId: state.pathParameters['noteId']!,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
         StatefulShellBranch(
@@ -171,6 +210,24 @@ final GoRouter appRouter = GoRouter(
                 GoRoute(
                   path: 'post1',
                   builder: (context, state) => const Post1Screen(),
+                ),
+              ],
+            ),
+            GoRoute(
+              path: '/notes',
+              builder: (context, state) => const NotesScreen(),
+              routes: [
+                GoRoute(
+                  path: 'folder/:folderId',
+                  builder: (context, state) => NoteFilesScreen(
+                    folderId: state.pathParameters['folderId']!,
+                  ),
+                ),
+                GoRoute(
+                  path: 'editor/:noteId',
+                  builder: (context, state) => NoteEditorScreen(
+                    noteId: state.pathParameters['noteId']!,
+                  ),
                 ),
               ],
             ),
@@ -203,6 +260,24 @@ final GoRouter appRouter = GoRouter(
                 GoRoute(
                   path: 'profile_info',
                   builder: (context, state) => const ProfileInfoScreen(),
+                ),
+              ],
+            ),
+            GoRoute(
+              path: '/notes',
+              builder: (context, state) => const NotesScreen(),
+              routes: [
+                GoRoute(
+                  path: 'folder/:folderId',
+                  builder: (context, state) => NoteFilesScreen(
+                    folderId: state.pathParameters['folderId']!,
+                  ),
+                ),
+                GoRoute(
+                  path: 'editor/:noteId',
+                  builder: (context, state) => NoteEditorScreen(
+                    noteId: state.pathParameters['noteId']!,
+                  ),
                 ),
               ],
             ),
