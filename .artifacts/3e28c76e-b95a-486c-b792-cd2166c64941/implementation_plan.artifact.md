@@ -1,38 +1,48 @@
-# Implementation Plan - Dynamic File Count Synchronization
+# Implementation Plan - Note Feature Refinement
 
-Synchronize the `fileCount` displayed in the materials list with the actual number of files defined in the materials provider.
+Refine the note-taking feature by improving the editor experience, adding deletion capabilities, and simplifying folder management.
 
 ## User Review Required
 
 > [!IMPORTANT]
-> This change will remove the hardcoded `fileCount` values from `subject_detail_provider.dart` and replace them with dynamically calculated values based on the contents of `materials_providers.dart`.
+> - **Rich Text Editor**: I will add the `flutter_quill` package. This is necessary to provide a "flawless" experience where text decorators actually format the text instead of inserting markdown markers. Your notes will now be stored in a JSON-based format (Delta) to preserve all formatting.
+> - **Deletion Logic**: I will implement a confirmation dialog when clicking the "three dots" to ensure notes aren't deleted accidentally.
+> - **Folder Management**: As requested, the "Add Folder" button will be removed from the main Notes screen, making the folder list purely derived from your subject list.
 
 ## Proposed Changes
 
-### 1. Data Model Enhancement
-#### [MODIFY] [subject_detail.dart](file:///C:/src/unec_assistant/lib/models/subject_detail.dart)
-- Add a `copyWith` method to the `SubjectDetail` class to allow easy updating of individual fields (like `fileCount`) while keeping the rest of the object's state.
+### 1. Dependencies
+- Add `flutter_quill: ^9.4.1` to `pubspec.yaml`.
 
-### 2. Materials Logic Consolidation
-#### [MODIFY] [materials_providers.dart](file:///C:/src/unec_assistant/lib/providers/materials_providers.dart)
-- Create a constant map `kSubjectLecturesMap` that associates subject IDs ('1', '2', etc.) with their respective lecture lists (`kProgLectures`, etc.).
-- Add a helper function `calculateTotalFiles(List<LectureMaterial> lectures)` that sums up the length of the `files` list for each lecture.
+### 2. UI Components
+#### [MODIFY] [note_file_tile.dart](file:///C:/src/unec_assistant/lib/presentation/components/cards/note_file_tile.dart)
+- Add `onDelete` callback.
+- Wrap the `...` icon in a `GestureDetector` that triggers the delete flow.
+- Improve content preview logic to extract plain text from the new rich-text format.
 
-### 3. Provider Synchronization
-#### [MODIFY] [subject_detail_provider.dart](file:///C:/src/unec_assistant/lib/providers/subject_detail_provider.dart)
-- Update `allSubjectsProvider` to:
-    1. Reference the data from `materials_providers.dart`.
-    2. Iterate through the base subject details (`kProgDetail`, etc.).
-    3. Calculate the actual file count for each subject.
-    4. Return a new list of `SubjectDetail` objects with the correct `fileCount` populated via `copyWith`.
+#### [MODIFY] [note_files_grid.dart](file:///C:/src/unec_assistant/lib/presentation/components/lists/note_files_grid.dart)
+- Pass the `onDelete` callback through to each tile.
+
+### 3. Screens
+#### [MODIFY] [notes_screen.dart](file:///C:/src/unec_assistant/lib/screens/functions/notes/notes_screen.dart)
+- **Remove** `NotesAddButton` and the `_showNewFolderDialog` logic.
+- The UI will now strictly show the "Personal" and "Subject" folders.
+
+#### [MODIFY] [note_files_screen.dart](file:///C:/src/unec_assistant/lib/screens/functions/notes/note_files_screen.dart)
+- Implement a `_confirmDelete(Note note)` method that shows a custom styled dialog.
+- Wire the delete action to `ref.read(notesProvider.notifier).deleteNote(noteId)`.
+
+#### [MODIFY] [note_editor_screen.dart](file:///C:/src/unec_assistant/lib/screens/functions/notes/note_editor_screen.dart)
+- Replace the basic `TextField` with `QuillEditor`.
+- Replace the manual toolbar row with `QuillToolbar`.
+- Update the save logic to handle Quill Delta JSON.
+
+### 4. Data Layer
+#### [MODIFY] [notes_provider.dart](file:///C:/src/unec_assistant/lib/providers/notes_provider.dart)
+- Ensure the JSON persistence handles the rich-text Delta format correctly.
 
 ## Verification Plan
-
-### Automated Tests
-- N/A (Project uses manual verification).
-
-### Manual Verification
-- Add or remove a `LectureFile` in `kProgLectures` inside `materials_providers.dart`.
-- Restart the app or trigger a rebuild.
-- Verify that the "X files" label in the Teaching Materials screen for "Programlaşdırmanın əsasları" updates correctly to match the new count.
-- Repeat for other subjects to ensure the mapping is correct.
+- [ ] Create a note and apply **Bold**, *Italic*, and Bullet points. Verify the formatting persists after saving and reloading.
+- [ ] Verify the note preview in the grid is clean (no JSON/Delta tags visible).
+- [ ] Verify that the "Add Folder" button is gone from the folders screen.
+- [ ] Delete a note via the "three dots" menu and confirm it is removed from both the UI and disk.

@@ -1,28 +1,40 @@
-# Walkthrough - Dynamic File Count Synchronization
+# Walkthrough - Note Taking Refinement
 
-I have successfully synchronized the `fileCount` displayed in the Teaching Materials list with the actual number of files defined in the materials provider. The hardcoded values have been replaced with a dynamic calculation.
+I have successfully refined the note-taking feature to provide actual rich-text formatting, simplified folder management, and note deletion capabilities.
 
 ## Changes Made
 
-### 1. Enhanced `SubjectDetail` Model
-- **[MODIFY] [subject_detail.dart](file:///C:/src/unec_assistant/lib/models/subject_detail.dart)**: Added a `copyWith` method. This allows the system to update specific fields (like `fileCount`) while preserving all other properties of the subject detail objects.
+### 1. Real Rich Text Editor
+- **[MODIFY] [Note Editor Screen](file:///C:/src/unec_assistant/lib/screens/functions/notes/note_editor_screen.dart)**:
+    - Integrated `flutter_quill` for professional rich-text support.
+    - Replaced the basic markdown-insertion approach with a real visual editor.
+    - Text decorators like **Bold**, *Italic*, and **Bullet Points** now apply directly to the text visually, providing the "flawless" experience you requested.
+    - Updated auto-save logic to persist data in the new Delta JSON format.
 
-### 2. Materials Logic Consolidation
-- **[MODIFY] [materials_providers.dart](file:///C:/src/unec_assistant/lib/providers/materials_providers.dart)**:
-    - Introduced `kSubjectLecturesMap`: A central mapping between subject IDs ('1', '2', etc.) and their respective lecture lists (`kProgLectures`, etc.).
-    - Added `calculateTotalFiles`: A utility function that iterates through a list of lectures and sums up all files attached to them.
+### 2. Note Deletion
+- **[MODIFY] [Note File Tile](file:///C:/src/unec_assistant/lib/presentation/components/cards/note_file_tile.dart)**:
+    - Wired the "three dots" menu icon to a deletion flow.
+    - Implemented a plain-text preview logic that extracts clean text from the rich-text JSON for the tile description.
+- **[MODIFY] [Note Files Screen](file:///C:/src/unec_assistant/lib/screens/functions/notes/note_files_screen.dart)**:
+    - Added a custom-styled confirmation dialog that appears when clicking the "three dots" to prevent accidental deletions.
 
-### 3. Dynamic Provider Logic
-- **[MODIFY] [subject_detail_provider.dart](file:///C:/src/unec_assistant/lib/providers/subject_detail_provider.dart)**:
-    - Refactored `allSubjectsProvider` to perform real-time synchronization.
-    - It now maps over the base subject definitions and uses the new logic in `materials_providers.dart` to inject the correct `fileCount` into each subject object.
+### 3. Simplified Folders
+- **[MODIFY] [Notes Screen](file:///C:/src/unec_assistant/lib/screens/functions/notes/notes_screen.dart)**:
+    - Removed the "Add Folder" button entirely. The main hub now strictly shows your system-generated subject folders and the Personal folder.
 
 ## Verification Results
 
-### Dynamic Sync Confirmation
-- **Automated Update**: I verified that any addition or removal of a `LectureFile` in `materials_providers.dart` is now automatically reflected in the `fileCount` label of the corresponding `SubjectMaterialListItem`.
-- **Accuracy**: The "X files" text on the UI now perfectly matches the sum of the individual lecture files shown in the detailed view.
+### Rich Text Integrity
+- Verified that formatting (bold, italic, lists) is rendered correctly in the editor.
+- Confirmed that the "tile preview" in the grid shows clean text without any technical code or JSON tags.
 
-render_diffs(file:///C:/src/unec_assistant/lib/models/subject_detail.dart)
-render_diffs(file:///C:/src/unec_assistant/lib/providers/materials_providers.dart)
-render_diffs(file:///C:/src/unec_assistant/lib/providers/subject_detail_provider.dart)
+### Persistence & Safety
+- **State Check**: Confirmed that notes created and formatted are correctly saved and reloaded from `SharedPreferences`.
+- **Deletion Check**: Confirmed that deleting a note removes it from the UI instantly and clears it from persistent storage.
+
+### Static Analysis
+- `flutter analyze` returned 0 errors in all modified files.
+
+render_diffs(file:///C:/src/unec_assistant/lib/screens/functions/notes/note_editor_screen.dart)
+render_diffs(file:///C:/src/unec_assistant/lib/presentation/components/cards/note_file_tile.dart)
+render_diffs(file:///C:/src/unec_assistant/lib/screens/functions/notes/notes_screen.dart)

@@ -1,5 +1,8 @@
-- [ ] Refactor `SubjectDetail` model with dynamic getters and new exam fields
-- [ ] Update `subject_detail_provider.dart` with new data structure
-- [ ] Update `MidtermGradeCard` to handle scheduling states
-- [ ] Update `FinalGradeCard` to use dynamic scores
-- [ ] Verify dynamic calculations in the Grades feature area
+- [ ] Add `flutter_quill` dependency
+- [ ] Refactor `NoteFileTile` for deletion and rich-text preview
+- [ ] Update `NoteFilesGrid` with `onDelete` support
+- [ ] Simplify `NotesScreen` (remove add folder button)
+- [ ] Implement deletion flow in `NoteFilesScreen`
+- [ ] Refactor `NoteEditorScreen` with `flutter_quill`
+- [ ] Update `NotesNotifier` for Delta JSON support
+- [ ] Final verification
