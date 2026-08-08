@@ -1,39 +1,28 @@
-# Walkthrough - Grade Calculator UI Final Refinement
+# Walkthrough - Dynamic File Count Synchronization
 
-I have meticulously updated the Grade Calculator to match the provided design reference, ensuring every detail from spacing to color logic is identical.
+I have successfully synchronized the `fileCount` displayed in the Teaching Materials list with the actual number of files defined in the materials provider. The hardcoded values have been replaced with a dynamic calculation.
 
 ## Changes Made
 
-### 1. Unified Interface Layout
-- **Attached Header**: Removed the vertical gap between the "Grade Goal Calculator" header and the calculation body.
-- **Synchronized Radii**: Adjusted corner radii so the header only has top-rounded corners and the body only has bottom-rounded corners, making them appear as a single connected unit.
+### 1. Enhanced `SubjectDetail` Model
+- **[MODIFY] [subject_detail.dart](file:///C:/src/unec_assistant/lib/models/subject_detail.dart)**: Added a `copyWith` method. This allows the system to update specific fields (like `fileCount`) while preserving all other properties of the subject detail objects.
 
-### 2. Enhanced Data Input
-- **Styled Dropdown**: Added a tinted background (`#F8F9FC`) and a subtle border to the subject selector.
-- **Refined Labels**: Increased font sizes for "CALCULATE FOR" and "I want to achieve" to improve hierarchy and readability.
+### 2. Materials Logic Consolidation
+- **[MODIFY] [materials_providers.dart](file:///C:/src/unec_assistant/lib/providers/materials_providers.dart)**:
+    - Introduced `kSubjectLecturesMap`: A central mapping between subject IDs ('1', '2', etc.) and their respective lecture lists (`kProgLectures`, etc.).
+    - Added `calculateTotalFiles`: A utility function that iterates through a list of lectures and sums up all files attached to them.
 
-### 3. Interactive Grade Tiles
-- **Horizontal Spacing**: Added proper gaps between the A, B, C, and D tiles.
-- **Selection States**:
-    - **Backgrounds**: Non-selected tiles use a light tint, while the selected tile uses a 10% opacity tint of its specific grade color.
-    - **Borders**: Selected tiles now feature a thicker, colored border matching the grade (e.g., Green for A, Blue for B).
-- **Typography**: Scaled up the grade letters and range text for a more prominent look.
-
-### 4. Advanced Result Visualization
-- **Result Container**: Wrapped the calculation results in a new bordered and tinted container, separating it clearly from the inputs.
-- **Dual-Colored Progress Bar**:
-    - **Blue Layer**: Represents your current progress ("Have").
-    - **Green Layer**: Represents the target goal ("Need"), appearing as a faded extension behind the current progress.
-- **Result Highlight**:
-    - Rebuilt the target score circle with a faded green background, dark green text, and a larger font size.
-    - Added a descriptive footer explaining that the result is the points needed on the final exam.
+### 3. Dynamic Provider Logic
+- **[MODIFY] [subject_detail_provider.dart](file:///C:/src/unec_assistant/lib/providers/subject_detail_provider.dart)**:
+    - Refactored `allSubjectsProvider` to perform real-time synchronization.
+    - It now maps over the base subject definitions and uses the new logic in `materials_providers.dart` to inject the correct `fileCount` into each subject object.
 
 ## Verification Results
 
-### Visual Fidelity
-- **Typography Scale**: Numbers like "48" and target "43" have been significantly enlarged to match the design's emphasis.
-- **Color Coordination**: "Have" text is linked to Blue, and "Need" text is linked to Green, matching the progress bar segments.
-- **Padding & Gaps**: All internal paddings have been synchronized to 20dp/16dp as per the reference.
+### Dynamic Sync Confirmation
+- **Automated Update**: I verified that any addition or removal of a `LectureFile` in `materials_providers.dart` is now automatically reflected in the `fileCount` label of the corresponding `SubjectMaterialListItem`.
+- **Accuracy**: The "X files" text on the UI now perfectly matches the sum of the individual lecture files shown in the detailed view.
 
-render_diffs(file:///C:/src/unec_assistant/lib/presentation/components/cards/grade_calculator_card.dart)
-render_diffs(file:///C:/src/unec_assistant/lib/screens/functions/grade_calculator_screen.dart)
+render_diffs(file:///C:/src/unec_assistant/lib/models/subject_detail.dart)
+render_diffs(file:///C:/src/unec_assistant/lib/providers/materials_providers.dart)
+render_diffs(file:///C:/src/unec_assistant/lib/providers/subject_detail_provider.dart)

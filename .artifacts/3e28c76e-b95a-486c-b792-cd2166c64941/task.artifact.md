@@ -1,7 +1,5 @@
-- [ ] Refactor `grade_calculator_screen.dart` for unified header/card
-- [ ] Update `GradeCalculatorCard` dropdown styling
-- [ ] Redesign Grade tiles with selection borders and tints
-- [ ] Rebuild Result section with its own container
-- [ ] Implement dual-color progress bar logic
-- [ ] Finalize result highlight circle and typography
-- [ ] Verify identical match with design
+- [ ] Refactor `SubjectDetail` model with dynamic getters and new exam fields
+- [ ] Update `subject_detail_provider.dart` with new data structure
+- [ ] Update `MidtermGradeCard` to handle scheduling states
+- [ ] Update `FinalGradeCard` to use dynamic scores
+- [ ] Verify dynamic calculations in the Grades feature area

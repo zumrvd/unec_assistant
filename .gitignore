@@ -25,3 +25,9 @@ doc/api/
 
 .flutter-plugins
 .flutter-plugins-dependencies
+.artifacts/3e28c76e-b95a-486c-b792-cd2166c64941/implementation_plan.artifact.md
+.artifacts/3e28c76e-b95a-486c-b792-cd2166c64941/walkthrough.artifact.md
+.artifacts/3e28c76e-b95a-486c-b792-cd2166c64941/walkthrough.artifact.md
+*.md
+.artifacts/3e28c76e-b95a-486c-b792-cd2166c64941/implementation_plan.artifact.md
+*.md
