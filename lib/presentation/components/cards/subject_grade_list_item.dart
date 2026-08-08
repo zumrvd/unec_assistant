@@ -4,14 +4,10 @@ import '../../../models/subject_detail.dart';
 
 class SubjectGradeListItem extends StatelessWidget {
   final SubjectDetail data;
-  final Color iconColor;
-  final Color iconBg;
   final VoidCallback onTap;
 
   const SubjectGradeListItem({
     required this.data,
-    required this.iconColor,
-    required this.iconBg,
     required this.onTap,
     super.key,
   });
@@ -43,13 +39,13 @@ class SubjectGradeListItem extends StatelessWidget {
                     width: 44,
                     height: 44,
                     decoration: BoxDecoration(
-                      color: iconBg,
+                      color: data.iconBg,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
                       Icons.grade_rounded,
                       size: 22,
-                      color: iconColor,
+                      color: data.iconColor,
                     ),
                   ),
                   const SizedBox(width: 12),

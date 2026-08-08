@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unec_assistant/presentation/components/buttons/current_class_button.dart';
 import 'package:unec_assistant/presentation/components/buttons/schedule_button.dart';
-import 'package:unec_assistant/presentation/components/buttons/subjects_button.dart';
-import 'package:unec_assistant/presentation/components/buttons/attendance_button.dart';
+import 'package:unec_assistant/presentation/components/buttons/subjects/subjects_button.dart';
+import 'package:unec_assistant/presentation/components/buttons/attendance/attendance_button.dart';
 import 'package:unec_assistant/presentation/components/buttons/notes_button.dart';
 
 import '../../presentation/components/lists/labels.dart';

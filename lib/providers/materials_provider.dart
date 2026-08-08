@@ -1,57 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/subject_material.dart';
 import '../models/lecture_material.dart';
-
-const List<SubjectMaterial> kSubjectMaterials = [
-  SubjectMaterial(
-    subjectId: 'prog',
-    subjectName: 'Programlaşdırmanın əsasları',
-    fileCount: 13,
-    icon: Icons.menu_book_rounded,
-    iconColor: Color(0xFF0569FF),
-    iconBg: Color(0x260569FF),
-  ),
-  SubjectMaterial(
-    subjectId: 'fizika',
-    subjectName: 'Fizika',
-    fileCount: 23,
-    icon: Icons.menu_book_rounded,
-    iconColor: Color(0xFF0F6E11),
-    iconBg: Color(0x260F6E11),
-  ),
-  SubjectMaterial(
-    subjectId: 'az',
-    subjectName: 'Azərbaycan dilində işgüzar və akademik kommunikasiya',
-    fileCount: 30,
-    icon: Icons.menu_book_rounded,
-    iconColor: Color(0xFFE3993C),
-    iconBg: Color(0x26E3993C),
-  ),
-  SubjectMaterial(
-    subjectId: 'xetti',
-    subjectName: 'Xətti cəbr və analitik həndəsə',
-    fileCount: 15,
-    icon: Icons.menu_book_rounded,
-    iconColor: Color(0xFFD54829),
-    iconBg: Color(0x26D54829),
-  ),
-  SubjectMaterial(
-    subjectId: 'info',
-    subjectName: 'İnformasiya texnologiyalarının əsasları',
-    fileCount: 14,
-    icon: Icons.menu_book_rounded,
-    iconColor: Color(0xFFDA4979),
-    iconBg: Color(0x26DA4979),
-  ),
-  SubjectMaterial(
-    subjectId: 'xarici',
-    subjectName: 'Xarici dildə işgüzar və akademik kommunikasiya',
-    fileCount: 23,
-    icon: Icons.menu_book_rounded,
-    iconColor: Color(0xFF534AB7),
-    iconBg: Color(0x26534AB7),
-  ),
-];
 
 const List<LectureMaterial> kProgLectures = [
   LectureMaterial(
@@ -61,11 +9,11 @@ const List<LectureMaterial> kProgLectures = [
     bundleSize: '2.4MB',
     bundleUploadedAgo: '1 week ago',
     files: [
-      LectureFile(fileTitle: 'Lecture 7 : Lecture', fileType: 'Lecture', fileSize: '68KB', uploadedAgo: '1 week ago'),
-      LectureFile(fileTitle: 'Lecture 7 : Presentation', fileType: 'Presentation', fileSize: '1.1MB', uploadedAgo: '1 week ago'),
-      LectureFile(fileTitle: 'Lecture 7 : Quiz', fileType: 'Quiz', fileSize: '35KB', uploadedAgo: '1 week ago'),
-      LectureFile(fileTitle: 'Lecture 7 : Seminar', fileType: 'Seminar', fileSize: '670KB', uploadedAgo: '1 week ago'),
-      LectureFile(fileTitle: 'Lecture 7 : Other', fileType: 'Other', fileSize: '320KB', uploadedAgo: '1 week ago'),
+      LectureFile(fileTitle: 'Lecture 1 : Lecture', fileType: 'Lecture', fileSize: '68KB', uploadedAgo: '1 week ago'),
+      LectureFile(fileTitle: 'Lecture 1 : Presentation', fileType: 'Presentation', fileSize: '1.1MB', uploadedAgo: '1 week ago'),
+      LectureFile(fileTitle: 'Lecture 1 : Quiz', fileType: 'Quiz', fileSize: '35KB', uploadedAgo: '1 week ago'),
+      LectureFile(fileTitle: 'Lecture 1 : Seminar', fileType: 'Seminar', fileSize: '670KB', uploadedAgo: '1 week ago'),
+      LectureFile(fileTitle: 'Lecture 1 : Other', fileType: 'Other', fileSize: '320KB', uploadedAgo: '1 week ago'),
     ],
   ),
   LectureMaterial(
@@ -74,7 +22,9 @@ const List<LectureMaterial> kProgLectures = [
     bundleFileName: 'Lecture 2: Dəyişənlər...',
     bundleSize: '1.8MB',
     bundleUploadedAgo: '6 days ago',
-    files: [],
+    files: [
+      LectureFile(fileTitle: 'Lecture 2 : Lecture', fileType: 'Lecture', fileSize: '68KB', uploadedAgo: '3 days ago'),
+    ],
   ),
   LectureMaterial(
     lectureLabel: 'Lecture 3',
@@ -282,6 +232,19 @@ const List<LectureMaterial> kXariciLectures = [
 ];
 
 const List<LectureMaterial> kEmptyLectures = [];
+
+final Map<String, List<LectureMaterial>> kSubjectLecturesMap = {
+  '1': kProgLectures,
+  '2': kFizikaLectures,
+  '3': kAzLectures,
+  '4': kXettiLectures,
+  '5': kInfoLectures,
+  '6': kXariciLectures,
+};
+
+int calculateTotalFiles(List<LectureMaterial> lectures) {
+  return lectures.fold(0, (total, lecture) => total + lecture.files.length);
+}
 
 Map<String, IconData> kFileTypeIcons = {
   'Lecture': Icons.menu_book_rounded,

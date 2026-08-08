@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unec_assistant/presentation/components/buttons/feed_filter_buttons.dart';
 import 'package:unec_assistant/presentation/components/cards/feed_post_card.dart';
-import 'package:unec_assistant/providers/dashboard_providers.dart';
+import 'package:unec_assistant/providers/dashboard_provider.dart';
 
 class FeedMainScreen extends ConsumerWidget {
   const FeedMainScreen({super.key});

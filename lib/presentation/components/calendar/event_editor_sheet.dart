@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/models/calendar_event.dart';
+import 'package:unec_assistant/utils/subject_event_link.dart';
 
 Future<CalendarEvent?> showEventEditorSheet(
   BuildContext context, {
@@ -114,17 +115,21 @@ class _EventEditorSheetState extends State<_EventEditorSheet> {
       EventType.exam => 'Exam',
     };
 
-    final event = CalendarEvent(
-      id: widget.existing?.id ??
-          'evt-${DateTime.now().millisecondsSinceEpoch}',
-      title: title,
-      subtype: widget.existing?.subtype ?? subtype,
-      location: _locationCtrl.text.trim(),
-      description: _descCtrl.text.trim(),
-      startTime: start,
-      endTime: end,
-      type: _type,
-      isRecurring: widget.existing?.isRecurring ?? false,
+    final event = withResolvedSubjectId(
+      CalendarEvent(
+        id: widget.existing?.id ??
+            'evt-${DateTime.now().millisecondsSinceEpoch}',
+        title: title,
+        subtype: widget.existing?.subtype ?? subtype,
+        location: _locationCtrl.text.trim(),
+        description: _descCtrl.text.trim(),
+        startTime: start,
+        endTime: end,
+        type: _type,
+        isRecurring: widget.existing?.isRecurring ?? false,
+        // Preserve existing link when the title still resolves; re-resolve below.
+        subjectId: widget.existing?.subjectId,
+      ),
     );
     Navigator.of(context).pop(event);
   }

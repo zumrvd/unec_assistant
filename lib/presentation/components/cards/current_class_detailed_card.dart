@@ -1,8 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/models/calendar_event.dart';
+import 'package:unec_assistant/models/subject_detail.dart';
 
 class CurrentClassDetailedCard extends StatelessWidget {
-  const CurrentClassDetailedCard({super.key});
+  const CurrentClassDetailedCard({
+    required this.subject,
+    required this.event,
+    this.forceZeroProgress = false,
+    this.now,
+    super.key,
+  });
+
+  final SubjectDetail subject;
+  final CalendarEvent event;
+
+  /// When true (State B — up next), progress is computed as if now == start.
+  final bool forceZeroProgress;
+
+  /// Optional clock override for tests / parent timers; defaults to [DateTime.now].
+  final DateTime? now;
 
   static const _primaryBlue = Color(0xFF0569FF);
   static const _labelGrey = Color(0xFF838A97);
@@ -11,6 +28,27 @@ class CurrentClassDetailedCard extends StatelessWidget {
   static const _iconBackgroundColor = Color(0x260569FF);
   static const _lightLabelGrey = Color(0x80838A97);
   static const _completedOrange = Color(0xFFE3993C);
+
+  static String _pad(int n) => n.toString().padLeft(2, '0');
+
+  static String _roomNumber(String location) {
+    final match = RegExp(r'Room\s+(\S+)', caseSensitive: false).firstMatch(location);
+    if (match != null) return match.group(1)!;
+    return location;
+  }
+
+  static String? _floorHint(String roomNumber) {
+    final n = int.tryParse(roomNumber);
+    if (n == null || n < 100) return null;
+    final floor = n ~/ 100;
+    final suffix = switch (floor) {
+      1 => 'st',
+      2 => 'nd',
+      3 => 'rd',
+      _ => 'th',
+    };
+    return 'on the $floor$suffix floor';
+  }
 
   Widget _infoRow(IconData icon, String label, String value) {
     return Row(
@@ -56,6 +94,25 @@ class CurrentClassDetailedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final clock = now ?? DateTime.now();
+    final startMin = event.startTime.hour * 60 + event.startTime.minute;
+    final endMin = event.endTime.hour * 60 + event.endTime.minute;
+    final duration = (endMin - startMin).clamp(1, 24 * 60);
+    final effectiveNowMin = forceZeroProgress
+        ? startMin
+        : clock.hour * 60 + clock.minute;
+    final elapsed = (effectiveNowMin - startMin).clamp(0, duration);
+    final remaining = duration - elapsed;
+    final completedRatio = elapsed / duration;
+    final timeLeftRatio = remaining / duration;
+
+    final roomNumber = _roomNumber(event.location);
+    final floorHint = _floorHint(roomNumber);
+    final startLabel =
+        '${_pad(event.startTime.hour)}:${_pad(event.startTime.minute)}';
+    final endLabel =
+        '${_pad(event.endTime.hour)}:${_pad(event.endTime.minute)}';
+
     return Container(
       width: .maxFinite,
       decoration: BoxDecoration(
@@ -93,33 +150,35 @@ class CurrentClassDetailedCard extends StatelessWidget {
               ),
               const SizedBox(width: 6),
               Text(
-                '316',
+                roomNumber,
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 40,
                   color: _valueBlack,
                 ),
               ),
-              const SizedBox(width: 6),
-              Flexible(
-                child: Text(
-                  'on the 3rd floor',
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.redditSans(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 10,
-                    color: _labelGrey,
+              if (floorHint != null) ...[
+                const SizedBox(width: 6),
+                Flexible(
+                  child: Text(
+                    floorHint,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.redditSans(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 10,
+                      color: _labelGrey,
+                    ),
                   ),
                 ),
-              ),
+              ],
             ],
           ),
           const SizedBox(height: 13),
-          _infoRow(Icons.book_outlined, 'Subject', 'Müasir programlaşdırma dilləri'),
+          _infoRow(Icons.book_outlined, 'Subject', subject.subjectName),
           const SizedBox(height: 8),
-          _infoRow(Icons.compare_outlined, 'Type', '   Mühazirə'),
+          _infoRow(Icons.compare_outlined, 'Type', '   ${event.subtype}'),
           const SizedBox(height: 13),
-          _infoRow(Icons.badge_outlined, 'Teacher', 'Prof. Əli Həsənov'),
+          _infoRow(Icons.badge_outlined, 'Teacher', subject.teacherName),
           const SizedBox(height: 20),
 
           const Divider(
@@ -133,18 +192,18 @@ class CurrentClassDetailedCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-            'Progress Line',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.redditSans(
-              fontWeight: FontWeight.w800,
-              fontSize: 15,
-              color: _valueBlack,
-            ),
+            children: [
+              Text(
+                'Progress Line',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.redditSans(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 15,
+                  color: _valueBlack,
+                ),
+              ),
+            ],
           ),
-      ],
-    ),
 
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -162,7 +221,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '14:00',
+                    startLabel,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w800,
                       fontSize: 16,
@@ -181,6 +240,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                     LayoutBuilder(
                       builder: (context, constraints) {
                         final width = constraints.maxWidth;
+                        final factor = completedRatio.clamp(0.0, 1.0);
                         return Stack(
                           clipBehavior: Clip.none,
                           children: [
@@ -193,7 +253,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                               ),
                             ),
                             FractionallySizedBox(
-                              widthFactor: 0.6,
+                              widthFactor: factor,
                               child: Container(
                                 height: 10,
                                 decoration: BoxDecoration(
@@ -203,7 +263,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                               ),
                             ),
                             Positioned(
-                              left: width * 0.6 - 6,
+                              left: (width * factor - 6).clamp(0.0, width - 12),
                               top: -3,
                               child: Container(
                                 width: 15,
@@ -241,7 +301,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '15:20',
+                    endLabel,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w800,
                       fontSize: 16,
@@ -284,7 +344,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                           width: 56,
                           height: 56,
                           child: CircularProgressIndicator(
-                            value: 0.64,
+                            value: timeLeftRatio.clamp(0.0, 1.0),
                             strokeWidth: 7,
                             strokeCap: StrokeCap.round,
                             color: _primaryBlue,
@@ -292,7 +352,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '34min',
+                          '${remaining}min',
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w700,
                             fontSize: 11,
@@ -328,7 +388,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                           width: 56,
                           height: 56,
                           child: CircularProgressIndicator(
-                            value: 0.64,
+                            value: completedRatio.clamp(0.0, 1.0),
                             strokeWidth: 7,
                             strokeCap: StrokeCap.round,
                             color: _completedOrange,
@@ -336,7 +396,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '64%',
+                          '${(completedRatio * 100).round()}%',
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w700,
                             fontSize: 11,

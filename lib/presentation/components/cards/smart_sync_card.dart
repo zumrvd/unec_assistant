@@ -51,7 +51,10 @@ class _SmartSyncCardState extends State<SmartSyncCard> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 4,
+                  runSpacing: 2,
                   children: [
                     Text(
                       title,
@@ -62,9 +65,9 @@ class _SmartSyncCardState extends State<SmartSyncCard> {
                       ),
                     ),
                     if (badge != null) ...[
-                      const SizedBox(width: 4),
                       Text(
                         badge,
+                        overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w600,
                           fontSize: 12,
@@ -116,6 +119,7 @@ class _SmartSyncCardState extends State<SmartSyncCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Üst Başlık ve Switch Alanı
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -163,11 +167,11 @@ class _SmartSyncCardState extends State<SmartSyncCard> {
                   color: isEnabled ? const Color(0xFF838A97) : const Color(0x80838A97),
                 ),
               ),
-
               const SizedBox(height: 8),
               const Divider(color: Color(0xFFE0E4F0), thickness: 1),
               const SizedBox(height: 8),
 
+              // Tercihler Bölümü
               IgnorePointer(
                 ignoring: !isEnabled,
                 child: Column(
@@ -182,6 +186,8 @@ class _SmartSyncCardState extends State<SmartSyncCard> {
                       ),
                     ),
                     const SizedBox(height: 4),
+
+                    // 1. BAŞLIK: Hangi Dosyalar (Which Files)
                     Row(
                       children: [
                         Container(
@@ -216,31 +222,38 @@ class _SmartSyncCardState extends State<SmartSyncCard> {
                       ],
                     ),
                     const SizedBox(height: 10),
+
+                    // Hangi Dosyalar Altındaki Seçenekler
                     _prefCheckboxRow(
                       checked: prefs.downloadCurrentClass,
                       enabled: isEnabled,
                       title: "Current Class",
                       badge: "(Highly Recommended)",
                       description: "Always be prepared for class. Downloads essential files 30 minutes before lesson.",
-                      onChanged: (v) => prefs.toggleDownloadPref('current', v),
+                      onChanged: (v) => prefs.updateCurrentClass(v),
                     ),
                     const SizedBox(height: 10),
                     _prefCheckboxRow(
                       checked: prefs.downloadUpcomingClass,
                       enabled: isEnabled,
                       title: "Upcoming Class",
-                      description: "Get a head start on next class's materials. Pre-downloads essential files for next lesson.",
-                      onChanged: (v) => prefs.toggleDownloadPref('upcoming', v),
+                      description: "Get a head start on next class's materials.",
+                      onChanged: (v) => prefs.updateUpcomingClass(v),
                     ),
                     const SizedBox(height: 10),
                     _prefCheckboxRow(
                       checked: prefs.downloadPreviousClass,
                       enabled: isEnabled,
                       title: "Previous Class",
-                      description: "Keep last class's file for quick review. Stores files from previous lesson.",
-                      onChanged: (v) => prefs.toggleDownloadPref('previous', v),
+                      description: "Keep last class's file for quick review.",
+                      onChanged: (v) => prefs.updatePreviousClass(v),
                     ),
+
                     const SizedBox(height: 16),
+                    const Divider(color: Color(0xFFE0E4F0), thickness: 0.5),
+                    const SizedBox(height: 12),
+
+                    // 2. BAŞLIK: Dosya Türleri (Types of Files)
                     Row(
                       children: [
                         Container(
@@ -264,7 +277,7 @@ class _SmartSyncCardState extends State<SmartSyncCard> {
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
-                            "Select what types of files you want to keep up-to-date:",
+                            "Select types of files to download:",
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w600,
                               fontSize: 13,
@@ -276,38 +289,31 @@ class _SmartSyncCardState extends State<SmartSyncCard> {
                     ),
                     const SizedBox(height: 10),
                     _prefCheckboxRow(
-                      checked: prefs.keepLecture,
+                      checked: prefs.downloadLecture,
                       enabled: isEnabled,
                       title: "Lecture",
-                      onChanged: (v) => prefs.toggleFileType('lecture', v),
+                      onChanged: (v) => prefs.updateLecture(v),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 10),
                     _prefCheckboxRow(
-                      checked: prefs.keepPresentation,
+                      checked: prefs.downloadPresentation,
                       enabled: isEnabled,
                       title: "Presentation",
-                      onChanged: (v) => prefs.toggleFileType('presentation', v),
+                      onChanged: (v) => prefs.updatePresentation(v),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 10),
                     _prefCheckboxRow(
-                      checked: prefs.keepSeminar,
+                      checked: prefs.downloadSeminar,
                       enabled: isEnabled,
                       title: "Seminar",
-                      onChanged: (v) => prefs.toggleFileType('seminar', v),
+                      onChanged: (v) => prefs.updateSeminar(v),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 10),
                     _prefCheckboxRow(
-                      checked: prefs.keepQuiz,
+                      checked: prefs.downloadOther,
                       enabled: isEnabled,
-                      title: "Quiz",
-                      onChanged: (v) => prefs.toggleFileType('quiz', v),
-                    ),
-                    const SizedBox(height: 8),
-                    _prefCheckboxRow(
-                      checked: prefs.keepOther,
-                      enabled: isEnabled,
-                      title: "Other",
-                      onChanged: (v) => prefs.toggleFileType('other', v),
+                      title: "Other Files",
+                      onChanged: (v) => prefs.updateOther(v),
                     ),
                   ],
                 ),

@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/models/calendar_event.dart';
 import 'package:unec_assistant/presentation/components/calendar/event_details_popup.dart';
 import 'package:unec_assistant/presentation/components/calendar/event_editor_sheet.dart';
-import 'package:unec_assistant/providers/calendar_providers.dart';
+import 'package:unec_assistant/providers/calendar_provider.dart';
 
 enum CalendarView { month, week, day }
 

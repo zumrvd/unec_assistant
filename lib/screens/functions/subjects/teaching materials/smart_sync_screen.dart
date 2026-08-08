@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../providers/smart_sync_provider.dart';
 import '../../../../presentation/components/cards/smart_sync_card.dart';
-import '../../../../presentation/components/buttons/smart_sync_button.dart';
-import '../../../../presentation/components/buttons/show_in_files_button.dart';
-
+import '../../../../presentation/components/buttons/materials/show_in_files_button.dart';
 import '../../../../presentation/components/lists/labels.dart';
 
 class SmartSyncScreen extends StatefulWidget {
@@ -24,13 +20,14 @@ class _SmartSyncScreenState extends State<SmartSyncScreen> {
       backgroundColor: const Color(0xFFF8F9FC),
       appBar: const CustomAppBar(title: 'Smart Sync'),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 10,
           children: [
             ShowInFilesButton(onTap: () {}),
-            const SizedBox(height: 20),
             SmartSyncCard(prefs: _prefs),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
           ],
         ),
       ),

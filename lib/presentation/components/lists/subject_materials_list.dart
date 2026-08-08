@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../cards/subject_material_list_item.dart';
-import '../../../models/subject_material.dart';
+import '../../../models/subject_detail.dart';
 
 class SubjectMaterialsList extends StatelessWidget {
-  final List<SubjectMaterial> items;
+  final List<SubjectDetail> items;
   final void Function(String subjectId)? onSubjectTap;
 
   const SubjectMaterialsList({

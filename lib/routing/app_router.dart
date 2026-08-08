@@ -133,27 +133,27 @@ final GoRouter appRouter = GoRouter(
                       builder: (context, state) => const GradeCalculatorScreen(),
                     ),
                     GoRoute(
-                      path: 'subject/prog',
+                      path: 'subject/1',
                       builder: (context, state) => const SubjectGradesScreen(data: kProgDetail),
                     ),
                     GoRoute(
-                      path: 'subject/fizika',
+                      path: 'subject/2',
                       builder: (context, state) => const SubjectGradesScreen(data: kFizikaDetail),
                     ),
                     GoRoute(
-                      path: 'subject/az',
+                      path: 'subject/3',
                       builder: (context, state) => const SubjectGradesScreen(data: kAzDetail),
                     ),
                     GoRoute(
-                      path: 'subject/xetti',
+                      path: 'subject/4',
                       builder: (context, state) => const SubjectGradesScreen(data: kXettiDetail),
                     ),
                     GoRoute(
-                      path: 'subject/info',
+                      path: 'subject/5',
                       builder: (context, state) => const SubjectGradesScreen(data: kInfoDetail),
                     ),
                     GoRoute(
-                      path: 'subject/xarici',
+                      path: 'subject/6',
                       builder: (context, state) => const SubjectGradesScreen(data: kXariciDetail),
                     ),
                   ],

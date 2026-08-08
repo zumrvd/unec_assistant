@@ -1,25 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-export 'subject1_button.dart';
-export 'subject2_button.dart';
-export 'subject3_button.dart';
-export 'subject4_button.dart';
-export 'subject5_button.dart';
-export 'subject6_button.dart';
+import '../../../../models/subject_detail.dart';
 
 class SubjectButton extends StatelessWidget {
-  final String subjectName;
-  final String subjectTag;
-  final Color iconColor;
-  final Color iconBg;
+  final SubjectDetail subject;
   final VoidCallback onTap;
 
   const SubjectButton({
-    required this.subjectName,
-    required this.subjectTag,
-    required this.iconColor,
-    required this.iconBg,
+    required this.subject,
     required this.onTap,
     super.key,
   });
@@ -51,13 +39,13 @@ class SubjectButton extends StatelessWidget {
                     width: 44,
                     height: 44,
                     decoration: BoxDecoration(
-                      color: iconBg,
+                      color: subject.iconBg,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
                       Icons.book_outlined,
                       size: 22,
-                      color: iconColor,
+                      color: subject.iconColor,
                     ),
                   ),
                   const SizedBox(width: 14),
@@ -66,7 +54,7 @@ class SubjectButton extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          subjectName,
+                          subject.subjectName,
                           softWrap: true,
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w700,
@@ -85,7 +73,7 @@ class SubjectButton extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            subjectTag,
+                            subject.subjectTag,
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w400,
                               fontSize: 10,

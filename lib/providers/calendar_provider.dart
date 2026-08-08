@@ -1,24 +1,24 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unec_assistant/models/calendar_event.dart';
+import 'package:unec_assistant/utils/subject_event_link.dart';
 
 class CalendarEventsNotifier extends Notifier<List<CalendarEvent>> {
   @override
   List<CalendarEvent> build() {
     return generateSemesterSchedule(
-      startDate: DateTime(2026, 9, 15),
+      startDate: DateTime(2026, 7, 15),
       numberOfWeeks: 15,
     );
   }
 
   /// Projects the 2-week (Week A / Week B) template across [numberOfWeeks].
-  /// Template day offsets 0–6 = Week A, 7–13 = Week B.
+  /// Template day offsets 0–6 = ust hefte (A), 7–13 = alt hefte (Week B).
   List<CalendarEvent> generateSemesterSchedule({
     required DateTime startDate,
     required int numberOfWeeks,
     List<CalendarEvent>? template,
   }) {
     final base = normalizeDay(startDate);
-    // Find the Monday of the week containing startDate to align with template (0=Mon)
     final mondayOfBase = base.subtract(Duration(days: base.weekday - 1));
 
     final tpl = template ?? kTwoWeekTemplate;
@@ -41,7 +41,6 @@ class CalendarEventsNotifier extends Notifier<List<CalendarEvent>> {
           event.startTime.minute,
         );
         
-        // Skip events that fall before the actual semester start date
         if (start.isBefore(base)) continue;
 
         final end = start.add(duration);
@@ -57,8 +56,6 @@ class CalendarEventsNotifier extends Notifier<List<CalendarEvent>> {
       }
     }
 
-    // One-off birthday marker day is handled in UI via kHbdDate.
-    // Seed a few personal one-off events near Nov 2026 for demo.
     generated.addAll(_demoOneOffs());
     return generated;
   }
@@ -79,14 +76,26 @@ class CalendarEventsNotifier extends Notifier<List<CalendarEvent>> {
   }
 
   void addEvent(CalendarEvent event) {
-    state = [...state, event];
+    state = [...state, withResolvedSubjectId(event)];
   }
 
   void updateEvent(CalendarEvent event) {
+    final linked = withResolvedSubjectId(event);
     state = [
       for (final e in state)
-        if (e.id == event.id) event else e,
+        if (e.id == linked.id) linked else e,
     ];
+  }
+
+  void healSubjectLinks() {
+    var changed = false;
+    final healed = <CalendarEvent>[];
+    for (final e in state) {
+      final next = withResolvedSubjectId(e);
+      if (next.subjectId != e.subjectId) changed = true;
+      healed.add(next);
+    }
+    if (changed) state = healed;
   }
 
   void deleteEvent(String id) {

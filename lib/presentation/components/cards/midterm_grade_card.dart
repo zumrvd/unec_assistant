@@ -43,36 +43,60 @@ class MidtermGradeCard extends StatelessWidget {
                   "Midterm exam",
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
-                    fontSize: 14,
+                    fontSize: 15,
                     color: const Color(0xFF1F1F1F),
                   ),
                 ),
               ),
-              RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "${data.midtermScore}",
-                      style: GoogleFonts.redditSans(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 20,
-                        color: const Color(0xFF1F1F1F),
-                      ),
-                    ),
-                    TextSpan(
-                      text: "/${data.midtermMax}",
-                      style: GoogleFonts.redditSans(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13,
-                        color: const Color(0x80838A97),
-                      ),
-                    ),
-                  ],
+              Text(
+                data.midtermScheduled ? "" : "Not Yet",
+                style: GoogleFonts.redditSans(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
+                  color: data.midtermScheduled
+                      ? const Color(0xFF1F1F1F)
+                      : const Color(0x80838A97),
                 ),
               ),
+              if (data.midtermScheduled) ...[
+                const SizedBox(width: 4),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "${data.midtermScore}",
+                        style: GoogleFonts.redditSans(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 25,
+                          color: const Color(0xFF1F1F1F),
+                        ),
+                      ),
+                      TextSpan(
+                        text: "/${data.midtermMax}",
+                        style: GoogleFonts.redditSans(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 15,
+                          color: const Color(0x80838A97),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ],
           ),
-          if (data.midtermExamCode.isNotEmpty) ...[
+          if (!data.midtermScheduled) ...[
+            const SizedBox(height: 8),
+            Text(
+              data.midtermNote,
+              style: GoogleFonts.redditSans(
+                fontWeight: FontWeight.w700,
+                fontSize: 10,
+                color: const Color(0x80838A97),
+              ),
+            ),
+          ],
+          if (data.midtermScheduled && data.midtermExamCode.isNotEmpty) ...[
             const SizedBox(height: 10),
             Text(
               data.midtermExamCode,
@@ -96,48 +120,52 @@ class MidtermGradeCard extends StatelessWidget {
               ),
             ),
           ],
-          const SizedBox(height: 12),
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: _buttonGradient,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.grid_view_rounded, size: 18, color: Color(0xFFF8F9FC)),
-                    const SizedBox(width: 8),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Open in Unec Cabinet",
-                          style: GoogleFonts.redditSans(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 13,
-                            color: const Color(0xFFF8F9FC),
+          if (data.midtermScheduled) ...[
+            const SizedBox(height: 12),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: _buttonGradient,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.grid_view_rounded,
+                          size: 18, color: Color(0xFFF8F9FC)),
+                      const SizedBox(width: 8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Open in Unec Cabinet",
+                            style: GoogleFonts.redditSans(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 13,
+                              color: const Color(0xFFF8F9FC),
+                            ),
                           ),
-                        ),
-                        Text(
-                          "See your results in Unec Cabinet",
-                          style: GoogleFonts.redditSans(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 9,
-                            color: const Color(0x80F8F9FC),
+                          Text(
+                            "See your results in Unec Cabinet",
+                            style: GoogleFonts.redditSans(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 9,
+                              color: const Color(0x80F8F9FC),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const Icon(Icons.arrow_outward_rounded, size: 18, color: Color(0xFFF8F9FC)),
-              ],
+                        ],
+                      ),
+                    ],
+                  ),
+                  const Icon(Icons.arrow_outward_rounded,
+                      size: 18, color: Color(0xFFF8F9FC)),
+                ],
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );

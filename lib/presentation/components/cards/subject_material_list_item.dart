@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../models/subject_material.dart';
+import '../../../models/subject_detail.dart';
 
 class SubjectMaterialListItem extends StatelessWidget {
-  final SubjectMaterial data;
+  final SubjectDetail data;
   final VoidCallback? onTap;
 
   const SubjectMaterialListItem({
@@ -57,7 +57,7 @@ class SubjectMaterialListItem extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
-                      fontSize: 13,
+                      fontSize: 15,
                       color: const Color(0xFF1F1F1F),
                     ),
                   ),

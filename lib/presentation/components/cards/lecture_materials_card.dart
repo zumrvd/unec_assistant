@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../models/lecture_material.dart';
-import '../../../providers/materials_providers.dart';
+import '../../../providers/materials_provider.dart';
 
 class LectureMaterialsCard extends StatefulWidget {
   final LectureMaterial data;

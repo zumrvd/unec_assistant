@@ -12,6 +12,7 @@ class CalendarEvent {
     this.description = '',
     this.timeRange = '',
     this.isRecurring = false,
+    this.subjectId,
   });
 
   final String id;
@@ -24,6 +25,10 @@ class CalendarEvent {
   final EventType type;
   final String timeRange;
   final bool isRecurring;
+
+  /// Links this event to a registered [SubjectDetail.subjectId].
+  /// Null for personal events and user-created class-like events without a real subject.
+  final String? subjectId;
 
   String get displayTimeRange {
     if (timeRange.isNotEmpty) return timeRange;
@@ -49,6 +54,7 @@ class CalendarEvent {
     EventType? type,
     String? timeRange,
     bool? isRecurring,
+    String? subjectId,
   }) {
     return CalendarEvent(
       id: id ?? this.id,
@@ -61,6 +67,7 @@ class CalendarEvent {
       type: type ?? this.type,
       timeRange: timeRange ?? this.timeRange,
       isRecurring: isRecurring ?? this.isRecurring,
+      subjectId: subjectId ?? this.subjectId,
     );
   }
 
@@ -89,6 +96,7 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(0, 10, 20),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '1',
     ),
     CalendarEvent(
       id: 'tpl-a-mon-2',
@@ -99,6 +107,7 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(0, 11, 50),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '4',
     ),
     CalendarEvent(
       id: 'tpl-a-mon-3',
@@ -109,6 +118,7 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(0, 13, 20),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '2',
     ),
 
     // Week A — Tue (1)
@@ -123,6 +133,7 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(2, 11, 50),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '3',
     ),
     CalendarEvent(
       id: 'tpl-a-wed-2',
@@ -133,6 +144,7 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(2, 13, 20),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '3',
     ),
 
     // Week A — Thu (3)
@@ -145,6 +157,7 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(3, 10, 20),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '5',
     ),
     CalendarEvent(
       id: 'tpl-a-thu-2',
@@ -155,6 +168,7 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(3, 11, 50),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '6',
     ),
     CalendarEvent(
       id: 'tpl-a-thu-3',
@@ -165,6 +179,7 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(3, 13, 20),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '5',
     ),
 
     // Week A — Fri (4)
@@ -177,6 +192,7 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(4, 10, 20),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '4',
     ),
     CalendarEvent(
       id: 'tpl-a-fri-2',
@@ -187,6 +203,7 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(4, 11, 50),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '6',
     ),
     CalendarEvent(
       id: 'tpl-a-fri-3',
@@ -197,8 +214,8 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(4, 13, 20),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '1',
     ),
-
 
     // Week B — Mon (7)
     CalendarEvent(
@@ -210,6 +227,7 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(7, 10, 20),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '1',
     ),
     CalendarEvent(
       id: 'tpl-b-mon-2',
@@ -220,6 +238,7 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(7, 11, 50),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '2',
     ),
     CalendarEvent(
       id: 'tpl-b-mon-3',
@@ -230,6 +249,7 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(7, 13, 20),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '2',
     ),
 
     // Week B — Tue (8)
@@ -244,6 +264,7 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(9, 11, 50),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '3',
     ),
     CalendarEvent(
       id: 'tpl-b-wed-2',
@@ -254,6 +275,7 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(9, 13, 20),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '3',
     ),
 
     // Week B — Thu (10)
@@ -266,6 +288,7 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(10, 10, 20),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '5',
     ),
     CalendarEvent(
       id: 'tpl-b-thu-2',
@@ -276,6 +299,7 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(10, 11, 50),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '6',
     ),
     CalendarEvent(
       id: 'tpl-a-thu-3',
@@ -286,6 +310,7 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(10, 13, 20),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '5',
     ),
 
     // Week B — Fri (11)
@@ -298,6 +323,7 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(11, 10, 20),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '4',
     ),
     CalendarEvent(
       id: 'tpl-b-fri-3',
@@ -308,6 +334,7 @@ List<CalendarEvent> get kTwoWeekTemplate {
       endTime: t(11, 13, 20),
       type: EventType.classEvent,
       isRecurring: true,
+      subjectId: '1',
     ),
   ];
 }

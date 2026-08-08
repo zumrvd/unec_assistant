@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/models/lecture_material.dart';
+import 'package:unec_assistant/providers/materials_provider.dart';
 
 class TeachingMaterialsCard extends StatelessWidget {
-  const TeachingMaterialsCard({super.key});
+  const TeachingMaterialsCard({
+    required this.subjectId,
+    this.lecture,
+    super.key,
+  });
+
+  final String subjectId;
+  final LectureMaterial? lecture;
 
   static const _primaryBlue = Color(0xFF0569FF);
   static const _valueBlack = Color(0xFF1F1F1F);
@@ -16,13 +26,13 @@ class TeachingMaterialsCard extends StatelessWidget {
   static const _downloadButtonIcon = Color(0x80838A97);
 
   Widget _fileRow(
-      IconData fileIcon,
-      Color iconColor,
-      Color iconBg,
-      String title,
-      String meta, {
-        bool isLast = false,
-      }) {
+    IconData fileIcon,
+    Color iconColor,
+    Color iconBg,
+    String title,
+    String meta, {
+    bool isLast = false,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -117,8 +127,26 @@ class TeachingMaterialsCard extends StatelessWidget {
     );
   }
 
+  IconData _iconForType(String fileType) =>
+      kFileTypeIcons[fileType] ?? Icons.insert_drive_file_rounded;
+
+  Color _colorForType(String fileType) =>
+      kFileTypeColors[fileType] ?? const Color(0xFF838A97);
+
   @override
   Widget build(BuildContext context) {
+    final bundle = lecture;
+    final bundleTitle = bundle == null
+        ? 'No materials yet'
+        : '${bundle.lectureLabel} : ${bundle.lectureTitle}';
+    final bundleMeta = bundle == null
+        ? ''
+        : [
+            if (bundle.bundleSize.isNotEmpty) bundle.bundleSize,
+            if (bundle.bundleUploadedAgo.isNotEmpty) bundle.bundleUploadedAgo,
+          ].join(' · ');
+    final files = bundle?.files ?? const <LectureFile>[];
+
     return Container(
       width: .maxFinite,
       decoration: BoxDecoration(
@@ -146,7 +174,9 @@ class TeachingMaterialsCard extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () => context.push(
+                  '/functions/teaching-materials/subject/$subjectId',
+                ),
                 child: Container(
                   decoration: BoxDecoration(
                     color: _seeAllBackground,
@@ -219,7 +249,7 @@ class TeachingMaterialsCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Lecture 7 : JSON faylları...',
+                            bundleTitle,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.redditSans(
@@ -228,14 +258,15 @@ class TeachingMaterialsCard extends StatelessWidget {
                               color: const Color(0xFFFFFFFF),
                             ),
                           ),
-                          Text(
-                            '2.4MB · 1 week ago',
-                            style: GoogleFonts.redditSans(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12,
-                              color: _bundleMetaColor,
+                          if (bundleMeta.isNotEmpty)
+                            Text(
+                              bundleMeta,
+                              style: GoogleFonts.redditSans(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12,
+                                color: _bundleMetaColor,
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     ),
@@ -293,47 +324,30 @@ class TeachingMaterialsCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _fileRow(
-                Icons.text_snippet_outlined,
-                const Color(0xFF0569FF),
-                const Color(0x260569FF),
-                'Lecture 7 : Lecture',
-                '68KB · 1 week ago',
+          if (files.isEmpty)
+            Text(
+              'No files in this bundle',
+              style: GoogleFonts.redditSans(
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
+                color: _labelGrey,
               ),
-              _fileRow(
-                Icons.slideshow_rounded,
-                const Color(0xFFE3993C),
-                const Color(0x26E3993C),
-                'Lecture 7 : Presentation',
-                '1.1MB · 1 week ago',
-              ),
-              _fileRow(
-                Icons.quiz_outlined,
-                const Color(0xFF0F6E56),
-                const Color(0x260F6E56),
-                'Lecture 7 : Quiz',
-                '35KB · 1 week ago',
-              ),
-              _fileRow(
-                Icons.slideshow_rounded,
-                const Color(0xFFE3993C),
-                const Color(0x26E3993C),
-                'Lecture 7 : Seminar',
-                '670KB · 1 week ago',
-              ),
-              _fileRow(
-                Icons.text_snippet_outlined,
-                const Color(0xFF0569FF),
-                const Color(0x260569FF),
-                'Lecture 7 : Other',
-                '320KB · 1 week ago',
-                isLast: true,
-              ),
-            ],
-          ),
+            )
+          else
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (var i = 0; i < files.length; i++)
+                  _fileRow(
+                    _iconForType(files[i].fileType),
+                    _colorForType(files[i].fileType),
+                    _colorForType(files[i].fileType).withValues(alpha: 0.15),
+                    files[i].fileTitle,
+                    '${files[i].fileSize} · ${files[i].uploadedAgo}',
+                    isLast: i == files.length - 1,
+                  ),
+              ],
+            ),
         ],
       ),
     );

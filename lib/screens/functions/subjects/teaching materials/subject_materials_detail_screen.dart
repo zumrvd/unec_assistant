@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../providers/materials_providers.dart';
+import '../../../../providers/materials_provider.dart';
+import '../../../../providers/subject_detail_provider.dart';
 import '../../../../models/lecture_material.dart';
 import '../../../../presentation/components/cards/lecture_materials_card.dart';
-
 import '../../../../presentation/components/lists/labels.dart';
 
-class SubjectMaterialsDetailScreen extends StatelessWidget {
+class SubjectMaterialsDetailScreen extends ConsumerWidget {
   final String subjectId;
 
   const SubjectMaterialsDetailScreen({
@@ -16,18 +16,18 @@ class SubjectMaterialsDetailScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final subject = kSubjectMaterials.firstWhere((s) => s.subjectId == subjectId);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final allSubjects = ref.watch(allSubjectsProvider);
+    final subject = allSubjects.firstWhere((s) => s.subjectId == subjectId);
     
-    // Map subjectId to lecture list
     List<LectureMaterial> lectures;
     switch (subjectId) {
-      case 'prog': lectures = kProgLectures; break;
-      case 'fizika': lectures = kFizikaLectures; break;
-      case 'az': lectures = kAzLectures; break;
-      case 'xetti': lectures = kXettiLectures; break;
-      case 'info': lectures = kInfoLectures; break;
-      case 'xarici': lectures = kXariciLectures; break;
+      case '1': lectures = kProgLectures; break;
+      case '2': lectures = kFizikaLectures; break;
+      case '3': lectures = kAzLectures; break;
+      case '4': lectures = kXettiLectures; break;
+      case '5': lectures = kInfoLectures; break;
+      case '6': lectures = kXariciLectures; break;
       default: lectures = kEmptyLectures;
     }
 
@@ -35,7 +35,7 @@ class SubjectMaterialsDetailScreen extends StatelessWidget {
       backgroundColor: const Color(0xFFF8F9FC),
       appBar: CustomAppBar(title: subject.subjectName),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

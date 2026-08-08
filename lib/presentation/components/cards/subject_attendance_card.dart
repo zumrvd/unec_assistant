@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../models/subject_detail.dart';
 
 class SubjectAttendanceCard extends StatefulWidget {
-  final String subjectName;
-  final int absencesUsed;
-  final int absenceLimit;
+  final SubjectDetail subject;
 
   const SubjectAttendanceCard({
-    required this.subjectName,
-    required this.absencesUsed,
-    required this.absenceLimit,
+    required this.subject,
     super.key,
   });
 
@@ -22,10 +19,10 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
 
   @override
   Widget build(BuildContext context) {
-    final int absencesLeft = widget.absenceLimit - widget.absencesUsed;
-    final double usedRatio = widget.absencesUsed / widget.absenceLimit;
+    final int absencesLeft = widget.subject.absenceLimit - widget.subject.absencesUsed;
+    final double usedRatio = widget.subject.absencesUsed / widget.subject.absenceLimit;
     final bool isSafe = usedRatio < 0.5;
-    final bool isDanger = widget.absencesUsed >= widget.absenceLimit;
+    final bool isDanger = widget.subject.absencesUsed >= widget.subject.absenceLimit;
     final bool isCaution = !isSafe && !isDanger;
 
     // Status colors
@@ -42,7 +39,7 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
             : const Color(0xFFE0E4F0);
 
     final Color pillBg = isDanger
-        ? const Color(0x26D54829) // 15% used as ~0x26
+        ? const Color(0x26D54829)
         : isCaution
             ? const Color(0x26E3993C)
             : const Color(0x260F6E11);
@@ -66,7 +63,7 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
         : "$absencesLeft absences left";
 
     final Color statusBg = isDanger
-        ? const Color(0x0DD54829) // 5% used as ~0x0D
+        ? const Color(0x0DD54829)
         : isCaution
             ? const Color(0x0DE3993C)
             : const Color(0x260F6E11);
@@ -121,7 +118,7 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        widget.subjectName,
+                        widget.subject.subjectName,
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w700,
                           fontSize: 14,
@@ -235,7 +232,7 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "${widget.absencesUsed}",
+                    "${widget.subject.absencesUsed}",
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 45,
@@ -262,7 +259,7 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Limit : ${widget.absenceLimit}",
+                      "Limit : ${widget.subject.absenceLimit}",
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w600,
                         fontSize: 13,

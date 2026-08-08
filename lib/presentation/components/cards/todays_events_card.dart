@@ -38,24 +38,33 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
   String _pad(int n) => n.toString().padLeft(2, '0');
 
   Widget _buildEventTile(CalendarEvent e) {
+    final bool isPersonal = e.type == EventType.personalEvent;
+    
+    final Color accentColor = isPersonal ? const Color(0xFFE3993C) : const Color(0xFF0569FF);
+    final Color bgColor = isPersonal ? const Color(0x26E3993C) : const Color(0xFFE8F0FE);
+    final Color borderColor = isPersonal ? const Color(0x26E3993C) : const Color(0x260569FF);
+    final Color subtitleColor = isPersonal ? const Color(0xFF985909).withOpacity(0.5) : const Color(0x800569FF);
+    final Color locationColor = isPersonal ? const Color(0xFF985909).withOpacity(0.7) : const Color(0xBF0569FF);
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFFE8F0FE),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0x260569FF), width: 1),
+        color: bgColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: borderColor, width: 1),
       ),
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              width: 4,
-              decoration: const BoxDecoration(
-                color: Color(0xFF0569FF),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(14),
-                  bottomLeft: Radius.circular(14),
+            const SizedBox(width: 15),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Container(
+                width: 3,
+                decoration: BoxDecoration(
+                  color: accentColor,
+                  borderRadius: BorderRadius.circular(2),
                 ),
               ),
             ),
@@ -69,18 +78,18 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
                     Text(
                       e.title,
                       style: GoogleFonts.redditSans(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16,
                         color: const Color(0xFF1F1F1F),
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     Text(
                       "${_pad(e.startTime.hour)}:${_pad(e.startTime.minute)} - ${_pad(e.endTime.hour)}:${_pad(e.endTime.minute)}",
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w600,
                         fontSize: 13,
-                        color: const Color(0x800569FF),
+                        color: subtitleColor,
                       ),
                     ),
                     if (e.location.isNotEmpty) ...[
@@ -90,7 +99,7 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w600,
                           fontSize: 12,
-                          color: const Color(0xBF0569FF),
+                          color: locationColor,
                         ),
                       ),
                     ],

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../models/subject_detail.dart';
 import '../../../../presentation/components/cards/subject_grade_header_card.dart';
 import '../../../../presentation/components/cards/midterm_grade_card.dart';

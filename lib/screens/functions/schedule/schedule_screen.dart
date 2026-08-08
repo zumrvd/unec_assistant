@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/presentation/components/calendar/event_editor_sheet.dart';
 import 'package:unec_assistant/presentation/components/cards/calendar_card.dart';
 import 'package:unec_assistant/presentation/components/cards/todays_events_card.dart';
-import 'package:unec_assistant/providers/calendar_providers.dart';
+import 'package:unec_assistant/providers/calendar_provider.dart';
 
 import 'package:unec_assistant/presentation/components/lists/labels.dart';
 
@@ -58,10 +57,21 @@ class ScheduleScreen extends ConsumerWidget {
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(vertical: 20),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 10,
             children: [
-              TodaysEventsCard(events: todaysEvents),
-              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 35.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 10,
+                  children: [
+                    const SectionLabel('Today\'s plans'),
+                    TodaysEventsCard(events: todaysEvents),
+                    const SectionLabel('Calendar'),
+                  ],
+                ),
+              ),
               CalendarCard(
                 onActiveClassTap: () =>
                     context.push('/functions/current_class_function'),

@@ -46,7 +46,7 @@ class _SeminarGradesCardState extends State<SeminarGradesCard> {
                       softWrap: true,
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
-                        fontSize: 11,
+                        fontSize: 13,
                         color: const Color(0xFF1F1F1F),
                       ),
                     ),
@@ -65,7 +65,7 @@ class _SeminarGradesCardState extends State<SeminarGradesCard> {
                 "${e.score}",
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
-                  fontSize: 13,
+                  fontSize: 15,
                   color: const Color(0xFF1F1F1F),
                 ),
               ),
@@ -100,7 +100,7 @@ class _SeminarGradesCardState extends State<SeminarGradesCard> {
                   "Seminars",
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
-                    fontSize: 14,
+                    fontSize: 15,
                     color: const Color(0xFF1F1F1F),
                   ),
                 ),
@@ -112,7 +112,7 @@ class _SeminarGradesCardState extends State<SeminarGradesCard> {
                       text: "${widget.data.seminarScore}",
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
-                        fontSize: 20,
+                        fontSize: 25,
                         color: const Color(0xFF1F1F1F),
                       ),
                     ),
@@ -120,7 +120,7 @@ class _SeminarGradesCardState extends State<SeminarGradesCard> {
                       text: "/${widget.data.seminarMax}",
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
-                        fontSize: 13,
+                        fontSize: 15,
                         color: const Color(0x80838A97),
                       ),
                     ),
@@ -133,10 +133,12 @@ class _SeminarGradesCardState extends State<SeminarGradesCard> {
           Row(
             children: [
               Text(
-                "${widget.data.seminarsGraded}/${widget.data.seminarsTotal} seminars graded",
+                widget.data.seminarsGraded == 0
+                    ? "no seminars graded"
+                    : "${widget.data.seminarsGraded}/${widget.data.seminarsTotal} seminars graded",
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
-                  fontSize: 10,
+                  fontSize: 13,
                   color: const Color(0x80838A97),
                 ),
               ),
