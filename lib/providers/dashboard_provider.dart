@@ -5,7 +5,7 @@ import 'package:unec_assistant/models/used_function.dart';
 final feedPostsProvider = Provider<List<FeedPost>>(
   (ref) => const [
     FeedPost(
-      id: '1',
+      id: 'p1',
       title: 'YAZ semestri ara imtahan cədvəli',
       content:
           '2025/2026-ci tədris ilinin YAZ semestri üçün ara imtahan cədvəli açıqlanmışdır. Cədvəl ilə aşağıdakı linkə daxil olmaqla tanış ola bilərsiz.\n\nLink : https://unec.edu.az/bakalavriatura-seviyyesi-uzre-2025-2026-ci-tedris-ilinin-yaz-semestrinin-ara-qiymetlendirme-imtahani-cedveli/',
@@ -13,7 +13,7 @@ final feedPostsProvider = Provider<List<FeedPost>>(
       dateString: '2 hours ago',
       channelName: 'Rektorat Kanalı',
       likeCount: 122,
-      commentCount: 6,
+      commentCount: 2,
     ),
   ],
 );

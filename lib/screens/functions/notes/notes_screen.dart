@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../models/note_folder.dart';
 import '../../../presentation/components/lists/labels.dart';
-import '../../../presentation/components/inputs/notes_search_bar.dart';
+import '../../../presentation/components/inputs/app_search_bar.dart';
 import '../../../presentation/components/cards/note_folder_tile.dart';
 import '../../../providers/notes_provider.dart';
 
@@ -38,7 +38,7 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            NotesSearchBar(
+            AppSearchBar(
               controller: _searchController,
               hintText: 'Search notes...',
               onChanged: (q) => setState(() => _searchQuery = q),

@@ -43,8 +43,8 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
     final Color accentColor = isPersonal ? const Color(0xFFE3993C) : const Color(0xFF0569FF);
     final Color bgColor = isPersonal ? const Color(0x26E3993C) : const Color(0xFFE8F0FE);
     final Color borderColor = isPersonal ? const Color(0x26E3993C) : const Color(0x260569FF);
-    final Color subtitleColor = isPersonal ? const Color(0xFF985909).withOpacity(0.5) : const Color(0x800569FF);
-    final Color locationColor = isPersonal ? const Color(0xFF985909).withOpacity(0.7) : const Color(0xBF0569FF);
+    final Color subtitleColor = isPersonal ? const Color(0xFF985909).withValues(alpha: 0.5) : const Color(0x800569FF);
+    final Color locationColor = isPersonal ? const Color(0xFF985909).withValues(alpha: 0.7) : const Color(0xBF0569FF);
 
     return Container(
       width: double.infinity,

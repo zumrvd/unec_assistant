@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:unec_assistant/models/channel.dart';
+import 'package:unec_assistant/models/post.dart';
 import 'package:unec_assistant/presentation/components/cards/current_class_card.dart';
-import 'package:unec_assistant/presentation/components/cards/feed_post_card.dart';
+import 'package:unec_assistant/presentation/components/cards/post_card.dart';
 import 'package:unec_assistant/providers/dashboard_provider.dart';
 
 import '../../presentation/components/lists/labels.dart';
@@ -32,10 +34,28 @@ class HomeScreen extends ConsumerWidget {
           const SizedBox(height: 10),
 
           if (posts.isNotEmpty)
-            FeedPostCard(
+            PostCard(
               key: ValueKey(posts.first.id),
-              post: posts.first,
-              isInteractive: false,
+              data: Post(
+                postId: posts.first.id,
+                channelId: 'ch1', // Fallback for old model compatibility
+                bodyText: posts.first.content,
+                feedType: PostFeedType.official,
+                postedAt: DateTime.now(),
+                likeCount: posts.first.likeCount,
+                commentCount: posts.first.commentCount,
+                shareCount: 0,
+                isLikedByCurrentUser: false,
+              ),
+              channel: const Channel(
+                channelId: 'ch1',
+                channelName: 'Rektorat Kanalı',
+                category: ChannelCategory.official,
+                isVerified: true,
+              ),
+              onTap: () => context.go('/feed/post/${posts.first.id}'),
+              onLikeTap: () {},
+              onShareTap: () {},
             ),
         ],
       ),

@@ -2,7 +2,6 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:unec_assistant/routing/main_scaffold.dart';
 import 'package:unec_assistant/screens/feed/feed_main_screen.dart';
-import 'package:unec_assistant/screens/feed/post1_screen.dart';
 import 'package:unec_assistant/screens/functions/current%20class/current_class_screen.dart';
 import 'package:unec_assistant/screens/functions/notes/notes_screen.dart';
 import 'package:unec_assistant/screens/functions/schedule/schedule_screen.dart';
@@ -23,9 +22,10 @@ import 'package:unec_assistant/screens/functions/subjects/grades/subject_grades_
 import 'package:unec_assistant/providers/subject_detail_provider.dart';
 import 'package:unec_assistant/screens/functions/subjects/subject_detail_screen.dart';
 
-
 import 'package:unec_assistant/screens/functions/notes/note_files_screen.dart';
 import 'package:unec_assistant/screens/functions/notes/note_editor_screen.dart';
+import 'package:unec_assistant/screens/feed/post_detail_screen.dart';
+import 'package:unec_assistant/screens/feed/manage_channels_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/home',
@@ -50,28 +50,6 @@ final GoRouter appRouter = GoRouter(
                 GoRoute(
                   path: 'current_class_function',
                   builder: (context, state) => const CurrentClassScreen(),
-                ),
-                GoRoute(
-                  path: 'post1',
-                  builder: (context, state) => const Post1Screen(),
-                ),
-              ],
-            ),
-            GoRoute(
-              path: '/notes',
-              builder: (context, state) => const NotesScreen(),
-              routes: [
-                GoRoute(
-                  path: 'folder/:folderId',
-                  builder: (context, state) => NoteFilesScreen(
-                    folderId: state.pathParameters['folderId']!,
-                  ),
-                ),
-                GoRoute(
-                  path: 'editor/:noteId',
-                  builder: (context, state) => NoteEditorScreen(
-                    noteId: state.pathParameters['noteId']!,
-                  ),
                 ),
               ],
             ),
@@ -181,24 +159,6 @@ final GoRouter appRouter = GoRouter(
                 ),
               ],
             ),
-            GoRoute(
-              path: '/notes',
-              builder: (context, state) => const NotesScreen(),
-              routes: [
-                GoRoute(
-                  path: 'folder/:folderId',
-                  builder: (context, state) => NoteFilesScreen(
-                    folderId: state.pathParameters['folderId']!,
-                  ),
-                ),
-                GoRoute(
-                  path: 'editor/:noteId',
-                  builder: (context, state) => NoteEditorScreen(
-                    noteId: state.pathParameters['noteId']!,
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
         StatefulShellBranch(
@@ -208,26 +168,14 @@ final GoRouter appRouter = GoRouter(
               builder: (context, state) => const FeedMainScreen(),
               routes: [
                 GoRoute(
-                  path: 'post1',
-                  builder: (context, state) => const Post1Screen(),
-                ),
-              ],
-            ),
-            GoRoute(
-              path: '/notes',
-              builder: (context, state) => const NotesScreen(),
-              routes: [
-                GoRoute(
-                  path: 'folder/:folderId',
-                  builder: (context, state) => NoteFilesScreen(
-                    folderId: state.pathParameters['folderId']!,
+                  path: 'post/:postId',
+                  builder: (context, state) => PostDetailScreen(
+                    postId: state.pathParameters['postId']!,
                   ),
                 ),
                 GoRoute(
-                  path: 'editor/:noteId',
-                  builder: (context, state) => NoteEditorScreen(
-                    noteId: state.pathParameters['noteId']!,
-                  ),
+                  path: 'manage-channels',
+                  builder: (context, state) => const ManageChannelsScreen(),
                 ),
               ],
             ),
@@ -263,25 +211,25 @@ final GoRouter appRouter = GoRouter(
                 ),
               ],
             ),
-            GoRoute(
-              path: '/notes',
-              builder: (context, state) => const NotesScreen(),
-              routes: [
-                GoRoute(
-                  path: 'folder/:folderId',
-                  builder: (context, state) => NoteFilesScreen(
-                    folderId: state.pathParameters['folderId']!,
-                  ),
-                ),
-                GoRoute(
-                  path: 'editor/:noteId',
-                  builder: (context, state) => NoteEditorScreen(
-                    noteId: state.pathParameters['noteId']!,
-                  ),
-                ),
-              ],
-            ),
           ],
+        ),
+      ],
+    ),
+    GoRoute(
+      path: '/notes',
+      builder: (context, state) => const NotesScreen(),
+      routes: [
+        GoRoute(
+          path: 'folder/:folderId',
+          builder: (context, state) => NoteFilesScreen(
+            folderId: state.pathParameters['folderId']!,
+          ),
+        ),
+        GoRoute(
+          path: 'editor/:noteId',
+          builder: (context, state) => NoteEditorScreen(
+            noteId: state.pathParameters['noteId']!,
+          ),
         ),
       ],
     ),

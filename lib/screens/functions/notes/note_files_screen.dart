@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
 import '../../../presentation/components/lists/labels.dart';
-import '../../../presentation/components/inputs/notes_search_bar.dart';
+import '../../../presentation/components/inputs/app_search_bar.dart';
 import '../../../presentation/components/lists/note_files_grid.dart';
 import '../../../presentation/components/buttons/notes_add_button.dart';
 import '../../../providers/notes_provider.dart';
@@ -105,7 +105,7 @@ class _NoteFilesScreenState extends ConsumerState<NoteFilesScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                NotesSearchBar(
+                AppSearchBar(
                   controller: _searchController,
                   hintText: 'Search in folder...',
                   onChanged: (q) => setState(() => _searchQuery = q),

@@ -121,8 +121,8 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
               double borderWidth = 1.0;
 
               if (isSelected) {
-                bgColor = gradeColor.withOpacity(0.15);
-                borderColor = gradeColor.withOpacity(0.2);
+                bgColor = gradeColor.withValues(alpha: 0.15);
+                borderColor = gradeColor.withValues(alpha: 0.2);
               } else if (isHovered) {
                 bgColor = Colors.white;
                 borderColor = gradeColor;
@@ -299,7 +299,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                 child: Container(
                   height: 12,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0F6E11).withOpacity(0.3),
+                    color: const Color(0xFF0F6E11).withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(6),
                   ),
                 ),
@@ -356,7 +356,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                     width: 54,
                     height: 54,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF0F6E11).withOpacity(0.15),
+                      color: const Color(0xFF0F6E11).withValues(alpha: 0.15),
                       shape: BoxShape.circle,
                       border: Border.all(color: const Color(0xFF0F6E11), width: 1.5),
                     ),

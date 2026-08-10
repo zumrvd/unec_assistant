@@ -21,7 +21,7 @@ Future<void> showContactRedirectDialog(BuildContext context, ContactMethod data)
                 width: 56,
                 height: 56,
                 decoration: BoxDecoration(
-                  color: data.brandColor.withOpacity(0.15),
+                  color: data.brandColor.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
                 child: Center(

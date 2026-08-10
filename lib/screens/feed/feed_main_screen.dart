@@ -1,56 +1,103 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:unec_assistant/presentation/components/buttons/feed_filter_buttons.dart';
-import 'package:unec_assistant/presentation/components/cards/feed_post_card.dart';
-import 'package:unec_assistant/providers/dashboard_provider.dart';
+import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../../../presentation/components/buttons/feed_filter_tabs.dart';
+import '../../../presentation/components/cards/post_card.dart';
+import '../../../presentation/components/inputs/app_search_bar.dart';
+import '../../../providers/feed_provider.dart';
 
-class FeedMainScreen extends ConsumerWidget {
+class FeedMainScreen extends ConsumerStatefulWidget {
   const FeedMainScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final posts = ref.watch(feedPostsProvider);
+  ConsumerState<FeedMainScreen> createState() => _FeedMainScreenState();
+}
+
+class _FeedMainScreenState extends ConsumerState<FeedMainScreen> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final feedState = ref.watch(feedProvider);
+    final repo = ref.read(feedRepositoryProvider);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FC),
-      body: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 35),
-        itemCount: posts.length + 2,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return const Padding(
-              padding: EdgeInsets.only(bottom: 10, top: 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'News Feed',
-                    style: TextStyle(
-                      color: Color(0xFF838A97),
-                      fontSize: 15,
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  FeedFilterButtons(),
-                ],
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 10),
+            child: Text(
+              'News Feed',
+              style: GoogleFonts.redditSans(
+                color: const Color(0xFF838A97),
+                fontSize: 15,
+                fontWeight: FontWeight.w400,
               ),
-            );
-          }
-
-          if (index == 1) {
-            return const SizedBox(height: 15);
-          }
-
-          final post = posts[index - 2];
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 15),
-            child: FeedPostCard(
-              key: ValueKey(post.id),
-              post: post,
-              isInteractive: true,
             ),
-          );
-        },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 35),
+            child: FeedFilterTabs(
+              selected: feedState.filter,
+              onSelect: (type) => ref.read(feedProvider.notifier).setFilter(type),
+            ),
+          ),
+          const SizedBox(height: 15),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 35),
+            child: AppSearchBar(
+              controller: _searchController,
+              hintText: 'Search posts...',
+              onChanged: (q) => ref.read(feedProvider.notifier).setSearchQuery(q),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Expanded(
+            child: feedState.isLoading && feedState.posts.isEmpty
+                ? const Center(child: CircularProgressIndicator(color: Color(0xFF0569FF)))
+                : feedState.posts.isEmpty
+                    ? Center(
+                        child: Text(
+                          'No posts found',
+                          style: GoogleFonts.redditSans(color: const Color(0xFF838A97)),
+                        ),
+                      )
+                    : ListView.separated(
+                        padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 0),
+                        itemCount: feedState.posts.length,
+                        separatorBuilder: (context, index) => const SizedBox(height: 12),
+                        itemBuilder: (context, index) {
+                          final post = feedState.posts[index];
+                          return FutureBuilder(
+                            future: repo.fetchChannelById(post.channelId),
+                            builder: (context, snapshot) {
+                              if (!snapshot.hasData) return const SizedBox(height: 150);
+                              return PostCard(
+                                data: post,
+                                channel: snapshot.data!,
+                                onTap: () => context.push('/feed/post/${post.postId}'),
+                                onLikeTap: () => ref.read(feedProvider.notifier).toggleLike(post.postId),
+                                onShareTap: () {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Link copied to clipboard')),
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ),
+          ),
+        ],
       ),
     );
   }

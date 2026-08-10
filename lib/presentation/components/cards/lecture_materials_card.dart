@@ -50,7 +50,7 @@ class _LectureMaterialsCardState extends State<LectureMaterialsCard> {
           width: 32,
           height: 32,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.15),
+            color: color.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Icon(icon, size: 15, color: color),
@@ -178,7 +178,7 @@ class _LectureMaterialsCardState extends State<LectureMaterialsCard> {
                             width: 28,
                             height: 28,
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: const Icon(
@@ -219,7 +219,7 @@ class _LectureMaterialsCardState extends State<LectureMaterialsCard> {
                         onTap: widget.onDownloadBundle,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

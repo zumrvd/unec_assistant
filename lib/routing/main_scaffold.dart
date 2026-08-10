@@ -7,6 +7,8 @@ library;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:unec_assistant/presentation/components/drawer/subscribed_channels_drawer.dart';
+
 /// Figma palette shared by the global app bar and nav indicator.
 abstract final class _AppColors {
   static const Color background = Color(0xFFF8F9FC);
@@ -38,7 +40,10 @@ class GlobalAppBar extends StatelessWidget {
           Expanded(
             child: Row(
               children: [
-                const Icon(Icons.menu, color: _AppColors.black, size: 30),
+                GestureDetector(
+                  onTap: () => Scaffold.of(context).openDrawer(),
+                  child: const Icon(Icons.menu, color: _AppColors.black, size: 30),
+                ),
                 const SizedBox(width: 4),
                 Flexible(
                   child: Text.rich(
@@ -130,6 +135,7 @@ class MainScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const SubscribedChannelsDrawer(),
       body: Column(
         children: [
           const GlobalAppBar(),

@@ -152,7 +152,7 @@ class _SmartSyncCardState extends State<SmartSyncCard> {
                   ),
                   Switch(
                     value: isEnabled,
-                    activeColor: const Color(0xFF0569FF),
+                    activeThumbColor: const Color(0xFF0569FF),
                     onChanged: (v) => prefs.toggleEnabled(v),
                   ),
                 ],
