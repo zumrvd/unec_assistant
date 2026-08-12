@@ -1,48 +1,53 @@
-# Implementation Plan - Note Feature Refinement
+# Implementation Plan - News Feed Bug Fixes & UI Polish
 
-Refine the note-taking feature by improving the editor experience, adding deletion capabilities, and simplifying folder management.
+Address functional issues with filtering, interactivity, and navigation, while refining the UI to be pixel-perfect and consistent with the project's background theme.
 
 ## User Review Required
 
 > [!IMPORTANT]
-> - **Rich Text Editor**: I will add the `flutter_quill` package. This is necessary to provide a "flawless" experience where text decorators actually format the text instead of inserting markdown markers. Your notes will now be stored in a JSON-based format (Delta) to preserve all formatting.
-> - **Deletion Logic**: I will implement a confirmation dialog when clicking the "three dots" to ensure notes aren't deleted accidentally.
-> - **Folder Management**: As requested, the "Add Folder" button will be removed from the main Notes screen, making the folder list purely derived from your subject list.
+> - **ID Alignment**: I will synchronize post and channel IDs across `dashboard_provider.dart` and `mock_feed_repository.dart` to fix the "Post not found" error when navigating from the Home screen.
+> - **Background Reset**: Reverting the feed and post detail screens to the canonical `#F8F9FC` background color.
+> - **Rich Interactivity**: Implementing the "Subscribe" toggle and full comment interactivity (likes and threaded replies).
 
 ## Proposed Changes
 
-### 1. Dependencies
-- Add `flutter_quill: ^9.4.1` to `pubspec.yaml`.
+### 1. Data & Logic Synchronization
+#### [MODIFY] [dashboard_provider.dart](file:///C:/src/unec_assistant/lib/providers/dashboard_provider.dart)
+- Update mock post IDs to `'p1'`, `'p2'` to match the repository identifiers.
+#### [MODIFY] [mock_feed_repository.dart](file:///C:/src/unec_assistant/lib/data/mock_feed_repository.dart)
+- Add more mock replies to demonstrate threaded comments.
+- Ensure unique author IDs are mapped to diverse user accounts.
 
-### 2. UI Components
-#### [MODIFY] [note_file_tile.dart](file:///C:/src/unec_assistant/lib/presentation/components/cards/note_file_tile.dart)
-- Add `onDelete` callback.
-- Wrap the `...` icon in a `GestureDetector` that triggers the delete flow.
-- Improve content preview logic to extract plain text from the new rich-text format.
+### 2. Provider Improvements
+#### [MODIFY] [feed_provider.dart](file:///C:/src/unec_assistant/lib/providers/feed_provider.dart)
+- Fix `setFilter` logic to allow resetting to "Discover" correctly.
+#### [MODIFY] [post_detail_provider.dart](file:///C:/src/unec_assistant/lib/providers/post_detail_provider.dart)
+- Implement `toggleCommentLike` logic with state updates.
+- Refine reply loading and submission logic.
 
-#### [MODIFY] [note_files_grid.dart](file:///C:/src/unec_assistant/lib/presentation/components/lists/note_files_grid.dart)
-- Pass the `onDelete` callback through to each tile.
+### 3. Component Refinement
+#### [MODIFY] [post_card.dart](file:///C:/src/unec_assistant/lib/presentation/components/cards/post_card.dart)
+- Ensure the entire card surface is tappable for navigation.
+- Match visual spacing and background colors to the reference images.
+#### [MODIFY] [comment_tile.dart](file:///C:/src/unec_assistant/lib/presentation/components/cards/comment_tile.dart)
+- Correctly resolve author names and initials from the provided user map.
+- Improve spacing and indenting for replies.
 
-### 3. Screens
-#### [MODIFY] [notes_screen.dart](file:///C:/src/unec_assistant/lib/screens/functions/notes/notes_screen.dart)
-- **Remove** `NotesAddButton` and the `_showNewFolderDialog` logic.
-- The UI will now strictly show the "Personal" and "Subject" folders.
-
-#### [MODIFY] [note_files_screen.dart](file:///C:/src/unec_assistant/lib/screens/functions/notes/note_files_screen.dart)
-- Implement a `_confirmDelete(Note note)` method that shows a custom styled dialog.
-- Wire the delete action to `ref.read(notesProvider.notifier).deleteNote(noteId)`.
-
-#### [MODIFY] [note_editor_screen.dart](file:///C:/src/unec_assistant/lib/screens/functions/notes/note_editor_screen.dart)
-- Replace the basic `TextField` with `QuillEditor`.
-- Replace the manual toolbar row with `QuillToolbar`.
-- Update the save logic to handle Quill Delta JSON.
-
-### 4. Data Layer
-#### [MODIFY] [notes_provider.dart](file:///C:/src/unec_assistant/lib/providers/notes_provider.dart)
-- Ensure the JSON persistence handles the rich-text Delta format correctly.
+### 4. Screen Overhaul
+#### [MODIFY] [feed_main_screen.dart](file:///C:/src/unec_assistant/lib/screens/feed/feed_main_screen.dart)
+- Update background to `#F8F9FC`.
+- Match filter tab active/inactive states exactly to the mockup.
+#### [MODIFY] [post_detail_screen.dart](file:///C:/src/unec_assistant/lib/screens/feed/post_detail_screen.dart)
+- Update background to `#F8F9FC`.
+- **Header**: Add a functional "Subscribe" pill button and "3 dots" overflow menu.
+- **Engagement**: Fully wire Like, Comment (scroll to section), and Share actions.
+- **Comment Section**: Implement a real `PopupMenuButton` for the sort dropdown.
 
 ## Verification Plan
-- [ ] Create a note and apply **Bold**, *Italic*, and Bullet points. Verify the formatting persists after saving and reloading.
-- [ ] Verify the note preview in the grid is clean (no JSON/Delta tags visible).
-- [ ] Verify that the "Add Folder" button is gone from the folders screen.
-- [ ] Delete a note via the "three dots" menu and confirm it is removed from both the UI and disk.
+
+### Manual Verification
+- **Home -> Feed**: Tap the post card on the Home screen and confirm it loads successfully.
+- **Filtering**: Tap "Clubs", then tap "Discover". Verify the list resets to show all posts.
+- **Interactions**: Like a comment and verify the heart turns red and count increments.
+- **Replies**: Tap "View replies" on a comment and verify nested tiles appear.
+- **Visuals**: Confirm the background color matches the rest of the app's functions.
