@@ -47,8 +47,8 @@ class _FeedMainScreenState extends ConsumerState<FeedMainScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 35),
             child: FeedFilterTabs(
-              selected: feedState.filter,
-              onSelect: (type) => ref.read(feedProvider.notifier).setFilter(type),
+              selectedFilters: feedState.filters,
+              onSelect: (type) => ref.read(feedProvider.notifier).toggleFilter(type),
             ),
           ),
           const SizedBox(height: 15),
@@ -65,39 +65,45 @@ class _FeedMainScreenState extends ConsumerState<FeedMainScreen> {
             child: feedState.isLoading && feedState.posts.isEmpty
                 ? const Center(child: CircularProgressIndicator(color: Color(0xFF0569FF)))
                 : feedState.posts.isEmpty
-                    ? Center(
-                        child: Text(
-                          'No posts found',
-                          style: GoogleFonts.redditSans(color: const Color(0xFF838A97)),
-                        ),
-                      )
-                    : ListView.separated(
-                        padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 0),
-                        itemCount: feedState.posts.length,
-                        separatorBuilder: (context, index) => const SizedBox(height: 12),
-                        itemBuilder: (context, index) {
-                          final post = feedState.posts[index];
-                          return FutureBuilder(
-                            future: repo.fetchChannelById(post.channelId),
-                            builder: (context, snapshot) {
-                              if (!snapshot.hasData) return const SizedBox(height: 150);
-                              return PostCard(
-                                data: post,
-                                channel: snapshot.data!,
-                                onTap: () => context.push('/feed/post/${post.postId}'),
-                                onLikeTap: () => ref.read(feedProvider.notifier).toggleLike(post.postId),
-                                onShareTap: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Link copied to clipboard')),
-                                  );
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
+                ? Center(
+              child: Text(
+                'No posts found',
+                style: GoogleFonts.redditSans(color: const Color(0xFF838A97)),
+              ),
+            )
+                : ListView.separated(
+              padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 0),
+              itemCount: feedState.posts.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              itemBuilder: (context, index) {
+                final post = feedState.posts[index];
+                return FutureBuilder(
+                  future: repo.fetchChannelById(post.channelId),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) return const SizedBox(height: 150);
+                    return PostCard(
+                      data: post,
+                      channel: snapshot.data!,
+                      onTap: () async {
+                        await context.push('/feed/post/${post.postId}');
+                        ref.read(feedProvider.notifier).refresh();
+                      },
+                      onLikeTap: () => ref.read(feedProvider.notifier).toggleLike(post.postId),
+                      onShareTap: () => ref.read(feedProvider.notifier).sharePost(post.postId),
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.push('/feed/create-post'),
+        backgroundColor: const Color(0xFF0569FF),
+        shape: const CircleBorder(),
+        elevation: 4,
+        child: const Icon(Icons.add_rounded, color: Colors.white, size: 28),
       ),
     );
   }

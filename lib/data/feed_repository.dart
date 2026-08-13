@@ -4,7 +4,7 @@ import '../models/comment.dart';
 
 abstract class FeedRepository {
   Future<List<Post>> fetchFeed({
-    PostFeedType? filter,
+    Set<PostFeedType> filters = const {},
     String? searchQuery,
     int page = 0,
   });
@@ -23,6 +23,9 @@ abstract class FeedRepository {
   });
   Future<Post> toggleLikePost(String postId);
   Future<Comment> toggleLikeComment(String commentId);
+  Future<Comment> editComment(String commentId, String newBodyText);
+  Future<void> deleteComment(String commentId);
+  Future<Post> sharePost(String postId);
   Future<void> setSubscription(String channelId, {required bool isSubscribed});
   Future<void> setNotifications(String channelId, {required bool enabled});
 }

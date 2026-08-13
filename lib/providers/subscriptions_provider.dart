@@ -23,9 +23,9 @@ class SubscriptionsNotifier extends Notifier<List<Channel>> {
     final repo = ref.read(feedRepositoryProvider);
     try {
       await repo.setSubscription(channelId, isSubscribed: isSubscribed);
-      _loadSubscriptions();
+      await _loadSubscriptions();
     } catch (e) {
-      // Handle error
+      rethrow;
     }
   }
 

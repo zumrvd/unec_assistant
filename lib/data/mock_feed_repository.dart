@@ -34,7 +34,7 @@ class MockFeedRepository implements FeedRepository {
       feedType: PostFeedType.official,
       postedAt: DateTime.now().subtract(const Duration(hours: 2)),
       likeCount: 122,
-      commentCount: 2,
+      commentCount: 3,
       shareCount: 14,
       isLikedByCurrentUser: false,
     ),
@@ -45,7 +45,7 @@ class MockFeedRepository implements FeedRepository {
       feedType: PostFeedType.clubs,
       postedAt: DateTime.now().subtract(const Duration(hours: 5)),
       likeCount: 45,
-      commentCount: 0,
+      commentCount: 3,
       shareCount: 5,
       isLikedByCurrentUser: true,
     ),
@@ -83,6 +83,38 @@ class MockFeedRepository implements FeedRepository {
       isLikedByCurrentUser: false,
       replyCount: 0,
     ),
+    Comment(
+      commentId: 'c3',
+      postId: 'p2',
+      authorUserId: 'u1',
+      bodyText: 'i don\'t have laptops',
+      postedAt: DateTime.now().subtract(const Duration(minutes: 2)),
+      likeCount: 0,
+      isLikedByCurrentUser: false,
+      replyCount: 2,
+    ),
+    Comment(
+      commentId: 'c3-r1',
+      postId: 'p2',
+      parentCommentId: 'c3',
+      authorUserId: 'u2',
+      bodyText: 'Mən gətirə bilərəm!',
+      postedAt: DateTime.now().subtract(const Duration(minutes: 1)),
+      likeCount: 0,
+      isLikedByCurrentUser: false,
+      replyCount: 0,
+    ),
+    Comment(
+      commentId: 'c3-r2',
+      postId: 'p2',
+      parentCommentId: 'c3',
+      authorUserId: 'u3',
+      bodyText: 'Mənim də ehtiyat laptopum var.',
+      postedAt: DateTime.now().subtract(const Duration(seconds: 30)),
+      likeCount: 0,
+      isLikedByCurrentUser: false,
+      replyCount: 0,
+    ),
   ];
 
   final Map<String, ChannelSubscription> _subscriptions = {
@@ -93,19 +125,29 @@ class MockFeedRepository implements FeedRepository {
   Future<void> _latency() => Future.delayed(const Duration(milliseconds: 300));
 
   @override
-  Future<List<Post>> fetchFeed({PostFeedType? filter, String? searchQuery, int page = 0}) async {
+  Future<List<Post>> fetchFeed({
+    Set<PostFeedType> filters = const {},
+    String? searchQuery,
+    int page = 0,
+  }) async {
     await _latency();
     var filtered = _posts;
-    if (filter != null) {
-      if (filter == PostFeedType.subscribed) {
-        filtered = filtered.where((p) => _subscriptions[p.channelId]?.isSubscribed ?? false).toList();
-      } else {
-        filtered = filtered.where((p) => p.feedType == filter).toList();
-      }
+
+    if (filters.isNotEmpty) {
+      filtered = filtered.where((p) {
+        // Match if the post type is in the filters, 
+        // OR if the 'subscribed' filter is active and the user is subscribed to the channel.
+        final bool typeMatch = filters.contains(p.feedType);
+        final bool subMatch = filters.contains(PostFeedType.subscribed) &&
+            (_subscriptions[p.channelId]?.isSubscribed ?? false);
+        return typeMatch || subMatch;
+      }).toList();
     }
+
     if (searchQuery != null && searchQuery.isNotEmpty) {
       final q = searchQuery.toLowerCase();
-      filtered = filtered.where((p) => p.bodyText.toLowerCase().contains(q)).toList();
+      filtered =
+          filtered.where((p) => p.bodyText.toLowerCase().contains(q)).toList();
     }
     return filtered;
   }
@@ -161,6 +203,21 @@ class MockFeedRepository implements FeedRepository {
       replyCount: 0,
     );
     _comments.add(newComment);
+
+    // Increment post comment count
+    final pIdx = _posts.indexWhere((p) => p.postId == postId);
+    if (pIdx != -1) {
+      _posts[pIdx] = _posts[pIdx].copyWith(commentCount: _posts[pIdx].commentCount + 1);
+    }
+
+    // Increment parent comment reply count
+    if (parentCommentId != null) {
+      final cIdx = _comments.indexWhere((c) => c.commentId == parentCommentId);
+      if (cIdx != -1) {
+        _comments[cIdx] = _comments[cIdx].copyWith(replyCount: _comments[cIdx].replyCount + 1);
+      }
+    }
+
     return newComment;
   }
 
@@ -187,6 +244,63 @@ class MockFeedRepository implements FeedRepository {
       likeCount: comment.isLikedByCurrentUser ? comment.likeCount - 1 : comment.likeCount + 1,
     );
     _comments[index] = updated;
+    return updated;
+  }
+
+  @override
+  Future<Comment> editComment(String commentId, String newBodyText) async {
+    await _latency();
+    final index = _comments.indexWhere((c) => c.commentId == commentId);
+    if (index == -1) throw Exception('Comment not found');
+    final updated = _comments[index].copyWith(
+      bodyText: newBodyText,
+      isEdited: true,
+    );
+    _comments[index] = updated;
+    return updated;
+  }
+
+  @override
+  Future<void> deleteComment(String commentId) async {
+    await _latency();
+    final index = _comments.indexWhere((c) => c.commentId == commentId);
+    if (index == -1) return;
+
+    final comment = _comments[index];
+    final postId = comment.postId;
+    final parentId = comment.parentCommentId;
+
+    // Find all replies if it's a top-level comment
+    final List<String> idsToDelete = [commentId];
+    if (parentId == null) {
+      final replies = _comments.where((c) => c.parentCommentId == commentId).map((c) => c.commentId);
+      idsToDelete.addAll(replies);
+    }
+
+    // Update counts
+    final pIdx = _posts.indexWhere((p) => p.postId == postId);
+    if (pIdx != -1) {
+      _posts[pIdx] = _posts[pIdx].copyWith(commentCount: _posts[pIdx].commentCount - idsToDelete.length);
+    }
+
+    if (parentId != null) {
+      final cIdx = _comments.indexWhere((c) => c.commentId == parentId);
+      if (cIdx != -1) {
+        _comments[cIdx] = _comments[cIdx].copyWith(replyCount: _comments[cIdx].replyCount - 1);
+      }
+    }
+
+    _comments.removeWhere((c) => idsToDelete.contains(c.commentId));
+  }
+
+  @override
+  Future<Post> sharePost(String postId) async {
+    await _latency();
+    final index = _posts.indexWhere((p) => p.postId == postId);
+    if (index == -1) throw Exception('Post not found');
+    final post = _posts[index];
+    final updated = post.copyWith(shareCount: post.shareCount + 1);
+    _posts[index] = updated;
     return updated;
   }
 

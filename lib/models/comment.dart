@@ -10,6 +10,7 @@ class Comment {
   final int likeCount;
   final bool isLikedByCurrentUser;
   final int replyCount;
+  final bool isEdited;
 
   const Comment({
     required this.commentId,
@@ -21,23 +22,27 @@ class Comment {
     required this.likeCount,
     required this.isLikedByCurrentUser,
     required this.replyCount,
+    this.isEdited = false,
   });
 
   Comment copyWith({
     int? likeCount,
     bool? isLikedByCurrentUser,
     int? replyCount,
+    String? bodyText,
+    bool? isEdited,
   }) {
     return Comment(
       commentId: commentId,
       postId: postId,
       parentCommentId: parentCommentId,
       authorUserId: authorUserId,
-      bodyText: bodyText,
+      bodyText: bodyText ?? this.bodyText,
       postedAt: postedAt,
       likeCount: likeCount ?? this.likeCount,
       isLikedByCurrentUser: isLikedByCurrentUser ?? this.isLikedByCurrentUser,
       replyCount: replyCount ?? this.replyCount,
+      isEdited: isEdited ?? this.isEdited,
     );
   }
 }

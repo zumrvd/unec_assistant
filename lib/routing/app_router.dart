@@ -26,6 +26,7 @@ import 'package:unec_assistant/screens/functions/notes/note_files_screen.dart';
 import 'package:unec_assistant/screens/functions/notes/note_editor_screen.dart';
 import 'package:unec_assistant/screens/feed/post_detail_screen.dart';
 import 'package:unec_assistant/screens/feed/manage_channels_screen.dart';
+import 'package:unec_assistant/screens/feed/create_post_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/home',
@@ -176,6 +177,10 @@ final GoRouter appRouter = GoRouter(
                 GoRoute(
                   path: 'manage-channels',
                   builder: (context, state) => const ManageChannelsScreen(),
+                ),
+                GoRoute(
+                  path: 'create-post',
+                  builder: (context, state) => const CreatePostScreen(),
                 ),
               ],
             ),

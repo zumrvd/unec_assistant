@@ -76,11 +76,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final VoidCallback? onBackTap;
   final Widget? trailing;
+  final Widget? leading;
 
   const CustomAppBar({
     required this.title,
     this.onBackTap,
     this.trailing,
+    this.leading,
     super.key,
   });
 
@@ -111,7 +113,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    GestureDetector(
+                    leading ?? GestureDetector(
                       onTap: onBackTap ?? () => Navigator.of(context).pop(),
                       child: Container(
                         width: 40,

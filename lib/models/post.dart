@@ -29,6 +29,7 @@ class Post {
     int? likeCount,
     bool? isLikedByCurrentUser,
     int? commentCount,
+    int? shareCount,
   }) {
     return Post(
       postId: postId,
@@ -39,7 +40,7 @@ class Post {
       postedAt: postedAt,
       likeCount: likeCount ?? this.likeCount,
       commentCount: commentCount ?? this.commentCount,
-      shareCount: shareCount,
+      shareCount: shareCount ?? this.shareCount,
       isLikedByCurrentUser: isLikedByCurrentUser ?? this.isLikedByCurrentUser,
     );
   }
