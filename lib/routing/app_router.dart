@@ -77,10 +77,6 @@ final GoRouter appRouter = GoRouter(
                   builder: (context, state) => const AttendanceScreen(),
                 ),
                 GoRoute(
-                  path: 'notes_function',
-                  redirect: (context, state) => '/notes',
-                ),
-                GoRoute(
                   path: 'subjects',
                   builder: (context, state) => const SubjectsScreen(),
                   routes: [
@@ -162,6 +158,24 @@ final GoRouter appRouter = GoRouter(
                 ),
               ],
             ),
+            GoRoute(
+              path: '/notes',
+              builder: (context, state) => const NotesScreen(),
+              routes: [
+                GoRoute(
+                  path: 'folder/:folderId',
+                  builder: (context, state) => NoteFilesScreen(
+                    folderId: state.pathParameters['folderId']!,
+                  ),
+                ),
+                GoRoute(
+                  path: 'editor/:noteId',
+                  builder: (context, state) => NoteEditorScreen(
+                    noteId: state.pathParameters['noteId']!,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
         StatefulShellBranch(
@@ -227,24 +241,6 @@ final GoRouter appRouter = GoRouter(
               ],
             ),
           ],
-        ),
-      ],
-    ),
-    GoRoute(
-      path: '/notes',
-      builder: (context, state) => const NotesScreen(),
-      routes: [
-        GoRoute(
-          path: 'folder/:folderId',
-          builder: (context, state) => NoteFilesScreen(
-            folderId: state.pathParameters['folderId']!,
-          ),
-        ),
-        GoRoute(
-          path: 'editor/:noteId',
-          builder: (context, state) => NoteEditorScreen(
-            noteId: state.pathParameters['noteId']!,
-          ),
         ),
       ],
     ),

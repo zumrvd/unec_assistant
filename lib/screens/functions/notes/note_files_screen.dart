@@ -6,7 +6,6 @@ import 'package:uuid/uuid.dart';
 import '../../../presentation/components/lists/labels.dart';
 import '../../../presentation/components/inputs/app_search_bar.dart';
 import '../../../presentation/components/lists/note_files_grid.dart';
-import '../../../presentation/components/buttons/notes_add_button.dart';
 import '../../../providers/notes_provider.dart';
 import '../../../models/note.dart';
 
@@ -98,51 +97,49 @@ class _NoteFilesScreenState extends ConsumerState<NoteFilesScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FC),
       appBar: CustomAppBar(title: folder.folderName),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AppSearchBar(
-                  controller: _searchController,
-                  hintText: 'Search in folder...',
-                  onChanged: (q) => setState(() => _searchQuery = q),
-                ),
-                const SizedBox(height: 25),
-                if (notes.isEmpty)
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 40),
-                      child: Text(
-                        _searchQuery.isEmpty
-                            ? "No notes in this folder"
-                            : "No notes matching your search",
-                        style: GoogleFonts.redditSans(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14,
-                          color: const Color(0xFF838A97),
-                        ),
-                      ),
-                    ),
-                  )
-                else
-                  NoteFilesGrid(
-                    notes: notes,
-                    onNoteTap: (note) =>
-                        context.push('/notes/editor/${note.noteId}'),
-                    onDeleteNote: _confirmDelete,
-                  ),
-              ],
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppSearchBar(
+              controller: _searchController,
+              hintText: 'Search in folder...',
+              onChanged: (q) => setState(() => _searchQuery = q),
             ),
-          ),
-          Positioned(
-            bottom: 30,
-            right: 30,
-            child: NotesAddButton(onTap: _createNewNote),
-          ),
-        ],
+            const SizedBox(height: 25),
+            if (notes.isEmpty)
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: Text(
+                    _searchQuery.isEmpty
+                        ? "No notes in this folder"
+                        : "No notes matching your search",
+                    style: GoogleFonts.redditSans(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                      color: const Color(0xFF838A97),
+                    ),
+                  ),
+                ),
+              )
+            else
+              NoteFilesGrid(
+                notes: notes,
+                onNoteTap: (note) =>
+                    context.push('/notes/editor/${note.noteId}'),
+                onDeleteNote: _confirmDelete,
+              ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _createNewNote,
+        backgroundColor: const Color(0xFF0569FF),
+        shape: const CircleBorder(),
+        elevation: 4,
+        child: const Icon(Icons.add_rounded, color: Colors.white, size: 28),
       ),
     );
   }

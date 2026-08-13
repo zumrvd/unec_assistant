@@ -24,64 +24,68 @@ class DeveloperIdCard extends StatelessWidget {
         gradient: _cardGradient,
         borderRadius: BorderRadius.circular(18),
       ),
-      padding: const EdgeInsets.all(20),
       child: Stack(
         clipBehavior: Clip.none,
         children: [
+          // Mascot peeking from the right
           Positioned(
-            top: -10,
-            right: -10,
+            top: 0,
+            right: -19,
+            bottom: 5,
             child: Image.asset(
-              'assets/images/robot_mascot.png',
-              width: 100,
-              height: 100,
-              errorBuilder: (context, error, stackTrace) => const SizedBox(width: 100, height: 100),
+              'assets/images/robot_mascot.PNG',
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                kDeveloperGreeting,
-                style: GoogleFonts.redditSans(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 11,
-                  color: const Color(0x80F8F9FC),
-                ),
-              ),
-              const SizedBox(height: 2),
-              SizedBox(
-                width: 180,
-                child: Text(
-                  kDeveloperName,
-                  softWrap: true,
+          // Content
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  kDeveloperGreeting,
                   style: GoogleFonts.redditSans(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 26,
-                    color: const Color(0xFFF8F9FC),
-                    height: 1.1,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 11,
+                    color: const Color(0x80F8F9FC),
                   ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                kDeveloperSubtitle,
-                style: GoogleFonts.redditSans(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 11,
-                  color: const Color(0x80F8F9FC),
+                const SizedBox(height: 2),
+                SizedBox(
+                  width: 180,
+                  child: Text(
+                    kDeveloperName,
+                    softWrap: true,
+                    style: GoogleFonts.redditSans(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 26,
+                      color: const Color(0xFFF8F9FC),
+                      height: 1.1,
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                kDeveloperRoleTags,
-                style: GoogleFonts.redditSans(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 13,
-                  color: const Color(0xFFF8F9FC),
+                const SizedBox(height: 8),
+                Text(
+                  kDeveloperSubtitle,
+                  style: GoogleFonts.redditSans(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 11,
+                    color: const Color(0x80F8F9FC),
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 4),
+                Text(
+                  kDeveloperRoleTags,
+                  style: GoogleFonts.redditSans(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
+                    color: const Color(0xFFF8F9FC),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

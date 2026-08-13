@@ -129,46 +129,81 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     return Scaffold(
       backgroundColor: _getSkinBgColor(_selectedSkin),
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70),
+        preferredSize: const Size.fromHeight(85),
         child: Container(
-          padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
-          child: Row(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  _saveNote();
-                  Navigator.pop(context);
-                },
-                child: const Icon(Icons.arrow_back_ios_new_rounded,
-                    size: 20, color: Color(0xFF838A97)),
-              ),
-              const SizedBox(width: 15),
-              Expanded(
-                child: TextField(
-                  controller: _titleController,
-                  onChanged: (_) => _onChanged(),
-                  style: GoogleFonts.redditSans(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 18,
-                      color: const Color(0xFF1F1F1F)),
-                  decoration: const InputDecoration(
-                      border: InputBorder.none, hintText: 'Note Title'),
+          decoration: const BoxDecoration(
+            border: Border(
+              top: BorderSide(color: Color(0xFFE0E4F0), width: 1),
+              bottom: BorderSide(color: Color(0xFFE0E4F0), width: 1),
+            ),
+          ),
+          child: Container(
+            height: 70,
+            width: double.infinity,
+            color: _getSkinBgColor(_selectedSkin),
+            padding: const EdgeInsets.symmetric(horizontal: 35.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          _saveNote();
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: const Color(0x80E0E4F0),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(
+                            Icons.arrow_back,
+                            size: 20,
+                            color: Color(0x80838A97),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: TextField(
+                          controller: _titleController,
+                          onChanged: (_) => _onChanged(),
+                          style: GoogleFonts.redditSans(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 18,
+                              color: const Color(0xFF838A97)),
+                          decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Note Title',
+                              hintStyle: TextStyle(color: Color(0x80838A97))),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  _saveNote();
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  'Done',
-                  style: GoogleFonts.redditSans(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 15,
-                      color: const Color(0xFF0569FF)),
+                const SizedBox(width: 12),
+                GestureDetector(
+                  onTap: () {
+                    _saveNote();
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'Done',
+                    style: GoogleFonts.redditSans(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 15,
+                        color: const Color(0xFF0569FF)),
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(width: 8),
+              ],
+            ),
           ),
         ),
       ),
