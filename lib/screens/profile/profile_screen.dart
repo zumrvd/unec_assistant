@@ -60,7 +60,7 @@ class ProfileScreen extends StatelessWidget {
                     Center(
                       child: SettingsCard1(
                         onProfileInfoTap: () =>
-                            context.push('/profile/profile_info'),
+                            context.push('/profile/academic_profile'),
                         onUnecCabinetTap: _launchUnecCabinet,
                         onChangePassTap: () =>
                             context.push('/profile/change_pass'),

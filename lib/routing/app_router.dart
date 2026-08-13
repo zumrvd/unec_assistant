@@ -27,6 +27,8 @@ import 'package:unec_assistant/screens/functions/notes/note_editor_screen.dart';
 import 'package:unec_assistant/screens/feed/post_detail_screen.dart';
 import 'package:unec_assistant/screens/feed/manage_channels_screen.dart';
 import 'package:unec_assistant/screens/feed/create_post_screen.dart';
+import 'package:unec_assistant/screens/profile/academic_profile_screen.dart';
+import 'package:unec_assistant/screens/profile/share_profile_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/home',
@@ -213,6 +215,14 @@ final GoRouter appRouter = GoRouter(
                 GoRoute(
                   path: 'profile_info',
                   builder: (context, state) => const ProfileInfoScreen(),
+                ),
+                GoRoute(
+                  path: 'academic_profile',
+                  builder: (context, state) => const AcademicProfileScreen(),
+                ),
+                GoRoute(
+                  path: 'share_profile',
+                  builder: (context, state) => const ShareProfileScreen(),
                 ),
               ],
             ),
