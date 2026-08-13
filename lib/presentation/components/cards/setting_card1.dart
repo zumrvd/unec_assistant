@@ -60,39 +60,40 @@ class SettingsCard1 extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _iconBox(
-                    Icons.badge_outlined,
-                    const Color(0x260F6E56),
-                    const Color(0xFF0F6E56),
-                  ),
-                  const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Profile İnformations', style: _labelStyle()),
-                      const SizedBox(height: 2),
-                      Text(
-                        'Your full transcript',
-                        style: GoogleFonts.redditSans(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 11,
-                          color: _subtitleColor,
+          GestureDetector(
+            onTap: onProfileInfoTap,
+            behavior: HitTestBehavior.opaque,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _iconBox(
+                      Icons.badge_outlined,
+                      const Color(0x260F6E56),
+                      const Color(0xFF0F6E56),
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Profile İnformations', style: _labelStyle()),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Your full transcript',
+                          style: GoogleFonts.redditSans(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 11,
+                            color: _subtitleColor,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              GestureDetector(
-                onTap: onProfileInfoTap,
-                child: Container(
+                      ],
+                    ),
+                  ],
+                ),
+                Container(
                   width: 28,
                   height: 28,
                   decoration: BoxDecoration(
@@ -105,8 +106,8 @@ class SettingsCard1 extends StatelessWidget {
                     color: _labelGrey,
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
 
           const SizedBox(height: 15),
@@ -119,41 +120,42 @@ class SettingsCard1 extends StatelessWidget {
 
           const SizedBox(height: 15),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _iconBox(
-                    Icons.add_box,
-                    const Color(0x260569FF),
-                    const Color(0xFF0569FF),
-                  ),
+          GestureDetector(
+            onTap: onUnecCabinetTap,
+            behavior: HitTestBehavior.opaque,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _iconBox(
+                      Icons.add_box,
+                      const Color(0x260569FF),
+                      const Color(0xFF0569FF),
+                    ),
 
-                  const SizedBox(width: 12),
+                    const SizedBox(width: 12),
 
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Unec Cabinet', style: _labelStyle()),
-                      const SizedBox(height: 2),
-                      Text(
-                        'Direct link to your cabinet',
-                        style: GoogleFonts.redditSans(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 11,
-                          color: _subtitleColor,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Unec Cabinet', style: _labelStyle()),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Direct link to your cabinet',
+                          style: GoogleFonts.redditSans(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 11,
+                            color: _subtitleColor,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              GestureDetector(
-                onTap: onUnecCabinetTap,
-                child: Container(
+                      ],
+                    ),
+                  ],
+                ),
+                Container(
                   width: 28,
                   height: 28,
                   decoration: BoxDecoration(
@@ -166,8 +168,8 @@ class SettingsCard1 extends StatelessWidget {
                     color: _labelGrey,
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
 
           const SizedBox(height: 15),
@@ -180,39 +182,40 @@ class SettingsCard1 extends StatelessWidget {
 
           const SizedBox(height: 15),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _iconBox(
-                    Icons.password_rounded,
-                    const Color(0x26993C1D),
-                    const Color(0xFF993C1D),
-                  ),
-                  const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Change Password', style: _labelStyle()),
-                      const SizedBox(height: 2),
-                      Text(
-                        'Resets your password',
-                        style: GoogleFonts.redditSans(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 11,
-                          color: _subtitleColor,
+          GestureDetector(
+            onTap: onChangePassTap,
+            behavior: HitTestBehavior.opaque,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _iconBox(
+                      Icons.password_rounded,
+                      const Color(0x26993C1D),
+                      const Color(0xFF993C1D),
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Change Password', style: _labelStyle()),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Resets your password',
+                          style: GoogleFonts.redditSans(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 11,
+                            color: _subtitleColor,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              GestureDetector(
-                onTap: onChangePassTap,
-                child: Container(
+                      ],
+                    ),
+                  ],
+                ),
+                Container(
                   width: 28,
                   height: 28,
                   decoration: BoxDecoration(
@@ -225,8 +228,8 @@ class SettingsCard1 extends StatelessWidget {
                     color: _labelGrey,
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
