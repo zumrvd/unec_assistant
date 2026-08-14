@@ -5,6 +5,9 @@ import 'package:unec_assistant/models/channel.dart';
 import 'package:unec_assistant/models/post.dart';
 import 'package:unec_assistant/presentation/components/cards/current_class_card.dart';
 import 'package:unec_assistant/presentation/components/cards/attendance_card.dart';
+import 'package:unec_assistant/presentation/components/cards/schedule_card.dart';
+import 'package:unec_assistant/presentation/components/cards/recent_note_card.dart';
+import 'package:unec_assistant/presentation/components/cards/recent_grade_card.dart';
 import 'package:unec_assistant/presentation/components/cards/post_card.dart';
 import 'package:unec_assistant/providers/dashboard_provider.dart';
 
@@ -31,6 +34,10 @@ class HomeScreen extends ConsumerWidget {
           ),
 
           const AttendanceCard(),
+
+          const ScheduleCard(),
+
+          const RecentGradeCard(),
 
           const SizedBox(height: 10),
           const SectionLabel('News Feed'),
@@ -60,6 +67,12 @@ class HomeScreen extends ConsumerWidget {
               onLikeTap: () {},
               onShareTap: () {},
             ),
+
+          const SizedBox(height: 10),
+          const SectionLabel('Personal'),
+
+          const RecentNoteCard(),
+
         ],
       ),
     );
