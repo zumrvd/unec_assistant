@@ -39,12 +39,37 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
 
   Widget _buildEventTile(CalendarEvent e) {
     final bool isPersonal = e.type == EventType.personalEvent;
+    final bool isExam = e.type == EventType.exam;
     
-    final Color accentColor = isPersonal ? const Color(0xFFE3993C) : const Color(0xFF0569FF);
-    final Color bgColor = isPersonal ? const Color(0x26E3993C) : const Color(0xFFE8F0FE);
-    final Color borderColor = isPersonal ? const Color(0x26E3993C) : const Color(0x260569FF);
-    final Color subtitleColor = isPersonal ? const Color(0xFF985909).withValues(alpha: 0.5) : const Color(0x800569FF);
-    final Color locationColor = isPersonal ? const Color(0xFF985909).withValues(alpha: 0.7) : const Color(0xBF0569FF);
+    final Color accentColor = isPersonal 
+        ? const Color(0xFFE3993C) 
+        : isExam 
+            ? const Color(0xFF0F6E56) 
+            : const Color(0xFF0569FF);
+            
+    final Color bgColor = isPersonal 
+        ? const Color(0x26E3993C) 
+        : isExam 
+            ? const Color(0xFFE8F6F1) 
+            : const Color(0xFFE8F0FE);
+            
+    final Color borderColor = isPersonal 
+        ? const Color(0x26E3993C) 
+        : isExam 
+            ? const Color(0x260F6E56) 
+            : const Color(0x260569FF);
+            
+    final Color subtitleColor = isPersonal 
+        ? const Color(0xFF985909).withValues(alpha: 0.5) 
+        : isExam 
+            ? const Color(0x800F6E56) 
+            : const Color(0x800569FF);
+            
+    final Color locationColor = isPersonal 
+        ? const Color(0xFF985909).withValues(alpha: 0.7) 
+        : isExam 
+            ? const Color(0xBF0F6E56) 
+            : const Color(0xBF0569FF);
 
     return Container(
       width: double.infinity,

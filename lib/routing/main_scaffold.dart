@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:unec_assistant/presentation/components/drawer/subscribed_channels_drawer.dart';
+import 'package:unec_assistant/presentation/components/drawer/general_drawer.dart';
 
 /// Figma palette shared by the global app bar and nav indicator.
 abstract final class _AppColors {
@@ -134,8 +135,12 @@ class MainScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isFeedBranch = navigationShell.currentIndex == 2;
+
     return Scaffold(
-      drawer: const SubscribedChannelsDrawer(),
+      drawer: isFeedBranch
+          ? const SubscribedChannelsDrawer()
+          : const GeneralDrawer(),
       body: Column(
         children: [
           const GlobalAppBar(),

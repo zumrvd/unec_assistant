@@ -52,7 +52,7 @@ class _EventDetailsCard extends StatelessWidget {
       case EventType.personalEvent:
         return const Color(0xFFE3993C);
       case EventType.exam:
-        return const Color(0xFF534AB7);
+        return const Color(0xFF0F6E56);
     }
   }
 

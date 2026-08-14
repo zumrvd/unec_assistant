@@ -14,10 +14,16 @@ enum CalendarView { month, week, day }
 class CalendarCard extends ConsumerStatefulWidget {
   const CalendarCard({
     required this.onActiveClassTap,
+    this.initialDate,
+    this.initialView,
+    this.initialScrollTime,
     super.key,
   });
 
   final VoidCallback onActiveClassTap;
+  final DateTime? initialDate;
+  final CalendarView? initialView;
+  final TimeOfDay? initialScrollTime;
 
   @override
   ConsumerState<CalendarCard> createState() => _CalendarCardState();
@@ -31,11 +37,11 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
   DateTime _now = DateTime.now();
   late ScrollController _weekScrollController;
   late ScrollController _dayScrollController;
-  late ScrollController _weekHorizontalController;
-  late ScrollController _weekHeaderHorizontalController;
+  final ScrollController _weekHorizontalController = ScrollController();
+  final ScrollController _weekHeaderHorizontalController = ScrollController();
 
   static const _hourHeight = 65.0;
-  static const _weekDayWidth = 68.6;
+  static const _weekDayWidth = 72.0;
   static const _totalGridHeight = 24 * _hourHeight;
   static const _borderColor = Color(0xFFE0E4F0);
   static const _primaryBlue = Color(0xFF0569FF);
@@ -74,6 +80,15 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
   @override
   void initState() {
     super.initState();
+
+    if (widget.initialView != null) {
+      _view = widget.initialView!;
+    }
+    if (widget.initialDate != null) {
+      _focusedDate = widget.initialDate!;
+      _selectedDate = widget.initialDate!;
+    }
+
     _nowTimer = Timer.periodic(
       const Duration(minutes: 1),
       (_) {
@@ -81,14 +96,39 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
         setState(() => _now = DateTime.now());
       },
     );
+
+    double initialOffset = 8 * _hourHeight;
+    if (widget.initialScrollTime != null) {
+      initialOffset = (widget.initialScrollTime!.hour +
+              widget.initialScrollTime!.minute / 60.0) *
+          _hourHeight;
+    }
+
     _weekScrollController = ScrollController(
-      initialScrollOffset: 8 * _hourHeight,
+      initialScrollOffset: initialOffset,
     );
     _dayScrollController = ScrollController(
-      initialScrollOffset: 8 * _hourHeight,
+      initialScrollOffset: initialOffset,
     );
-    _weekHorizontalController = ScrollController();
-    _weekHeaderHorizontalController = ScrollController();
+
+    // Sync horizontal scrolls
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      
+      _weekHorizontalController.addListener(() {
+        if (_weekHeaderHorizontalController.hasClients &&
+            _weekHeaderHorizontalController.offset != _weekHorizontalController.offset) {
+          _weekHeaderHorizontalController.jumpTo(_weekHorizontalController.offset);
+        }
+      });
+
+      _weekHeaderHorizontalController.addListener(() {
+        if (_weekHorizontalController.hasClients &&
+            _weekHorizontalController.offset != _weekHeaderHorizontalController.offset) {
+          _weekHorizontalController.jumpTo(_weekHeaderHorizontalController.offset);
+        }
+      });
+    });
   }
 
   @override
@@ -109,7 +149,6 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     final now = _now;
     if (!isSameCalendarDay(now, e.startTime) &&
         !isSameCalendarDay(now, e.endTime)) {
-      // Cross-midnight: active if now is between start and end.
       if (!(now.isAfter(e.startTime) && now.isBefore(e.endTime))) {
         return false;
       }
@@ -142,7 +181,6 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     return topRatio * _totalGridHeight;
   }
 
-  /// Visible segment of [event] on [day] for positioning in the grid.
   (double top, double height) _segmentOnDay(CalendarEvent event, DateTime day) {
     final dayStart = normalizeDay(day);
     final dayEnd = dayStart.add(const Duration(days: 1));
@@ -239,7 +277,6 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
   }
 
   Widget _buildMonthView() {
-    // Keep provider watched so month cells refresh on CRUD.
     ref.watch(calendarEventsProvider);
 
     final firstDayOfMonth = DateTime(_focusedDate.year, _focusedDate.month, 1);
@@ -332,7 +369,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
       case EventType.personalEvent:
         return const Color(0xFF985909);
       case EventType.exam:
-        return const Color(0xFF534AB7);
+        return const Color(0xFF0F6E56);
     }
   }
 
@@ -479,23 +516,20 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Headers Row
-        Row(
-          children: [
-            const SizedBox(width: 50),
-            Expanded(
-              child: NotificationListener<ScrollNotification>(
-                onNotification: (notification) {
-                  if (notification is ScrollUpdateNotification &&
-                      notification.metrics.axis == Axis.horizontal) {
-                    _weekHorizontalController
-                        .jumpTo(_weekHeaderHorizontalController.offset);
-                  }
-                  return false;
-                },
+        // STICKY Date Headers
+        Container(
+          color: Colors.white, // Ensure it covers content behind if needed
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Row(
+            children: [
+              const SizedBox(width: 50), // Align with time column
+              Expanded(
                 child: SingleChildScrollView(
                   controller: _weekHeaderHorizontalController,
                   scrollDirection: Axis.horizontal,
+                  physics: const AlwaysScrollableScrollPhysics(
+                    parent: BouncingScrollPhysics(),
+                  ),
                   child: Row(
                     children: [
                       for (final day in weekDays)
@@ -517,9 +551,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                                   style: GoogleFonts.redditSans(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12,
-                                    color: _isToday(day)
-                                        ? _primaryBlue
-                                        : _textGrey,
+                                    color: _isToday(day) ? _primaryBlue : _textGrey,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
@@ -553,21 +585,23 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                             ),
                           ),
                         ),
+                      const SizedBox(width: 20),
                     ],
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        const SizedBox(height: 8),
+        const Divider(height: 1, color: _borderColor),
+        // Scrollable Content
         Expanded(
           child: SingleChildScrollView(
             controller: _weekScrollController,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Time column
+                // Fixed Time Column
                 SizedBox(
                   width: 50,
                   child: Column(
@@ -589,86 +623,70 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                     ],
                   ),
                 ),
-                // Grid and events
+                // Grid Content (Horizontal)
                 Expanded(
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (notification) {
-                      if (notification is ScrollUpdateNotification &&
-                          notification.metrics.axis == Axis.horizontal) {
-                        _weekHeaderHorizontalController
-                            .jumpTo(_weekHorizontalController.offset);
-                      }
-                      return false;
-                    },
-                    child: SingleChildScrollView(
-                      controller: _weekHorizontalController,
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
+                  child: SingleChildScrollView(
+                    controller: _weekHorizontalController,
+                    scrollDirection: Axis.horizontal,
+                    physics: const AlwaysScrollableScrollPhysics(
+                      parent: BouncingScrollPhysics(),
+                    ),
+                    child: SizedBox(
+                      height: _totalGridHeight,
+                      width: 7 * _weekDayWidth + 20,
+                      child: Stack(
+                        clipBehavior: Clip.none,
                         children: [
-                          for (final day in weekDays)
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _selectedDate = day;
-                                  _focusedDate = day;
-                                  _view = CalendarView.day;
-                                });
-                              },
-                              child: SizedBox(
-                                width: _weekDayWidth,
-                                height: _totalGridHeight,
-                                child: Stack(
-                                  clipBehavior: Clip.hardEdge,
-                                  children: [
-                                    Column(
-                                      children: [
-                                        for (var h = 0; h < 24; h++)
-                                          Container(
-                                            height: _hourHeight,
-                                            decoration: const BoxDecoration(
-                                              border: Border(
-                                                top: BorderSide(
-                                                  color: _borderColor,
-                                                  width: 0.5,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                      ],
+                          // Background Grid Lines
+                          for (var h = 0; h < 24; h++)
+                            Positioned(
+                              top: h * _hourHeight,
+                              left: 0,
+                              right: 0,
+                              child: Container(
+                                height: _hourHeight,
+                                decoration: const BoxDecoration(
+                                  border: Border(
+                                    top: BorderSide(
+                                      color: _borderColor,
+                                      width: 0.5,
                                     ),
-                                    for (final event in _eventsForDate(day))
-                                      Builder(
-                                        builder: (context) {
-                                          final (top, height) =
-                                              _segmentOnDay(event, day);
-                                          return Positioned(
-                                            top: top,
-                                            left: 2,
-                                            child: SizedBox(
-                                              height: height,
-                                              child: _buildWeekEventTile(
-                                                event,
-                                                height: height,
-                                                isActive: _isActiveNow(event),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    if (_isToday(day))
-                                      Positioned(
-                                        top: _nowTop() - 4,
-                                        left: 0,
-                                        child: IgnorePointer(
-                                          child: _buildNowIndicator(
-                                            width: _weekDayWidth,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             ),
+                          // Events
+                          for (var i = 0; i < weekDays.length; i++)
+                            for (final event in _eventsForDate(weekDays[i]))
+                              Builder(
+                                builder: (context) {
+                                  final (top, height) = _segmentOnDay(event, weekDays[i]);
+                                  return Positioned(
+                                    top: top,
+                                    left: i * _weekDayWidth + 2,
+                                    width: _weekDayWidth - 4,
+                                    height: height,
+                                    child: _buildWeekEventTile(
+                                      event,
+                                      height: height,
+                                      isActive: _isActiveNow(event),
+                                    ),
+                                  );
+                                },
+                              ),
+                          // Now Indicator
+                          for (var i = 0; i < weekDays.length; i++)
+                            if (_isToday(weekDays[i]))
+                              Positioned(
+                                top: _nowTop() - 4,
+                                left: i * _weekDayWidth,
+                                width: _weekDayWidth,
+                                child: IgnorePointer(
+                                  child: _buildNowIndicator(
+                                    width: _weekDayWidth,
+                                  ),
+                                ),
+                              ),
                         ],
                       ),
                     ),
@@ -689,7 +707,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
       case EventType.personalEvent:
         return isActive ? const Color(0xFFE3993C) : const Color(0xFFF0EAE0);
       case EventType.exam:
-        return isActive ? const Color(0xFF534AB7) : const Color(0xFFE8E6F8);
+        return isActive ? const Color(0xFF0F6E56) : const Color(0xFFE8F6F1);
     }
   }
 
@@ -700,7 +718,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
       case EventType.personalEvent:
         return isActive ? const Color(0xFFC27719) : const Color(0xFFE3993C);
       case EventType.exam:
-        return isActive ? const Color(0xFF3D3690) : const Color(0xFF534AB7);
+        return isActive ? const Color(0xFF0A5442) : const Color(0xFF0F6E56);
     }
   }
 
@@ -720,7 +738,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
       case EventType.exam:
         return isActive
             ? const Color(0x80F8F9FC)
-            : const Color(0x80534AB7);
+            : const Color(0x800F6E56);
     }
   }
 
@@ -732,8 +750,6 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     return GestureDetector(
       onTap: () => _openDetails(e),
       child: Container(
-        width: 64,
-        height: height,
         decoration: BoxDecoration(
           color: _tileBackground(e.type, isActive),
           borderRadius: BorderRadius.circular(6),
@@ -863,7 +879,6 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     );
   }
 
-  /// Assigns columns for overlapping events to avoid RenderFlex overflow.
   List<(CalendarEvent event, int column, int columnCount)> _layoutOverlaps(
     List<CalendarEvent> events,
     DateTime day,
@@ -1136,9 +1151,12 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildViewToggle(),
-          if (_view == CalendarView.month) _buildMonthView(),
-          if (_view == CalendarView.week) _buildWeekView(),
-          if (_view == CalendarView.day) _buildDayView(),
+          if (_view == CalendarView.month)
+            KeyedSubtree(key: const ValueKey('cal_view_month'), child: _buildMonthView()),
+          if (_view == CalendarView.week)
+            KeyedSubtree(key: const ValueKey('cal_view_week'), child: _buildWeekView()),
+          if (_view == CalendarView.day)
+            KeyedSubtree(key: const ValueKey('cal_view_day'), child: _buildDayView()),
         ],
       ),
     );

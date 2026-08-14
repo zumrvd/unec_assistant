@@ -9,7 +9,16 @@ import 'package:unec_assistant/providers/calendar_provider.dart';
 import 'package:unec_assistant/presentation/components/lists/labels.dart';
 
 class ScheduleScreen extends ConsumerWidget {
-  const ScheduleScreen({super.key});
+  final DateTime? initialDate;
+  final CalendarView? initialView;
+  final TimeOfDay? scrollToTime;
+
+  const ScheduleScreen({
+    this.initialDate,
+    this.initialView,
+    this.scrollToTime,
+    super.key,
+  });
 
   Future<void> _openCreateSheet(BuildContext context, WidgetRef ref) async {
     final created = await showEventEditorSheet(
@@ -75,6 +84,9 @@ class ScheduleScreen extends ConsumerWidget {
               CalendarCard(
                 onActiveClassTap: () =>
                     context.push('/functions/current_class_function'),
+                initialDate: initialDate,
+                initialView: initialView,
+                initialScrollTime: scrollToTime,
               ),
             ],
           ),

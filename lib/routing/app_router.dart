@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:unec_assistant/routing/main_scaffold.dart';
@@ -5,6 +6,7 @@ import 'package:unec_assistant/screens/feed/feed_main_screen.dart';
 import 'package:unec_assistant/screens/functions/current%20class/current_class_screen.dart';
 import 'package:unec_assistant/screens/functions/notes/notes_screen.dart';
 import 'package:unec_assistant/screens/functions/schedule/schedule_screen.dart';
+import 'package:unec_assistant/presentation/components/cards/calendar_card.dart';
 import 'package:unec_assistant/screens/functions/functions_main_screen.dart';
 import 'package:unec_assistant/screens/home/home_screen.dart';
 import 'package:unec_assistant/screens/profile/change_pass_screen.dart';
@@ -70,7 +72,14 @@ final GoRouter appRouter = GoRouter(
                 ),
                 GoRoute(
                   path: 'schedule_function',
-                  builder: (context, state) => const ScheduleScreen(),
+                  builder: (context, state) {
+                    final extra = state.extra as Map<String, dynamic>?;
+                    return ScheduleScreen(
+                      initialDate: extra?['initialDate'] as DateTime?,
+                      initialView: extra?['initialView'] as CalendarView?,
+                      scrollToTime: extra?['scrollToTime'] as TimeOfDay?,
+                    );
+                  },
                 ),
                 GoRoute(
                   path: 'attendance_function',

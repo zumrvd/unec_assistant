@@ -46,104 +46,110 @@ class CurrentClassCard extends ConsumerWidget {
     final isUpcoming = !state.hasActive && state.hasNext;
     final tracked = isUpcoming ? state.nextClass! : state.activeClass!;
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 330,
-        decoration: BoxDecoration(
-          color: const Color(0xFFFFFFFF),
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: _borderColor,
-            width: 1,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(18),
+        child: Container(
+          width: 330,
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFFFFF),
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(
+              color: _borderColor,
+              width: 1,
+            ),
           ),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      isUpcoming ? 'UP NEXT' : 'CURRENT CLASS',
-                      style: GoogleFonts.redditSans(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                        color: _primaryBlue,
-                      ),
-                    ),
-                    if (isUpcoming) ...[
-                      const SizedBox(height: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        'No class is currently active',
+                        isUpcoming ? 'UP NEXT' : 'CURRENT CLASS',
                         style: GoogleFonts.redditSans(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                          color: _labelGrey,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          color: _primaryBlue,
                         ),
                       ),
+                      if (isUpcoming) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          'No class is currently active',
+                          style: GoogleFonts.redditSans(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                            color: _labelGrey,
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
-                ),
-                if (!isUpcoming)
-                  Image.asset(
-                    'assets/images/red_dot.gif',
-                    width: 28,
-                    height: 28,
-                    gaplessPlayback: true,
-                  )
-                else
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF0F5FF),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      _nextWhenMessage(state.nextWhen),
-                      style: GoogleFonts.redditSans(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 10,
-                        color: _primaryBlue,
+                  ),
+                  if (!isUpcoming)
+                    ExcludeSemantics(
+                      child: Image.asset(
+                        'assets/images/red_dot.gif',
+                        width: 28,
+                        height: 28,
+                        gaplessPlayback: true,
+                      ),
+                    )
+                  else
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF0F5FF),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        _nextWhenMessage(state.nextWhen),
+                        style: GoogleFonts.redditSans(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 10,
+                          color: _primaryBlue,
+                        ),
                       ),
                     ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Text(
+                    'Room',
+                    style: GoogleFonts.redditSans(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 10,
+                      color: _labelGrey,
+                    ),
                   ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: [
-                Text(
-                  'Room',
-                  style: GoogleFonts.redditSans(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 10,
-                    color: _labelGrey,
+                  const SizedBox(width: 6),
+                  Text(
+                    _roomNumber(tracked.event.location),
+                    style: GoogleFonts.redditSans(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 40,
+                      color: _valueBlack,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  _roomNumber(tracked.event.location),
-                  style: GoogleFonts.redditSans(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 40,
-                    color: _valueBlack,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            _infoRow(Icons.book_outlined, 'Subject', tracked.subject.subjectName),
-            const SizedBox(height: 12),
-            _infoRow(Icons.compare_outlined, 'Type', tracked.event.subtype ?? 'Mühazirə'),
-          ],
+                ],
+              ),
+              const SizedBox(height: 12),
+              _infoRow(Icons.book_outlined, 'Subject', tracked.subject.subjectName),
+              const SizedBox(height: 12),
+              _infoRow(Icons.compare_outlined, 'Type', tracked.event.subtype ?? 'Mühazirə'),
+            ],
+          ),
         ),
       ),
     );
