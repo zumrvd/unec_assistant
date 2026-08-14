@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:unec_assistant/models/channel.dart';
 import 'package:unec_assistant/models/post.dart';
 import 'package:unec_assistant/presentation/components/cards/current_class_card.dart';
+import 'package:unec_assistant/presentation/components/cards/attendance_card.dart';
 import 'package:unec_assistant/presentation/components/cards/post_card.dart';
 import 'package:unec_assistant/providers/dashboard_provider.dart';
 
@@ -28,6 +29,8 @@ class HomeScreen extends ConsumerWidget {
           CurrentClassCard(
             onTap: () => context.go('/functions/${recentFunction.title}'),
           ),
+
+          const AttendanceCard(),
 
           const SizedBox(height: 10),
           const SectionLabel('News Feed'),

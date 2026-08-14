@@ -25,8 +25,8 @@ class CalendarCard extends ConsumerStatefulWidget {
 
 class _CalendarCardState extends ConsumerState<CalendarCard> {
   CalendarView _view = CalendarView.month;
-  DateTime _focusedDate = DateTime(2026, 11, 16);
-  DateTime _selectedDate = DateTime(2026, 11, 16);
+  DateTime _focusedDate = DateTime.now();
+  DateTime _selectedDate = DateTime.now();
   late Timer _nowTimer;
   DateTime _now = DateTime.now();
   late ScrollController _weekScrollController;
