@@ -37,6 +37,9 @@ class HomeScreen extends ConsumerWidget {
 
           const ScheduleCard(),
 
+          const SizedBox(height: 10),
+          const SectionLabel('Academic'),
+
           const RecentGradeCard(),
 
           const SizedBox(height: 10),
@@ -70,7 +73,6 @@ class HomeScreen extends ConsumerWidget {
 
           const SizedBox(height: 10),
           const SectionLabel('Personal'),
-
           const RecentNoteCard(),
 
         ],
