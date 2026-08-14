@@ -1,0 +1,279 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import '../../models/app_notification.dart';
+import '../../providers/notification_provider.dart';
+import '../../presentation/components/lists/labels.dart';
+
+class NotificationsScreen extends ConsumerWidget {
+  const NotificationsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final notifications = ref.watch(notificationListProvider);
+    final isEnabled = ref.watch(notificationsEnabledProvider);
+
+    // Grouping logic
+    final Map<String, List<AppNotification>> grouped = {};
+    for (var n in notifications) {
+      String groupKey = _getGroupKey(n.timestamp);
+      grouped.putIfAbsent(groupKey, () => []).add(n);
+    }
+
+    final sortedKeys = grouped.keys.toList();
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFF8F9FC),
+      appBar: CustomAppBar(
+        title: 'Notifications',
+        trailing: notifications.any((n) => !n.isRead)
+            ? GestureDetector(
+                onTap: () => ref.read(notificationListProvider.notifier).markAllAsRead(),
+                child: Text(
+                  'Mark all as read',
+                  style: GoogleFonts.redditSans(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                    color: const Color(0xFF0569FF),
+                  ),
+                ),
+              )
+            : null,
+      ),
+      body: !isEnabled
+          ? _buildDisabledState()
+          : notifications.isEmpty
+              ? _buildEmptyState()
+              : ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  itemCount: sortedKeys.length,
+                  itemBuilder: (context, index) {
+                    final key = sortedKeys[index];
+                    final groupNotifications = grouped[key]!;
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+                          child: Text(
+                            key.toUpperCase(),
+                            style: GoogleFonts.redditSans(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 12,
+                              color: const Color(0xFF838A97),
+                              letterSpacing: 1.1,
+                            ),
+                          ),
+                        ),
+                        ...groupNotifications.map((n) => _NotificationTile(notification: n)),
+                      ],
+                    );
+                  },
+                ),
+    );
+  }
+
+  String _getGroupKey(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final yesterday = today.subtract(const Duration(days: 1));
+    final notificationDate = DateTime(date.year, date.month, date.day);
+
+    if (notificationDate == today) return 'Today';
+    if (notificationDate == yesterday) return 'Yesterday';
+    return DateFormat('MMMM dd').format(date);
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.notifications_none_rounded, size: 80, color: Color(0xFFE0E4F0)),
+          const SizedBox(height: 16),
+          Text(
+            'No notifications yet',
+            style: GoogleFonts.redditSans(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF838A97),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDisabledState() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(40.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.notifications_off_outlined, size: 80, color: Color(0xFFE0E4F0)),
+            const SizedBox(height: 16),
+            Text(
+              'Notifications are turned off',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.redditSans(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF838A97),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'You can enable them in Settings to stay updated.',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.redditSans(
+                fontSize: 13,
+                fontWeight: FontWeight.w400,
+                color: const Color(0xFF838A97),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _NotificationTile extends ConsumerWidget {
+  final AppNotification notification;
+
+  const _NotificationTile({required this.notification});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Dismissible(
+      key: Key(notification.id),
+      direction: DismissDirection.endToStart,
+      onDismissed: (_) => ref.read(notificationListProvider.notifier).deleteNotification(notification.id),
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20),
+        decoration: BoxDecoration(
+          color: Colors.red.shade400,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: const Icon(Icons.delete_outline_rounded, color: Colors.white),
+      ),
+      child: GestureDetector(
+        onTap: () => ref.read(notificationListProvider.notifier).markAsRead(notification.id),
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: notification.isRead ? const Color(0xFFE0E4F0) : const Color(0xFF0569FF).withOpacity(0.3),
+              width: 1,
+            ),
+            boxShadow: [
+              if (!notification.isRead)
+                BoxShadow(
+                  color: const Color(0xFF0569FF).withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+            ],
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildIcon(),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            notification.title,
+                            style: GoogleFonts.redditSans(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: const Color(0xFF1F1F1F),
+                            ),
+                          ),
+                        ),
+                        if (!notification.isRead)
+                          Container(
+                            width: 8,
+                            height: 8,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFFF3B30),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      notification.message,
+                      style: GoogleFonts.redditSans(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13,
+                        color: const Color(0xFF4B5563),
+                        height: 1.4,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      DateFormat('HH:mm').format(notification.timestamp),
+                      style: GoogleFonts.redditSans(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 11,
+                        color: const Color(0xFF838A97),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildIcon() {
+    IconData iconData;
+    Color color;
+
+    switch (notification.type) {
+      case NotificationType.academic:
+        iconData = Icons.school_rounded;
+        color = const Color(0xFF0569FF);
+        break;
+      case NotificationType.feed:
+        iconData = Icons.newspaper_rounded;
+        color = const Color(0xFF34C759);
+        break;
+      case NotificationType.alert:
+        iconData = Icons.warning_amber_rounded;
+        color = const Color(0xFFFF9500);
+        break;
+      case NotificationType.info:
+      default:
+        iconData = Icons.info_outline_rounded;
+        color = const Color(0xFF5856D6);
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        shape: BoxShape.circle,
+      ),
+      child: Icon(iconData, color: color, size: 18),
+    );
+  }
+}

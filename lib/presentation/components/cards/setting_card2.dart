@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/providers/notification_provider.dart';
 
-class SettingsCard2 extends StatefulWidget {
+class SettingsCard2 extends ConsumerStatefulWidget {
   const SettingsCard2({
     required this.onAboutAppTap,
     super.key,
@@ -10,12 +12,11 @@ class SettingsCard2 extends StatefulWidget {
   final VoidCallback onAboutAppTap;
 
   @override
-  State<SettingsCard2> createState() => _SettingsCardState();
+  ConsumerState<SettingsCard2> createState() => _SettingsCardState();
 }
 
-class _SettingsCardState extends State<SettingsCard2> {
+class _SettingsCardState extends ConsumerState<SettingsCard2> {
   String _selectedTheme = 'System';
-  bool _notificationsOn = true;
   String _selectedLanguage = 'English';
 
   static const _borderColor = Color(0xFFE0E4F0);
@@ -202,8 +203,8 @@ class _SettingsCardState extends State<SettingsCard2> {
               ),
               const SizedBox(width: 8),
               Switch(
-                value: _notificationsOn,
-                onChanged: (val) => setState(() => _notificationsOn = val),
+                value: ref.watch(notificationsEnabledProvider),
+                onChanged: (val) => ref.read(notificationsEnabledProvider.notifier).toggle(val),
                 activeThumbColor: const Color(0xFFFFFFFF),
                 activeTrackColor: const Color(0xFF0569FF),
                 inactiveThumbColor: const Color(0xFFFFFFFF),

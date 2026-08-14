@@ -5,10 +5,14 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:unec_assistant/presentation/components/drawer/subscribed_channels_drawer.dart';
 import 'package:unec_assistant/presentation/components/drawer/general_drawer.dart';
+import 'package:unec_assistant/providers/notification_provider.dart';
+import 'package:unec_assistant/presentation/components/dialogs/profile_pop_up.dart';
 
 /// Figma palette shared by the global app bar and nav indicator.
 abstract final class _AppColors {
@@ -19,14 +23,15 @@ abstract final class _AppColors {
 }
 
 /// Static global top bar — fixed across all shell branch transitions.
-class GlobalAppBar extends StatelessWidget {
+class GlobalAppBar extends ConsumerWidget {
   const GlobalAppBar({super.key});
 
   static const double _contentHeight = 80.0;
   static const double _avatarSize = 50.0;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final int unreadCount = ref.watch(unreadNotificationsCountProvider);
     final double statusBarHeight = MediaQuery.of(context).padding.top;
     return Container(
       height: _contentHeight + statusBarHeight,
@@ -78,35 +83,140 @@ class GlobalAppBar extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
-                Icons.notifications_none_rounded,
-                color: _AppColors.blue,
-                size: 30,
+              GestureDetector(
+                onTap: () => context.push('/home/notifications-wall'),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Icon(
+                      unreadCount > 0
+                          ? Icons.notifications_active_rounded
+                          : Icons.notifications_none_rounded,
+                      color: _AppColors.blue,
+                      size: 30,
+                    ),
+                    if (unreadCount > 0)
+                      Positioned(
+                        right: -2,
+                        top: -2,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFFF3B30),
+                            shape: BoxShape.circle,
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 16,
+                            minHeight: 16,
+                          ),
+                          child: Text(
+                            unreadCount > 9 ? '9+' : unreadCount.toString(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 8,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
               const SizedBox(width: 10),
-              Container(
-                width: _avatarSize,
-                height: _avatarSize,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: _AppColors.blue.withValues(alpha: 0.15),
-                ),
-                alignment: Alignment.center,
-                child: const Text(
-                  'U',
-                  style: TextStyle(
-                    color: _AppColors.blue,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+              GestureDetector(
+                onTap: () => _showProfilePopUp(context),
+                child: Container(
+                  width: _avatarSize,
+                  height: _avatarSize,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _AppColors.blue.withValues(alpha: 0.15),
+                  ),
+                  alignment: Alignment.center,
+                  child: const Text(
+                    'Z.V',
+                    style: TextStyle(
+                      color: _AppColors.blue,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
               const SizedBox(width: 10),
-              const Icon(Icons.more_horiz, color: _AppColors.black, size: 30),
+              GestureDetector(
+                onTap: () => _showMorePopUp(context),
+                child: const Icon(Icons.more_horiz, color: _AppColors.black, size: 30),
+              ),
             ],
           ),
         ],
       ),
+    );
+  }
+
+  void _showProfilePopUp(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierColor: Colors.transparent,
+      builder: (context) => const ProfilePopUp(),
+    );
+  }
+
+  void _showMorePopUp(BuildContext context) {
+    final RenderBox button = context.findRenderObject() as RenderBox;
+    final RenderBox overlay = Navigator.of(context).overlay!.context.findRenderObject() as RenderBox;
+    final RelativeRect position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        button.localToGlobal(Offset(button.size.width, 80), ancestor: overlay),
+        button.localToGlobal(button.size.bottomRight(Offset.zero), ancestor: overlay),
+      ),
+      Offset.zero & overlay.size,
+    );
+
+    showMenu(
+      context: context,
+      position: position,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 8,
+      color: Colors.white,
+      items: [
+        PopupMenuItem(
+          onTap: () {},
+          child: Row(
+            children: [
+              const Icon(Icons.help_outline_rounded, size: 20, color: _AppColors.black),
+              const SizedBox(width: 12),
+              Text(
+                'Need help?',
+                style: GoogleFonts.redditSans(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: _AppColors.black,
+                ),
+              ),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          onTap: () {},
+          child: Row(
+            children: [
+              const Icon(Icons.bug_report_outlined, size: 20, color: _AppColors.black),
+              const SizedBox(width: 12),
+              Text(
+                'Report a bug',
+                style: GoogleFonts.redditSans(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: _AppColors.black,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

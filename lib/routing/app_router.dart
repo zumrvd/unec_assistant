@@ -31,6 +31,7 @@ import 'package:unec_assistant/screens/feed/manage_channels_screen.dart';
 import 'package:unec_assistant/screens/feed/create_post_screen.dart';
 import 'package:unec_assistant/screens/profile/academic_profile_screen.dart';
 import 'package:unec_assistant/screens/profile/share_profile_screen.dart';
+import 'package:unec_assistant/screens/notifications/notifications_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/home',
@@ -55,6 +56,10 @@ final GoRouter appRouter = GoRouter(
                 GoRoute(
                   path: 'current_class_function',
                   builder: (context, state) => const CurrentClassScreen(),
+                ),
+                GoRoute(
+                  path: 'notifications-wall',
+                  builder: (context, state) => const NotificationsScreen(),
                 ),
               ],
             ),

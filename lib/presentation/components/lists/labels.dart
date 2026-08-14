@@ -87,7 +87,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   @override
-  Size get preferredSize => const Size.fromHeight(85);
+  Size get preferredSize => const Size.fromHeight(70);
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +96,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: Container(
         decoration: const BoxDecoration(
           border: Border(
-            top: BorderSide(color: Color(0xFFE0E4F0), width: 1),
             bottom: BorderSide(color: Color(0xFFE0E4F0), width: 1),
           ),
         ),
