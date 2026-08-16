@@ -102,7 +102,7 @@ class _FeedMainScreenState extends ConsumerState<FeedMainScreen> {
         onPressed: () => context.push('/feed/create-post'),
         backgroundColor: const Color(0xFF0569FF),
         shape: const CircleBorder(),
-        elevation: 4,
+        elevation: 0,
         child: const Icon(Icons.add_rounded, color: Colors.white, size: 28),
       ),
     );

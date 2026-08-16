@@ -91,38 +91,42 @@ class _CommentTileState extends State<CommentTile> {
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          widget.author.displayName,
-                          style: GoogleFonts.redditSans(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 13,
-                            color: const Color(0xFF1F1F1F),
-                          ),
+                    // Flexible prevents overflow on long display names
+                    Flexible(
+                      child: Text(
+                        widget.author.displayName,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: GoogleFonts.redditSans(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
+                          color: const Color(0xFF1F1F1F),
                         ),
-                        const SizedBox(width: 6),
-                        Text(
-                          '${_timeAgo(widget.data.postedAt)}${widget.data.isEdited ? ' · edited' : ''}',
-                          style: GoogleFonts.redditSans(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 10,
-                            color: const Color(0xFF838A97),
-                          ),
-                        ),
-                      ],
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      '${_timeAgo(widget.data.postedAt)}${widget.data.isEdited ? ' · edited' : ''}',
+                      style: GoogleFonts.redditSans(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 10,
+                        color: const Color(0xFF838A97),
+                      ),
                     ),
                   ],
                 ),
               ),
               if (widget.author.userId == widget.currentUser.userId)
+                // PopupMenuButton: elevation 0 + border instead of elevation 2
                 PopupMenuButton<String>(
                   color: const Color(0xFFFFFFFF),
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: const BorderSide(color: Color(0xFFE0E4F0), width: 1),
+                  ),
                   padding: EdgeInsets.zero,
                   icon: const Icon(Icons.more_vert_rounded, size: 18, color: Color(0xFF838A97)),
                   onSelected: (value) {
@@ -136,13 +140,15 @@ class _CommentTileState extends State<CommentTile> {
                     }
                   },
                   itemBuilder: (context) => [
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'edit',
-                      child: Text('Edit', style: TextStyle(fontSize: 13)),
+                      child: Text('Edit',
+                          style: GoogleFonts.redditSans(fontSize: 13, color: const Color(0xFF1F1F1F))),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'delete',
-                      child: Text('Delete', style: TextStyle(fontSize: 13, color: Colors.red)),
+                      child: Text('Delete',
+                          style: GoogleFonts.redditSans(fontSize: 13, color: const Color(0xFFD54829))),
                     ),
                   ],
                 ),
@@ -173,24 +179,52 @@ class _CommentTileState extends State<CommentTile> {
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          TextButton(
-                            onPressed: () => setState(() => _editInputVisible = false),
-                            child: const Text('Cancel', style: TextStyle(fontSize: 12)),
+                          // Cancel — GestureDetector + styled Container (no TextButton)
+                          GestureDetector(
+                            onTap: () => setState(() => _editInputVisible = false),
+                            behavior: HitTestBehavior.opaque,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: const Color(0xFFE0E4F0)),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                'Cancel',
+                                style: GoogleFonts.redditSans(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: const Color(0xFF838A97),
+                                ),
+                              ),
+                            ),
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              if (_editController.text.isNotEmpty && _editController.text != widget.data.bodyText) {
+                          const SizedBox(width: 8),
+                          // Save — GestureDetector + styled Container (no ElevatedButton)
+                          GestureDetector(
+                            onTap: () {
+                              if (_editController.text.isNotEmpty &&
+                                  _editController.text != widget.data.bodyText) {
                                 widget.onEditSubmit(widget.data.commentId, _editController.text);
                               }
                               setState(() => _editInputVisible = false);
                             },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF0569FF),
-                              foregroundColor: Colors.white,
-                              minimumSize: const Size(60, 30),
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                            behavior: HitTestBehavior.opaque,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF0569FF),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                'Save',
+                                style: GoogleFonts.redditSans(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: const Color(0xFFFFFFFF),
+                                ),
+                              ),
                             ),
-                            child: const Text('Save', style: TextStyle(fontSize: 12)),
                           ),
                         ],
                       ),
@@ -215,9 +249,13 @@ class _CommentTileState extends State<CommentTile> {
                       child: Row(
                         children: [
                           Icon(
-                            widget.data.isLikedByCurrentUser ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                            widget.data.isLikedByCurrentUser
+                                ? Icons.favorite_rounded
+                                : Icons.favorite_border_rounded,
                             size: 16,
-                            color: widget.data.isLikedByCurrentUser ? const Color(0xFFDA4979) : const Color(0xFF838A97),
+                            color: widget.data.isLikedByCurrentUser
+                                ? const Color(0xFFDA4979)
+                                : const Color(0xFF838A97),
                           ),
                           const SizedBox(width: 4),
                           Text(
@@ -225,7 +263,9 @@ class _CommentTileState extends State<CommentTile> {
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w600,
                               fontSize: 11,
-                              color: widget.data.isLikedByCurrentUser ? const Color(0xFFDA4979) : const Color(0xFF838A97),
+                              color: widget.data.isLikedByCurrentUser
+                                  ? const Color(0xFFDA4979)
+                                  : const Color(0xFF838A97),
                             ),
                           ),
                         ],

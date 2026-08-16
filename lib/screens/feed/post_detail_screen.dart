@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../models/channel.dart';
 import '../../../models/comment.dart';
 import '../../../models/user_account.dart';
 import '../../../presentation/components/cards/comment_tile.dart';
 import '../../../presentation/components/lists/labels.dart';
 import '../../../providers/post_detail_provider.dart';
 import '../../../providers/current_user_provider.dart';
+import '../../../utils/app_toast.dart';
+
+// Top-level constant — decoupled from widget state.
+const _kMockUsers = {
+  'u2': UserAccount(userId: 'u2', displayName: 'Elşad V.', initials: 'EM'),
+  'u3': UserAccount(userId: 'u3', displayName: 'Vəfa B.', initials: 'VB'),
+  'u1': UserAccount(userId: 'u1', displayName: 'Zümrüd V.', initials: 'ZV'),
+};
+
+const _kCategoryLabels = {
+  ChannelCategory.official: 'Official Channel',
+  ChannelCategory.clubs: 'Clubs Channel',
+  ChannelCategory.devTeam: 'Dev Team Channel',
+};
 
 class PostDetailScreen extends ConsumerStatefulWidget {
   final String postId;
@@ -23,12 +39,6 @@ class PostDetailScreen extends ConsumerStatefulWidget {
 
 class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
   final TextEditingController _commentController = TextEditingController();
-
-  final Map<String, UserAccount> _mockUsers = {
-    'u2': const UserAccount(userId: 'u2', displayName: 'Elşad V.', initials: 'EM'),
-    'u3': const UserAccount(userId: 'u3', displayName: 'Vəfa B.', initials: 'VB'),
-    'u1': const UserAccount(userId: 'u1', displayName: 'Zümrüd V.', initials: 'ZV'),
-  };
 
   @override
   void initState() {
@@ -52,9 +62,8 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
   }
 
   void _copyToClipboard() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Link copied to clipboard')),
-    );
+    Clipboard.setData(const ClipboardData(text: 'https://unec.edu.az/post'));
+    AppToast.show(context, 'Link copied to clipboard');
   }
 
   @override
@@ -133,7 +142,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                               ],
                             ),
                             Text(
-                              'Official Channel',
+                              _kCategoryLabels[channel.category] ?? 'Channel',
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 11,
@@ -337,24 +346,26 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                     itemCount: state.comments.length,
                     itemBuilder: (context, index) {
                       final comment = state.comments[index];
-                      final author = _mockUsers[comment.authorUserId] ?? const UserAccount(userId: '?', displayName: 'Unknown', initials: '??');
+                      final author = _kMockUsers[comment.authorUserId] ??
+                          const UserAccount(userId: '?', displayName: 'Unknown', initials: '??');
 
                       return CommentTile(
                         data: comment,
                         author: author,
                         currentUser: currentUser,
                         onLikeTap: (id) => ref.read(postDetailProvider.notifier).toggleCommentLike(id),
-                        onReplySubmit: (text, parentId, replyToId) => ref.read(postDetailProvider.notifier).submitComment(
-                          text, 
-                          parentCommentId: parentId, 
-                          replyToUserId: replyToId, 
-                          users: _mockUsers,
-                        ),
+                        onReplySubmit: (text, parentId, replyToId) =>
+                            ref.read(postDetailProvider.notifier).submitComment(
+                              text,
+                              parentCommentId: parentId,
+                              replyToUserId: replyToId,
+                              users: _kMockUsers,
+                            ),
                         onEditSubmit: (id, text) => ref.read(postDetailProvider.notifier).editComment(id, text),
                         onDeleteTap: (id) => ref.read(postDetailProvider.notifier).deleteComment(id),
                         onLoadReplies: () => ref.read(postDetailProvider.notifier).loadReplies(comment.commentId),
                         loadedReplies: state.replies[comment.commentId],
-                        users: _mockUsers,
+                        users: _kMockUsers,
                       );
                     },
                   ),

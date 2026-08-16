@@ -76,7 +76,8 @@ class RecentNoteCard extends ConsumerWidget {
     final bgColor = _getSkinBgColor(note.paperSkin);
     final plainText = _getPlainText(note.content);
 
-    final String semanticLabel = "Recent Note: ${note.title.isEmpty ? 'Untitled' : note.title}, Last edited ${DateFormat('MMM d').format(note.updatedAt)}";
+    final String semanticLabel =
+        "Recent Note: ${note.title.isEmpty ? 'Untitled' : note.title}, Last edited ${DateFormat('MMM d').format(note.updatedAt)}";
 
     return Column(
       children: [
@@ -85,94 +86,96 @@ class RecentNoteCard extends ConsumerWidget {
           container: true,
           button: true,
           label: semanticLabel,
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () => context.go('/notes/editor/${note.noteId}'),
-              borderRadius: BorderRadius.circular(18),
-              child: Container(
-                width: 330,
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: _borderColor, width: 1),
-                ),
-                padding: const EdgeInsets.all(16),
-                child: ExcludeSemantics(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Header
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(Icons.edit_note_rounded, size: 18, color: accentColor),
-                              const SizedBox(width: 8),
-                              Text(
-                                'RECENT NOTE',
-                                style: GoogleFonts.redditSans(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 14,
-                                  color: accentColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: accentColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              DateFormat('MMM d').format(note.updatedAt),
+          child: GestureDetector(
+            onTap: () => context.go('/notes/editor/${note.noteId}'),
+            behavior: HitTestBehavior.opaque,
+            child: Container(
+              width: 330,
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: _borderColor, width: 1),
+              ),
+              padding: const EdgeInsets.all(16),
+              child: ExcludeSemantics(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Header
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.edit_note_rounded, size: 18, color: accentColor),
+                            const SizedBox(width: 8),
+                            Text(
+                              'RECENT NOTE',
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w700,
-                                fontSize: 10,
+                                fontSize: 14,
                                 color: accentColor,
                               ),
                             ),
+                          ],
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: accentColor.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                        ],
+                          child: Text(
+                            DateFormat('MMM d').format(note.updatedAt),
+                            style: GoogleFonts.redditSans(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 10,
+                              color: accentColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    // Title
+                    Text(
+                      note.title.isEmpty ? 'Untitled' : note.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.redditSans(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 18,
+                        color: _valueBlack,
                       ),
-                      const SizedBox(height: 15),
-                      // Title
-                      Text(
-                        note.title.isEmpty ? 'Untitled' : note.title,
-                        maxLines: 1,
+                    ),
+                    const SizedBox(height: 12),
+                    // Info Box (Preview)
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: note.paperSkin == PaperSkin.plain
+                            ? const Color(0xFFF8F9FC)
+                            : Colors.white.withValues(alpha: 0.5),
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(
+                          color: _borderColor.withValues(alpha: 0.5),
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        plainText.isEmpty ? 'No additional content' : plainText,
+                        maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.redditSans(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 18,
-                          color: _valueBlack,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 13,
+                          color: _labelGrey,
+                          height: 1.4,
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      // Info Box (Preview)
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          color: (note.paperSkin == PaperSkin.plain ? const Color(0xFFF8F9FC) : Colors.white.withOpacity(0.5)),
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: _borderColor.withOpacity(0.5), width: 1),
-                        ),
-                        child: Text(
-                          plainText.isEmpty ? 'No additional content' : plainText,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.redditSans(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 13,
-                            color: _labelGrey,
-                            height: 1.4,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

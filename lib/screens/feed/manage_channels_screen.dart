@@ -11,6 +11,50 @@ class ManageChannelsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final channels = ref.watch(subscriptionsProvider);
 
+    if (channels.isEmpty) {
+      return Scaffold(
+        backgroundColor: const Color(0xFFF8F9FC),
+        appBar: const CustomAppBar(title: 'Manage Subscribed Channels'),
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 72,
+                height: 72,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEEF4FF),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                alignment: Alignment.center,
+                child: const Icon(Icons.notifications_off_outlined, size: 36, color: Color(0xFF0569FF)),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'No subscriptions yet',
+                style: GoogleFonts.redditSans(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 18,
+                  color: const Color(0xFF1F1F1F),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Subscribe to channels from the Feed\nto see them here.',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.redditSans(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13,
+                  color: const Color(0xFF838A97),
+                  height: 1.5,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FC),
       appBar: const CustomAppBar(title: 'Manage Subscribed Channels'),
@@ -32,8 +76,14 @@ class ManageChannelsScreen extends ConsumerWidget {
                 children: [
                   CircleAvatar(
                     backgroundColor: const Color(0xFFE8F0FE),
-                    child: Text(channel.channelName.substring(0, 1),
-                        style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF0569FF))),
+                    child: Text(
+                      channel.channelName.substring(0, 1),
+                      style: GoogleFonts.redditSans(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 16,
+                        color: const Color(0xFF0569FF),
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(

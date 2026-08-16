@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:unec_assistant/presentation/components/lists/labels.dart';
 import 'package:unec_assistant/providers/student_profile_provider.dart';
+import 'package:unec_assistant/utils/app_toast.dart';
 
 class ShareProfileScreen extends ConsumerWidget {
   const ShareProfileScreen({super.key});
@@ -93,7 +94,10 @@ class ShareProfileScreen extends ConsumerWidget {
                     ),
                     if (profile.isActive)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xFFE7F4F0),
                           borderRadius: BorderRadius.circular(12),
@@ -121,7 +125,7 @@ class ShareProfileScreen extends ConsumerWidget {
                   profile.year,
                   style: GoogleFonts.redditSans(
                     fontSize: 14,
-                    color: const Color(0xFF838A97).withOpacity(0.6),
+                    color: const Color(0xFF838A97).withValues(alpha: 0.6),
                   ),
                 ),
               ],
@@ -158,12 +162,13 @@ class ShareProfileScreen extends ConsumerWidget {
               GestureDetector(
                 onTap: () {
                   Clipboard.setData(ClipboardData(text: text));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Copied to clipboard!')),
-                  );
+                  AppToast.show(context, 'Copied to clipboard!');
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFFEEF4FF),
                     borderRadius: BorderRadius.circular(12),
@@ -219,7 +224,11 @@ class ShareProfileScreen extends ConsumerWidget {
           _buildShareIcon(
             context,
             'Email',
-            const Icon(Icons.email_outlined, color: Color(0xFF0569FF), size: 28),
+            const Icon(
+              Icons.email_outlined,
+              color: Color(0xFF0569FF),
+              size: 28,
+            ),
             const Color(0xFFEEF4FF),
           ),
           _buildShareIcon(
@@ -231,7 +240,11 @@ class ShareProfileScreen extends ConsumerWidget {
           _buildShareIcon(
             context,
             'More',
-            const Icon(Icons.share_outlined, color: Color(0xFFE67E22), size: 28),
+            const Icon(
+              Icons.share_outlined,
+              color: Color(0xFFE67E22),
+              size: 28,
+            ),
             const Color(0xFFFFF3E0),
           ),
         ],
@@ -239,7 +252,12 @@ class ShareProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildShareIcon(BuildContext context, String label, Widget icon, Color bgColor) {
+  Widget _buildShareIcon(
+    BuildContext context,
+    String label,
+    Widget icon,
+    Color bgColor,
+  ) {
     return Column(
       children: [
         GestureDetector(
@@ -248,9 +266,7 @@ class ShareProfileScreen extends ConsumerWidget {
               // Copy action is already tested in the card, but let's keep it here too
               Clipboard.setData(ClipboardData(text: 'Mock profile text...'));
             }
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Sharing via $label...')),
-            );
+            AppToast.show(context, 'Sharing via $label...');
           },
           child: Container(
             width: 56,

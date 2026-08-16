@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class StudentIdCard extends StatelessWidget {
+class StudentIdCard extends StatefulWidget {
   const StudentIdCard({
     required this.studentName,
     required this.groupCode,
@@ -23,8 +23,8 @@ class StudentIdCard extends StatelessWidget {
   final String? quote;
   final ImageProvider? profileImage;
 
-  static const _textColor = Color(0xFFE0E4F0);
-  static const _backgroundGradient = LinearGradient(
+  static const textColor = Color(0xFFE0E4F0);
+  static const backgroundGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [
@@ -34,15 +34,95 @@ class StudentIdCard extends StatelessWidget {
     ],
     stops: [0.0, 0.5, 1.0],
   );
-  static const _bubbleColor = Color(0xFF2776F3);
-  static const _badgeBackgroundColor = Color(0xB56B98DB);
+  static const bubbleColor = Color(0xFF2776F3);
+  static const badgeBackgroundColor = Color(0xB56B98DB);
+
+  @override
+  State<StudentIdCard> createState() => _StudentIdCardState();
+}
+
+class _StudentIdCardState extends State<StudentIdCard> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _rotationAnimation;
+  late Animation<double> _scaleAnimation;
+  bool _isFront = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+
+    _rotationAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOutCubic,
+      ),
+    );
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOutQuart,
+      ),
+    );
+  }
+
+  void _toggleCard() {
+    if (_isFront) {
+      _controller.forward();
+    } else {
+      _controller.reverse();
+    }
+    setState(() {
+      _isFront = !_isFront;
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 17.0),
+      padding: const EdgeInsets.all(10.0),
+      child: GestureDetector(
+        onTap: _toggleCard,
+        child: AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: _scaleAnimation.value,
+              child: Transform(
+                transform: Matrix4.identity()
+                  ..setEntry(3, 2, 0.001) // perspective
+                  ..rotateY(_rotationAnimation.value * 3.14159),
+                alignment: Alignment.center,
+                child: _rotationAnimation.value < 0.5
+                    ? _buildFrontCard()
+                    : Transform.scale(
+                        scaleX: -1,
+                        scaleY: 1,
+                        child: _buildBackCard(),
+                      ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFrontCard() {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 160),
       child: SizedBox(
-        width: double.infinity,
+        width: 280,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
           clipBehavior: Clip.hardEdge,
@@ -51,7 +131,7 @@ class StudentIdCard extends StatelessWidget {
               Positioned.fill(
                 child: const DecoratedBox(
                   decoration: BoxDecoration(
-                    gradient: _backgroundGradient,
+                    gradient: StudentIdCard.backgroundGradient,
                   ),
                 ),
               ),
@@ -73,6 +153,7 @@ class StudentIdCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -82,12 +163,12 @@ class StudentIdCard extends StatelessWidget {
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w700,
                             fontSize: 14,
-                            color: _textColor,
+                            color: StudentIdCard.textColor,
                           ),
                         ),
                         Container(
                           decoration: BoxDecoration(
-                            color: _badgeBackgroundColor,
+                            color: StudentIdCard.badgeBackgroundColor,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           padding: const EdgeInsets.symmetric(
@@ -95,11 +176,11 @@ class StudentIdCard extends StatelessWidget {
                             vertical: 4,
                           ),
                           child: Text(
-                            yearBadge,
+                            widget.yearBadge,
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w700,
                               fontSize: 10,
-                              color: _textColor,
+                              color: StudentIdCard.textColor,
                             ),
                           ),
                         ),
@@ -114,17 +195,17 @@ class StudentIdCard extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _ProfilePhoto(profileImage: profileImage),
-                              if (quote != null) ...[
+                              _ProfilePhoto(profileImage: widget.profileImage),
+                              if (widget.quote != null) ...[
                                 const SizedBox(height: 8),
                                 Text(
-                                  quote!,
+                                  widget.quote!,
                                   softWrap: true,
                                   style: GoogleFonts.redditSans(
                                     fontStyle: FontStyle.italic,
                                     fontWeight: FontWeight.w400,
                                     fontSize: 8,
-                                    color: _textColor,
+                                    color: StudentIdCard.textColor,
                                   ),
                                 ),
                               ],
@@ -137,47 +218,47 @@ class StudentIdCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                studentName,
+                                widget.studentName,
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w800,
                                   fontSize: 15,
-                                  color: Color(0xFFFFFFFF),
+                                  color: const Color(0xFFFFFFFF),
                                 ),
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                groupCode,
+                                widget.groupCode,
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w800,
                                   fontSize: 15,
-                                  color: Color(0xFFFFFFFF),
+                                  color: const Color(0xFFFFFFFF),
                                 ),
                               ),
                               const SizedBox(height: 6),
                               Text(
-                                faculty,
+                                widget.faculty,
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 12,
-                                  color: _textColor,
+                                  color: StudentIdCard.textColor,
                                 ),
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                '· $sabahGroup',
+                                '· ${widget.sabahGroup}',
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 12,
-                                  color: _textColor,
+                                  color: StudentIdCard.textColor,
                                 ),
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                years,
+                                widget.years,
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 8,
-                                  color: _textColor,
+                                  color: StudentIdCard.textColor,
                                 ),
                               ),
                             ],
@@ -188,6 +269,37 @@ class StudentIdCard extends StatelessWidget {
                   ],
                 ),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBackCard() {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 220),
+      child: SizedBox(
+        width: double.infinity,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          clipBehavior: Clip.hardEdge,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: const DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: StudentIdCard.backgroundGradient,
+                  ),
+                ),
+              ),
+              const Positioned(
+                top: -50,
+                right: 20,
+                child: _Bubble(diameter: 150),
+              ),
+              // Non-positioned child to give the Stack a finite height
+              const SizedBox(height: 200, width: double.infinity),
             ],
           ),
         ),
@@ -208,7 +320,7 @@ class _Bubble extends StatelessWidget {
       height: diameter,
       decoration: const BoxDecoration(
         shape: BoxShape.circle,
-        color: StudentIdCard._bubbleColor,
+        color: StudentIdCard.bubbleColor,
       ),
     );
   }
@@ -239,7 +351,7 @@ class _ProfilePhoto extends StatelessWidget {
       width: 72,
       height: 72,
       decoration: BoxDecoration(
-        color: StudentIdCard._bubbleColor,
+        color: StudentIdCard.bubbleColor,
         borderRadius: BorderRadius.circular(8),
       ),
     );

@@ -11,11 +11,7 @@ class AcademicProfileScreen extends ConsumerWidget {
   static const _buttonGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [
-      Color(0xFF0569FF),
-      Color(0xCC0569FF),
-      Color(0xFF035CE1),
-    ],
+    colors: [Color(0xFF0569FF), Color(0xCC0569FF), Color(0xFF035CE1)],
     stops: [0.0, 0.5, 1.0],
   );
 
@@ -59,7 +55,12 @@ class AcademicProfileScreen extends ConsumerWidget {
               iconBgColor: const Color(0xFFE7F4F0),
               title: 'Academic standing',
               rows: [
-                _buildInfoRow('Cumulative GPA', '${profile.gpa.toStringAsFixed(2)} / 100.00', isBoldValue: true, valueColor: const Color(0xFF6E8E15)),
+                _buildInfoRow(
+                  'Cumulative GPA',
+                  '${profile.gpa.toStringAsFixed(2)} / 100.00',
+                  isBoldValue: true,
+                  valueColor: const Color(0xFF6E8E15),
+                ),
               ],
             ),
             const SizedBox(height: 16),
@@ -72,13 +73,18 @@ class AcademicProfileScreen extends ConsumerWidget {
               title: 'Club memberships',
               rows: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 20,
+                  ),
                   child: Center(
                     child: Wrap(
                       spacing: 8,
                       runSpacing: 10,
                       alignment: WrapAlignment.center,
-                      children: profile.clubMemberships.map((club) => _buildClubBadge(club)).toList(),
+                      children: profile.clubMemberships
+                          .map((club) => _buildClubBadge(club))
+                          .toList(),
                     ),
                   ),
                 ),
@@ -142,11 +148,18 @@ class AcademicProfileScreen extends ConsumerWidget {
                     ),
                     if (profile.isActive)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xFFE7F4F0),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFF6E8E15).withOpacity(0.2)),
+                          border: Border.all(
+                            color: const Color(
+                              0xFF6E8E15,
+                            ).withValues(alpha: 0.2),
+                          ),
                         ),
                         child: Text(
                           'Active',
@@ -171,7 +184,7 @@ class AcademicProfileScreen extends ConsumerWidget {
                   profile.studentId,
                   style: GoogleFonts.redditSans(
                     fontSize: 14,
-                    color: const Color(0xFF838A97).withOpacity(0.6),
+                    color: const Color(0xFF838A97).withValues(alpha: 0.6),
                   ),
                 ),
               ],
@@ -229,23 +242,27 @@ class AcademicProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildInfoRow(String label, String value, {
-    bool isBoldValue = false, 
-    Color? valueColor, 
+  Widget _buildInfoRow(
+    String label,
+    String value, {
+    bool isBoldValue = false,
+    Color? valueColor,
     bool showLabel = true,
     bool isCenterValue = false,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
-        mainAxisAlignment: showLabel ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
+        mainAxisAlignment: showLabel
+            ? MainAxisAlignment.spaceBetween
+            : MainAxisAlignment.center,
         children: [
           if (showLabel)
             Text(
               label,
               style: GoogleFonts.redditSans(
                 fontSize: 14,
-                color: const Color(0xFF838A97).withOpacity(0.6),
+                color: const Color(0xFF838A97).withValues(alpha: 0.6),
               ),
             ),
           Expanded(
@@ -270,7 +287,9 @@ class AcademicProfileScreen extends ConsumerWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFF0F0FF),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF5E5CE6).withOpacity(0.1)),
+        border: Border.all(
+          color: const Color(0xFF5E5CE6).withValues(alpha: 0.1),
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -308,7 +327,7 @@ class AcademicProfileScreen extends ConsumerWidget {
               width: 54,
               height: 54,
               decoration: BoxDecoration(
-                color: const Color(0xFFF8F9FC).withOpacity(0.15),
+                color: const Color(0xFFF8F9FC).withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: const Icon(
@@ -336,7 +355,7 @@ class AcademicProfileScreen extends ConsumerWidget {
                     style: GoogleFonts.redditSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: const Color(0xFFF8F9FC).withOpacity(0.6),
+                      color: const Color(0xFFF8F9FC).withValues(alpha: 0.6),
                     ),
                   ),
                 ],

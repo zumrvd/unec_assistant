@@ -11,9 +11,14 @@ class ProfilePopUp extends StatelessWidget {
       insetPadding: const EdgeInsets.only(top: 80, right: 20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       backgroundColor: const Color(0xFFF0F4F8),
-      elevation: 8,
+      // Elevation 0 — no shadow per design rules. Uses border for depth.
+      elevation: 0,
       child: Container(
         width: 330,
+        decoration: BoxDecoration(
+          border: Border.all(color: const Color(0xFFE0E4F0), width: 1),
+          borderRadius: BorderRadius.circular(28),
+        ),
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -34,18 +39,26 @@ class ProfilePopUp extends StatelessWidget {
                   ),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: const Icon(Icons.close, size: 20),
-                      onPressed: () => Navigator.pop(context),
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      behavior: HitTestBehavior.opaque,
+                      child: Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: const Color(0x10000000),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        alignment: Alignment.center,
+                        child: const Icon(Icons.close, size: 18, color: Color(0xFF838A97)),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 20),
-            
+
             // Profile Icon Large
             Container(
               width: 80,
@@ -55,17 +68,17 @@ class ProfilePopUp extends StatelessWidget {
                 color: Color(0xFF0569FF),
               ),
               alignment: Alignment.center,
-              child: const Text(
+              child: Text(
                 'Z.V',
-                style: TextStyle(
+                style: GoogleFonts.redditSans(
                   color: Colors.white,
                   fontSize: 28,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ),
             const SizedBox(height: 12),
-            
+
             // Greeting
             Text(
               'Merhaba Zümrüd!',
@@ -76,33 +89,38 @@ class ProfilePopUp extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            
-            // Manage Account Button
-            OutlinedButton(
-              onPressed: () {},
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Color(0xFFE0E4F0)),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+
+            // Manage Account Button (GestureDetector + styled Container)
+            GestureDetector(
+              onTap: () {},
+              behavior: HitTestBehavior.opaque,
+              child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              ),
-              child: Text(
-                'Manage your Account',
-                style: GoogleFonts.redditSans(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF0569FF),
+                decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0xFFE0E4F0)),
+                  borderRadius: BorderRadius.circular(100),
+                ),
+                child: Text(
+                  'Manage your Account',
+                  style: GoogleFonts.redditSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF0569FF),
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 24),
-            
-            // Action List
+
+            // Action List — GestureDetector rows instead of ListTile
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Material(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                clipBehavior: Clip.antiAlias,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: const Color(0xFFE0E4F0), width: 1),
+                ),
                 child: Column(
                   children: [
                     _ActionTile(
@@ -120,13 +138,13 @@ class ProfilePopUp extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _FooterLink(label: 'Privacy Policy'),
-                const Text(' • ', style: TextStyle(color: Color(0xFF838A97))),
+                Text(' • ', style: GoogleFonts.redditSans(color: const Color(0xFF838A97))),
                 _FooterLink(label: 'Terms of Service'),
               ],
             ),
@@ -150,18 +168,26 @@ class _ActionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(icon, color: const Color(0xFF1F1F1F), size: 22),
-      title: Text(
-        label,
-        style: GoogleFonts.redditSans(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: const Color(0xFF1F1F1F),
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+            Icon(icon, color: const Color(0xFF1F1F1F), size: 22),
+            const SizedBox(width: 18),
+            Text(
+              label,
+              style: GoogleFonts.redditSans(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF1F1F1F),
+              ),
+            ),
+          ],
         ),
       ),
-      onTap: onTap,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
     );
   }
 }

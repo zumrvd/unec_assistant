@@ -598,6 +598,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
         Expanded(
           child: SingleChildScrollView(
             controller: _weekScrollController,
+            physics: const ClampingScrollPhysics(),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

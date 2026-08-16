@@ -111,10 +111,10 @@ class GlobalAppBar extends ConsumerWidget {
                           ),
                           child: Text(
                             unreadCount > 9 ? '9+' : unreadCount.toString(),
-                            style: const TextStyle(
+                            style: GoogleFonts.redditSans(
                               color: Colors.white,
                               fontSize: 8,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w700,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -134,12 +134,12 @@ class GlobalAppBar extends ConsumerWidget {
                     color: _AppColors.blue.withValues(alpha: 0.15),
                   ),
                   alignment: Alignment.center,
-                  child: const Text(
+                  child: Text(
                     'Z.V',
-                    style: TextStyle(
+                    style: GoogleFonts.redditSans(
                       color: _AppColors.blue,
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
@@ -178,8 +178,11 @@ class GlobalAppBar extends ConsumerWidget {
     showMenu(
       context: context,
       position: position,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 8,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: const BorderSide(color: Color(0xFFE0E4F0), width: 1),
+      ),
+      elevation: 0,
       color: Colors.white,
       items: [
         PopupMenuItem(

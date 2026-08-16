@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unec_assistant/providers/user_security_provider.dart';
 import 'package:unec_assistant/presentation/components/lists/labels.dart';
+import 'package:unec_assistant/utils/app_toast.dart';
 
 class ChangePassScreen extends ConsumerStatefulWidget {
   const ChangePassScreen({super.key});
@@ -53,7 +54,8 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
           final minutes = remaining.inMinutes;
           final seconds = remaining.inSeconds % 60;
           setState(() {
-            _cooldownText = 'Security cooldown: ${minutes}:${seconds.toString().padLeft(2, '0')} remaining';
+            _cooldownText =
+                'Security cooldown: $minutes:${seconds.toString().padLeft(2, '0')} remaining';
           });
         }
       } else {
@@ -89,32 +91,34 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
 
   void _handleUpdate() async {
     setState(() => _isLoading = true);
-    
+
     if (_newPasswordController.text != _confirmPasswordController.text) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Passwords do not match')),
+      AppToast.show(
+        context,
+        'Passwords do not match',
+        textColor: const Color(0xFF993C1D),
       );
-      setState(() => _isLoading = false);
-      return;
     }
 
-    final error = await ref.read(userSecurityProvider.notifier).changePassword(
-      _currentPasswordController.text,
-      _newPasswordController.text,
-    );
+    final error = await ref
+        .read(userSecurityProvider.notifier)
+        .changePassword(
+          _currentPasswordController.text,
+          _newPasswordController.text,
+        );
 
     if (mounted) {
       setState(() => _isLoading = false);
       if (error != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error), backgroundColor: const Color(0xFF993C1D)),
-        );
+        AppToast.show(context, error, textColor: const Color(0xFF993C1D));
         if (error.contains('cooldown') || error.contains('blocked')) {
-           _startCooldownTimer();
+          _startCooldownTimer();
         }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Password updated successfully'), backgroundColor: Color(0xFF0F6E56)),
+        AppToast.show(
+          context,
+          'Password updated successfully',
+          textColor: const Color(0xFF0F6E56),
         );
         _startCooldownTimer();
         Future.delayed(const Duration(seconds: 1), () {
@@ -133,7 +137,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
       'One lowercase letter (a-z)',
       'One number',
       'One special character (!@#\$...)',
-      'Different from last 3 passwords'
+      'Different from last 3 passwords',
     ].every(_meetsRequirement);
 
     return Scaffold(
@@ -154,7 +158,11 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                   color: const Color(0x260569FF),
                   borderRadius: BorderRadius.circular(15),
                 ),
-                child: const Icon(Icons.shield_moon, color: Color(0xFF0569FF), size: 30),
+                child: const Icon(
+                  Icons.shield_moon,
+                  color: Color(0xFF0569FF),
+                  size: 30,
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -177,7 +185,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
               ),
             ),
             const SizedBox(height: 30),
-            
+
             // Input Fields Card
             Container(
               decoration: BoxDecoration(
@@ -192,7 +200,9 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                     controller: _currentPasswordController,
                     isObscured: _isCurrentObscured,
                     icon: Icons.lock_outline_rounded,
-                    onToggle: () => setState(() => _isCurrentObscured = !_isCurrentObscured),
+                    onToggle: () => setState(
+                      () => _isCurrentObscured = !_isCurrentObscured,
+                    ),
                   ),
                   const Divider(height: 1, color: Color(0xFFE0E4F0)),
                   _buildPasswordField(
@@ -200,7 +210,8 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                     controller: _newPasswordController,
                     isObscured: _isNewObscured,
                     icon: Icons.shield_moon_outlined,
-                    onToggle: () => setState(() => _isNewObscured = !_isNewObscured),
+                    onToggle: () =>
+                        setState(() => _isNewObscured = !_isNewObscured),
                     onChanged: (_) => setState(() {}),
                   ),
                   const Divider(height: 1, color: Color(0xFFE0E4F0)),
@@ -209,14 +220,16 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                     controller: _confirmPasswordController,
                     isObscured: _isConfirmObscured,
                     icon: Icons.sync_rounded,
-                    onToggle: () => setState(() => _isConfirmObscured = !_isConfirmObscured),
+                    onToggle: () => setState(
+                      () => _isConfirmObscured = !_isConfirmObscured,
+                    ),
                   ),
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // Requirements Card
             Container(
               decoration: BoxDecoration(
@@ -248,22 +261,31 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 30),
-            
+
             if (_cooldownText.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(bottom: 15),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF993C1D).withOpacity(0.1),
+                    color: const Color(0xFF993C1D).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: const Color(0xFF993C1D).withOpacity(0.3)),
+                    border: Border.all(
+                      color: const Color(0xFF993C1D).withValues(alpha: 0.3),
+                    ),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.timer_outlined, color: Color(0xFF993C1D), size: 18),
+                      const Icon(
+                        Icons.timer_outlined,
+                        color: Color(0xFF993C1D),
+                        size: 18,
+                      ),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Text(
@@ -279,61 +301,91 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                   ),
                 ),
               ),
-            
+
             SizedBox(
               width: double.infinity,
               height: 55,
-              child: ElevatedButton(
-                onPressed: (allRequirementsMet && !_isLoading && !securityState.isBlocked) 
-                    ? _handleUpdate 
+              child: GestureDetector(
+                onTap:
+                    (allRequirementsMet &&
+                        !_isLoading &&
+                        !securityState.isBlocked)
+                    ? _handleUpdate
                     : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0569FF),
-                  foregroundColor: Colors.white,
-                  disabledBackgroundColor: const Color(0xFFB0B3B8).withOpacity(0.3),
-                  shape: RoundedRectangleBorder(
+                behavior: HitTestBehavior.opaque,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color:
+                        (allRequirementsMet &&
+                            !_isLoading &&
+                            !securityState.isBlocked)
+                        ? const Color(0xFF0569FF)
+                        : const Color(0xFFB0B3B8).withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  elevation: 0,
-                ),
-                child: _isLoading 
-                    ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.history_rounded, size: 20),
-                          const SizedBox(width: 10),
-                          Text(
-                            'Update password',
-                            style: GoogleFonts.redditSans(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 16,
-                            ),
+                  alignment: Alignment.center,
+                  child: _isLoading
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
                           ),
-                        ],
-                      ),
-              ),
-            ),
-            
-            const SizedBox(height: 20),
-            
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                'Forgot current password?',
-                style: GoogleFonts.redditSans(
-                  color: const Color(0xFF0569FF),
-                  fontWeight: FontWeight.w600,
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.history_rounded,
+                              size: 20,
+                              color: Colors.white,
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              'Update password',
+                              style: GoogleFonts.redditSans(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
                 ),
               ),
             ),
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                'Having troubles with your Unec Kabinet password?',
-                style: GoogleFonts.redditSans(
-                  color: const Color(0xFF0569FF),
-                  fontWeight: FontWeight.w600,
+
+            const SizedBox(height: 20),
+
+            GestureDetector(
+              onTap: () {},
+              behavior: HitTestBehavior.opaque,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Text(
+                  'Forgot current password?',
+                  style: GoogleFonts.redditSans(
+                    color: const Color(0xFF0569FF),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {},
+              behavior: HitTestBehavior.opaque,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Text(
+                  'Having troubles with your Unec Kabinet password?',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.redditSans(
+                    color: const Color(0xFF0569FF),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
                 ),
               ),
             ),
@@ -397,15 +449,24 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: const BorderSide(color: Color(0xFFE0E4F0)),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                     isDense: true,
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        isObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                        size: 20,
-                        color: const Color(0xFF838A97),
+                    suffixIcon: GestureDetector(
+                      onTap: onToggle,
+                      behavior: HitTestBehavior.opaque,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Icon(
+                          isObscured
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                          size: 20,
+                          color: const Color(0xFF838A97),
+                        ),
                       ),
-                      onPressed: onToggle,
                     ),
                   ),
                 ),
@@ -420,10 +481,10 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
   Widget _buildRequirementItem(String text) {
     final isMet = _meetsRequirement(text);
     final hasText = _newPasswordController.text.isNotEmpty;
-    
+
     Color iconColor;
     IconData iconData;
-    
+
     if (!hasText) {
       iconColor = const Color(0xFFB0B3B8);
       iconData = Icons.radio_button_unchecked;
@@ -446,7 +507,9 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
             style: GoogleFonts.redditSans(
               fontWeight: FontWeight.w600,
               fontSize: 14,
-              color: hasText ? (isMet ? const Color(0xFF1E1E1E) : const Color(0xFF993C1D)) : const Color(0xFF838A97),
+              color: hasText
+                  ? (isMet ? const Color(0xFF1E1E1E) : const Color(0xFF993C1D))
+                  : const Color(0xFF838A97),
             ),
           ),
         ],

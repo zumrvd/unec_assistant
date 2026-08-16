@@ -11,6 +11,7 @@ import '../../presentation/components/lists/labels.dart';
 import '../../presentation/components/dialogs/discard_changes_dialog.dart';
 import '../../providers/post_request_provider.dart';
 import '../../providers/signature_provider.dart';
+import '../../utils/app_toast.dart';
 
 enum CreatePostView { editor, pending, approved }
 
@@ -75,16 +76,12 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     if (_bodyController.text.isEmpty ||
         _emailController.text.isEmpty ||
         _nameController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all required fields')),
-      );
+      AppToast.show(context, 'Please fill all required fields');
       return;
     }
 
     if (!_emailController.text.contains('@')) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a valid email')),
-      );
+      AppToast.show(context, 'Please enter a valid email');
       return;
     }
 
@@ -124,15 +121,21 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
           style: GoogleFonts.redditSans(),
         ),
         actions: [
-          TextButton(
-            onPressed: () {
+          GestureDetector(
+            onTap: () {
               Navigator.pop(context); // Close dialog
               if (mounted) {
                 context.pop(); // Return to feed using go_router
               }
             },
-            child: Text('OK',
-                style: GoogleFonts.redditSans(color: const Color(0xFF0569FF))),
+            behavior: HitTestBehavior.opaque,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Text('OK',
+                  style: GoogleFonts.redditSans(
+                      fontWeight: FontWeight.w700,
+                      color: const Color(0xFF0569FF))),
+            ),
           ),
         ],
       ),
@@ -363,14 +366,18 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                       style: GoogleFonts.redditSans(fontSize: 14, color: const Color(0xFF1F1F1F)),
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.delete_outline_rounded, size: 18, color: Color(0xFFFF4D4D)),
-                    onPressed: () {
+                  GestureDetector(
+                    onTap: () {
                       ref.read(signatureProvider.notifier).deleteSignature(sig.id);
                       if (_selectedSignatureId == sig.id) {
                         setState(() => _selectedSignatureId = null);
                       }
                     },
+                    behavior: HitTestBehavior.opaque,
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      child: Icon(Icons.delete_outline_rounded, size: 18, color: Color(0xFFFF4D4D)),
+                    ),
                   ),
                 ],
               ),
@@ -503,16 +510,19 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
             ),
             const SizedBox(height: 24),
             if (_currentView != CreatePostView.editor)
-              ElevatedButton(
-                onPressed: () => setState(() => _currentView = CreatePostView.editor),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF0569FF),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              GestureDetector(
+                onTap: () => setState(() => _currentView = CreatePostView.editor),
+                behavior: HitTestBehavior.opaque,
+                child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                ),
-                child: Text(
-                  'Go to Editor',
-                  style: GoogleFonts.redditSans(fontWeight: FontWeight.w600, color: Colors.white),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0569FF),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    'Go to Editor',
+                    style: GoogleFonts.redditSans(fontWeight: FontWeight.w600, color: Colors.white),
+                  ),
                 ),
               ),
           ],
@@ -661,10 +671,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
   Widget _buildAttachmentButton() {
     return GestureDetector(
       onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Image selection will be implemented soon')),
-        );
+      AppToast.show(context, 'Image selection will be implemented soon');
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14),

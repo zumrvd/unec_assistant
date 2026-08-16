@@ -29,7 +29,8 @@ class NotificationsScreen extends ConsumerWidget {
         title: 'Notifications',
         trailing: notifications.any((n) => !n.isRead)
             ? GestureDetector(
-                onTap: () => ref.read(notificationListProvider.notifier).markAllAsRead(),
+                onTap: () =>
+                    ref.read(notificationListProvider.notifier).markAllAsRead(),
                 child: Text(
                   'Mark all as read',
                   style: GoogleFonts.redditSans(
@@ -44,34 +45,39 @@ class NotificationsScreen extends ConsumerWidget {
       body: !isEnabled
           ? _buildDisabledState()
           : notifications.isEmpty
-              ? _buildEmptyState()
-              : ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  itemCount: sortedKeys.length,
-                  itemBuilder: (context, index) {
-                    final key = sortedKeys[index];
-                    final groupNotifications = grouped[key]!;
+          ? _buildEmptyState()
+          : ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: sortedKeys.length,
+              itemBuilder: (context, index) {
+                final key = sortedKeys[index];
+                final groupNotifications = grouped[key]!;
 
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 5),
-                          child: Text(
-                            key.toUpperCase(),
-                            style: GoogleFonts.redditSans(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 12,
-                              color: const Color(0xFF838A97),
-                              letterSpacing: 1.1,
-                            ),
-                          ),
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 15,
+                        horizontal: 5,
+                      ),
+                      child: Text(
+                        key.toUpperCase(),
+                        style: GoogleFonts.redditSans(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12,
+                          color: const Color(0xFF838A97),
+                          letterSpacing: 1.1,
                         ),
-                        ...groupNotifications.map((n) => _NotificationTile(notification: n)),
-                      ],
-                    );
-                  },
-                ),
+                      ),
+                    ),
+                    ...groupNotifications.map(
+                      (n) => _NotificationTile(notification: n),
+                    ),
+                  ],
+                );
+              },
+            ),
     );
   }
 
@@ -91,7 +97,11 @@ class NotificationsScreen extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.notifications_none_rounded, size: 80, color: Color(0xFFE0E4F0)),
+          const Icon(
+            Icons.notifications_none_rounded,
+            size: 80,
+            color: Color(0xFFE0E4F0),
+          ),
           const SizedBox(height: 16),
           Text(
             'No notifications yet',
@@ -113,7 +123,11 @@ class NotificationsScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.notifications_off_outlined, size: 80, color: Color(0xFFE0E4F0)),
+            const Icon(
+              Icons.notifications_off_outlined,
+              size: 80,
+              color: Color(0xFFE0E4F0),
+            ),
             const SizedBox(height: 16),
             Text(
               'Notifications are turned off',
@@ -151,7 +165,9 @@ class _NotificationTile extends ConsumerWidget {
     return Dismissible(
       key: Key(notification.id),
       direction: DismissDirection.endToStart,
-      onDismissed: (_) => ref.read(notificationListProvider.notifier).deleteNotification(notification.id),
+      onDismissed: (_) => ref
+          .read(notificationListProvider.notifier)
+          .deleteNotification(notification.id),
       background: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
@@ -162,7 +178,9 @@ class _NotificationTile extends ConsumerWidget {
         child: const Icon(Icons.delete_outline_rounded, color: Colors.white),
       ),
       child: GestureDetector(
-        onTap: () => ref.read(notificationListProvider.notifier).markAsRead(notification.id),
+        onTap: () => ref
+            .read(notificationListProvider.notifier)
+            .markAsRead(notification.id),
         child: Container(
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(16),
@@ -170,17 +188,11 @@ class _NotificationTile extends ConsumerWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: notification.isRead ? const Color(0xFFE0E4F0) : const Color(0xFF0569FF).withOpacity(0.3),
+              color: notification.isRead
+                  ? const Color(0xFFE0E4F0)
+                  : const Color(0xFF0569FF).withValues(alpha: 0.3),
               width: 1,
             ),
-            boxShadow: [
-              if (!notification.isRead)
-                BoxShadow(
-                  color: const Color(0xFF0569FF).withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-            ],
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,7 +282,7 @@ class _NotificationTile extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
       child: Icon(iconData, color: color, size: 18),
