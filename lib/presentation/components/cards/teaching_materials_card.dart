@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/models/lecture_material.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/materials_provider.dart';
 
-class TeachingMaterialsCard extends StatelessWidget {
+class TeachingMaterialsCard extends ConsumerWidget {
   const TeachingMaterialsCard({
     required this.subjectId,
     this.lecture,
@@ -14,23 +17,13 @@ class TeachingMaterialsCard extends StatelessWidget {
   final String subjectId;
   final LectureMaterial? lecture;
 
-  static const _primaryBlue = Color(0xFF0569FF);
-  static const _valueBlack = Color(0xFF1F1F1F);
-  static const _labelGrey = Color(0xFF838A97);
-  static const _borderColor = Color(0xFFE0E4F0);
-  static const _seeAllBackground = Color(0xFFE8F0FE);
-  static const _bundleLabelColor = Color(0xFFE8F0FE);
-  static const _bundleMetaColor = Color(0x80E0E4F0);
-  static const _bundleIncludingColor = Color(0x80838A97);
-  static const _downloadButtonBg = Color(0x80E0E4F0);
-  static const _downloadButtonIcon = Color(0x80838A97);
-
   Widget _fileRow(
     IconData fileIcon,
     Color iconColor,
     Color iconBg,
     String title,
-    String meta, {
+    String meta,
+    AppColors appColors, {
     bool isLast = false,
   }) {
     return Column(
@@ -44,11 +37,11 @@ class TeachingMaterialsCard extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.subdirectory_arrow_right_outlined,
                     size: 25,
                     weight: 0.5,
-                    color: _borderColor,
+                    color: appColors.borderColor,
                   ),
                   const SizedBox(width: 3),
                   Container(
@@ -76,7 +69,7 @@ class TeachingMaterialsCard extends StatelessWidget {
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w800,
                             fontSize: 12,
-                            color: _valueBlack,
+                            color: appColors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -87,7 +80,7 @@ class TeachingMaterialsCard extends StatelessWidget {
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w700,
                             fontSize: 12,
-                            color: _labelGrey,
+                            color: appColors.textSecondary,
                           ),
                         ),
                       ],
@@ -98,17 +91,18 @@ class TeachingMaterialsCard extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {},
+              behavior: HitTestBehavior.opaque,
               child: Container(
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
-                  color: _downloadButtonBg,
+                  color: appColors.iconBoxArrowBg,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.file_download_outlined,
                   size: 18,
-                  color: _downloadButtonIcon,
+                  color: appColors.textSecondary,
                 ),
               ),
             ),
@@ -116,8 +110,8 @@ class TeachingMaterialsCard extends StatelessWidget {
         ),
         if (!isLast) ...[
           const SizedBox(height: 15),
-          const Divider(
-            color: _borderColor,
+          Divider(
+            color: appColors.divider,
             thickness: 1,
             height: 1,
           ),
@@ -134,7 +128,8 @@ class TeachingMaterialsCard extends StatelessWidget {
       kFileTypeColors[fileType] ?? const Color(0xFF838A97);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
     final bundle = lecture;
     final bundleTitle = bundle == null
         ? 'No materials yet'
@@ -150,10 +145,10 @@ class TeachingMaterialsCard extends StatelessWidget {
     return Container(
       width: .maxFinite,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: _borderColor,
+          color: appColors.borderColor,
           width: 1,
         ),
       ),
@@ -170,16 +165,17 @@ class TeachingMaterialsCard extends StatelessWidget {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 16,
-                  color: _primaryBlue,
+                  color: appColors.primary,
                 ),
               ),
               GestureDetector(
                 onTap: () => context.push(
                   '/functions/teaching-materials/subject/$subjectId',
                 ),
+                behavior: HitTestBehavior.opaque,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: _seeAllBackground,
+                    color: appColors.primaryContainer,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   padding: const EdgeInsets.symmetric(
@@ -189,9 +185,9 @@ class TeachingMaterialsCard extends StatelessWidget {
                   child: Text(
                     'See all',
                     style: GoogleFonts.redditSans(
-                      fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w500,
                       fontSize: 11,
-                      color: _primaryBlue,
+                      color: appColors.primary,
                     ),
                   ),
                 ),
@@ -223,7 +219,7 @@ class TeachingMaterialsCard extends StatelessWidget {
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w500,
                     fontSize: 14,
-                    color: _bundleLabelColor,
+                    color: const Color(0xFFE8F0FE),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -240,7 +236,7 @@ class TeachingMaterialsCard extends StatelessWidget {
                       child: const Icon(
                         Icons.chrome_reader_mode_outlined,
                         size: 20,
-                        color: _bundleLabelColor,
+                        color: Color(0xFFE8F0FE),
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -264,7 +260,7 @@ class TeachingMaterialsCard extends StatelessWidget {
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 12,
-                                color: _bundleMetaColor,
+                                color: const Color(0x80E0E4F0),
                               ),
                             ),
                         ],
@@ -275,6 +271,7 @@ class TeachingMaterialsCard extends StatelessWidget {
                 const SizedBox(height: 10),
                 GestureDetector(
                   onTap: () {},
+                  behavior: HitTestBehavior.opaque,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -303,7 +300,7 @@ class TeachingMaterialsCard extends StatelessWidget {
                             const Icon(
                               Icons.file_download_outlined,
                               size: 18,
-                              color: _bundleLabelColor,
+                              color: Color(0xFFE8F0FE),
                             ),
                           ],
                         ),
@@ -320,7 +317,7 @@ class TeachingMaterialsCard extends StatelessWidget {
             style: GoogleFonts.redditSans(
               fontWeight: FontWeight.w700,
               fontSize: 12,
-              color: _bundleIncludingColor,
+              color: appColors.textMuted,
             ),
           ),
           const SizedBox(height: 10),
@@ -330,7 +327,7 @@ class TeachingMaterialsCard extends StatelessWidget {
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w600,
                 fontSize: 12,
-                color: _labelGrey,
+                color: appColors.textSecondary,
               ),
             )
           else
@@ -344,6 +341,7 @@ class TeachingMaterialsCard extends StatelessWidget {
                     _colorForType(files[i].fileType).withValues(alpha: 0.15),
                     files[i].fileTitle,
                     '${files[i].fileSize} · ${files[i].uploadedAgo}',
+                    appColors,
                     isLast: i == files.length - 1,
                   ),
               ],
@@ -353,3 +351,4 @@ class TeachingMaterialsCard extends StatelessWidget {
     );
   }
 }
+

@@ -4,21 +4,17 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/models/calendar_event.dart';
 import 'package:unec_assistant/presentation/components/cards/calendar_card.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import 'package:unec_assistant/providers/calendar_provider.dart';
 
 class ScheduleCard extends ConsumerWidget {
   const ScheduleCard({super.key});
 
-  static const _borderColor = Color(0xFFE0E4F0);
-  static const _labelGrey = Color(0xFF838A97);
-  static const _valueBlack = Color(0xFF1F1F1F);
-  static const _personalYellow = Color(0xFFE3993C);
-  static const _examGreen = Color(0xFF0F6E56);
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final now = DateTime.now();
     final events = ref.watch(calendarEventsProvider);
+    final appColors = ref.watch(appColorsProvider);
 
     // Filter for upcoming personal events and exams
     final upcomingEvents = events.where((e) {
@@ -32,7 +28,7 @@ class ScheduleCard extends ConsumerWidget {
     final bool hasEvent = upcomingEvents.isNotEmpty;
     final firstEvent = hasEvent ? upcomingEvents.first : null;
     final isExam = firstEvent?.type == EventType.exam;
-    final accentColor = isExam ? _examGreen : _personalYellow;
+    final accentColor = isExam ? appColors.success : appColors.warning;
     final isActive = firstEvent != null &&
         now.isAfter(firstEvent.startTime) &&
         now.isBefore(firstEvent.endTime);
@@ -53,7 +49,6 @@ class ScheduleCard extends ConsumerWidget {
             label: semanticLabel,
             child: GestureDetector(
               onTap: () {
-                // Micro-delay to allow UI tree to settle
                 Future.delayed(Duration.zero, () {
                   if (context.mounted && firstEvent != null) {
                     context.go(
@@ -72,9 +67,9 @@ class ScheduleCard extends ConsumerWidget {
                 width: 330,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: appColors.cardBackground,
                   borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: _borderColor, width: 1),
+                  border: Border.all(color: appColors.borderColor, width: 1),
                 ),
                 child: ExcludeSemantics(
                   child: Column(
@@ -118,7 +113,7 @@ class ScheduleCard extends ConsumerWidget {
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFFFE5E5),
+                                    color: appColors.error.withValues(alpha: 0.15),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
@@ -126,7 +121,7 @@ class ScheduleCard extends ConsumerWidget {
                                     style: GoogleFonts.redditSans(
                                       fontWeight: FontWeight.w800,
                                       fontSize: 9,
-                                      color: const Color(0xFFF65959),
+                                      color: appColors.error,
                                     ),
                                   ),
                                 ),
@@ -135,7 +130,7 @@ class ScheduleCard extends ConsumerWidget {
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: accentColor.withValues(alpha: 0.1),
+                                  color: accentColor.withValues(alpha: 0.15),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Text(
@@ -158,7 +153,7 @@ class ScheduleCard extends ConsumerWidget {
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w700,
                           fontSize: 18,
-                          color: _valueBlack,
+                          color: appColors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -167,9 +162,9 @@ class ScheduleCard extends ConsumerWidget {
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF8F9FC),
+                          color: appColors.surface,
                           borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: const Color(0xFFE0E4F0), width: 1),
+                          border: Border.all(color: appColors.borderColor, width: 1),
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -185,14 +180,14 @@ class ScheduleCard extends ConsumerWidget {
                                   style: GoogleFonts.redditSans(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 11,
-                                    color: _labelGrey,
+                                    color: appColors.textSecondary,
                                     height: 1.1,
                                   ),
                                 ),
                               ],
                             ),
                             const SizedBox(width: 15),
-                            Container(width: 1, height: 40, color: const Color(0xFFE0E4F0)),
+                            Container(width: 1, height: 40, color: appColors.divider),
                             const SizedBox(width: 15),
                             Expanded(
                               child: Column(
@@ -203,14 +198,14 @@ class ScheduleCard extends ConsumerWidget {
                                     style: GoogleFonts.redditSans(
                                       fontWeight: FontWeight.w700,
                                       fontSize: 16,
-                                      color: const Color(0xFF1F1F1F),
+                                      color: appColors.textPrimary,
                                     ),
                                   ),
                                   if (firstEvent?.location.isNotEmpty ?? false) ...[
                                     const SizedBox(height: 4),
                                     Row(
                                       children: [
-                                        Icon(Icons.location_on_outlined, size: 12, color: _labelGrey),
+                                        Icon(Icons.location_on_outlined, size: 12, color: appColors.textSecondary),
                                         const SizedBox(width: 4),
                                         Expanded(
                                           child: Text(
@@ -220,7 +215,7 @@ class ScheduleCard extends ConsumerWidget {
                                             style: GoogleFonts.redditSans(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 12,
-                                              color: _labelGrey,
+                                              color: appColors.textSecondary,
                                             ),
                                           ),
                                         ),
@@ -261,3 +256,4 @@ class ScheduleCard extends ConsumerWidget {
     return names[month - 1];
   }
 }
+

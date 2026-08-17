@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:unec_assistant/presentation/components/calendar/event_editor_sheet.dart';
 import 'package:unec_assistant/presentation/components/cards/calendar_card.dart';
 import 'package:unec_assistant/presentation/components/cards/todays_events_card.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import 'package:unec_assistant/providers/calendar_provider.dart';
 
 import 'package:unec_assistant/presentation/components/lists/labels.dart';
@@ -33,6 +34,7 @@ class ScheduleScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final allEvents = ref.watch(calendarEventsProvider);
+    final appColors = ref.watch(appColorsProvider);
     final now = DateTime.now();
     final todaysEvents = allEvents.where((e) =>
       e.startTime.year == now.year &&
@@ -41,20 +43,21 @@ class ScheduleScreen extends ConsumerWidget {
     ).toList();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FC),
+      backgroundColor: appColors.background,
       floatingActionButton: GestureDetector(
         onTap: () => _openCreateSheet(context, ref),
+        behavior: HitTestBehavior.opaque,
         child: Container(
           width: 56,
           height: 56,
           decoration: BoxDecoration(
-            color: const Color(0xFF0569FF),
+            color: appColors.primary,
             borderRadius: BorderRadius.circular(16),
-            boxShadow: const [
+            boxShadow: [
               BoxShadow(
-                color: Color(0x330569FF),
+                color: appColors.primary.withValues(alpha: 0.3),
                 blurRadius: 12,
-                offset: Offset(0, 4),
+                offset: const Offset(0, 4),
               ),
             ],
           ),
@@ -95,3 +98,4 @@ class ScheduleScreen extends ConsumerWidget {
     );
   }
 }
+

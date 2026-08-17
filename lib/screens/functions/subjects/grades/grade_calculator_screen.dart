@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import '../../../../providers/subject_detail_provider.dart';
 import '../../../../presentation/components/buttons/grade_calculator_button.dart';
 import '../../../../presentation/components/cards/grade_calculator_card.dart';
 
 import '../../../../presentation/components/lists/labels.dart';
 
-class GradeCalculatorScreen extends StatelessWidget {
+class GradeCalculatorScreen extends ConsumerWidget {
   const GradeCalculatorScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FC),
+      backgroundColor: appColors.background,
       appBar: const CustomAppBar(title: 'Grade Goal Calculator'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 16),
@@ -37,3 +41,4 @@ class GradeCalculatorScreen extends StatelessWidget {
     );
   }
 }
+

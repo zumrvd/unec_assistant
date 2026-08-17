@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/models/calendar_event.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 
 Future<void> showEventDetailsPopup(
   BuildContext context, {
@@ -27,7 +30,7 @@ Future<void> showEventDetailsPopup(
   );
 }
 
-class _EventDetailsCard extends StatelessWidget {
+class _EventDetailsCard extends ConsumerWidget {
   const _EventDetailsCard({
     required this.event,
     required this.onEdit,
@@ -40,19 +43,14 @@ class _EventDetailsCard extends StatelessWidget {
   final VoidCallback onDelete;
   final VoidCallback? onActiveClassTap;
 
-  static const _border = Color(0xFFE0E4F0);
-  static const _blue = Color(0xFF0569FF);
-  static const _grey = Color(0xFF838A97);
-  static const _dark = Color(0xFF1F1F1F);
-
-  Color get _badgeColor {
+  Color _badgeColor(AppColors appColors) {
     switch (event.type) {
       case EventType.classEvent:
-        return _blue;
+        return appColors.primary;
       case EventType.personalEvent:
-        return const Color(0xFFE3993C);
+        return appColors.attendanceOrange;
       case EventType.exam:
-        return const Color(0xFF0F6E56);
+        return appColors.success;
     }
   }
 
@@ -68,15 +66,17 @@ class _EventDetailsCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
     final day = event.startDay;
+    final badgeColor = _badgeColor(appColors);
 
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: _border),
+        border: Border.all(color: appColors.borderColor),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -90,13 +90,14 @@ class _EventDetailsCard extends StatelessWidget {
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 16,
-                    color: _dark,
+                    color: appColors.textPrimary,
                   ),
                 ),
               ),
               GestureDetector(
                 onTap: () => Navigator.of(context).pop(),
-                child: const Icon(Icons.close_rounded, color: _grey, size: 22),
+                behavior: HitTestBehavior.opaque,
+                child: Icon(Icons.close_rounded, color: appColors.textSecondary, size: 22),
               ),
             ],
           ),
@@ -104,7 +105,7 @@ class _EventDetailsCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: _badgeColor.withValues(alpha: 0.15),
+              color: badgeColor.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
@@ -112,24 +113,25 @@ class _EventDetailsCard extends StatelessWidget {
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w700,
                 fontSize: 11,
-                color: _badgeColor,
+                color: badgeColor,
               ),
             ),
           ),
           const SizedBox(height: 14),
-          _infoRow(Icons.schedule_rounded, event.displayTimeRange),
+          _infoRow(Icons.schedule_rounded, event.displayTimeRange, appColors),
           const SizedBox(height: 8),
           _infoRow(
             Icons.calendar_today_outlined,
             '${day.day}/${day.month}/${day.year}',
+            appColors,
           ),
           if (event.location.isNotEmpty) ...[
             const SizedBox(height: 8),
-            _infoRow(Icons.place_outlined, event.location),
+            _infoRow(Icons.place_outlined, event.location, appColors),
           ],
           if (event.subtype.isNotEmpty) ...[
             const SizedBox(height: 8),
-            _infoRow(Icons.label_outline_rounded, event.subtype),
+            _infoRow(Icons.label_outline_rounded, event.subtype, appColors),
           ],
           if (event.description.isNotEmpty) ...[
             const SizedBox(height: 12),
@@ -137,7 +139,7 @@ class _EventDetailsCard extends StatelessWidget {
               event.description,
               style: GoogleFonts.redditSans(
                 fontSize: 13,
-                color: _grey,
+                color: appColors.textSecondary,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -151,12 +153,13 @@ class _EventDetailsCard extends StatelessWidget {
                     Navigator.of(context).pop();
                     onEdit();
                   },
+                  behavior: HitTestBehavior.opaque,
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF8F9FC),
+                      color: appColors.surface,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: _border),
+                      border: Border.all(color: appColors.borderColor),
                     ),
                     alignment: Alignment.center,
                     child: Text(
@@ -164,7 +167,7 @@ class _EventDetailsCard extends StatelessWidget {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 13,
-                        color: _dark,
+                        color: appColors.textPrimary,
                       ),
                     ),
                   ),
@@ -177,10 +180,11 @@ class _EventDetailsCard extends StatelessWidget {
                     Navigator.of(context).pop();
                     onDelete();
                   },
+                  behavior: HitTestBehavior.opaque,
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     decoration: BoxDecoration(
-                      color: const Color(0x26F65959),
+                      color: appColors.error.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     alignment: Alignment.center,
@@ -189,7 +193,7 @@ class _EventDetailsCard extends StatelessWidget {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 13,
-                        color: const Color(0xFFF65959),
+                        color: appColors.error,
                       ),
                     ),
                   ),
@@ -204,11 +208,12 @@ class _EventDetailsCard extends StatelessWidget {
                 Navigator.of(context).pop();
                 onActiveClassTap!();
               },
+              behavior: HitTestBehavior.opaque,
               child: Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: _blue,
+                  color: appColors.primary,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 alignment: Alignment.center,
@@ -228,10 +233,10 @@ class _EventDetailsCard extends StatelessWidget {
     );
   }
 
-  Widget _infoRow(IconData icon, String text) {
+  Widget _infoRow(IconData icon, String text, AppColors appColors) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: _grey),
+        Icon(icon, size: 16, color: appColors.textSecondary),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
@@ -239,7 +244,7 @@ class _EventDetailsCard extends StatelessWidget {
             style: GoogleFonts.redditSans(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: _dark,
+              color: appColors.textPrimary,
             ),
           ),
         ),
@@ -247,3 +252,4 @@ class _EventDetailsCard extends StatelessWidget {
     );
   }
 }
+

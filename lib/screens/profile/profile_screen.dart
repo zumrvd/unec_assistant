@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/presentation/components/cards/feedback_card.dart';
 import 'package:unec_assistant/presentation/components/cards/setting_card1.dart';
 import 'package:unec_assistant/presentation/components/cards/setting_card2.dart';
 import 'package:unec_assistant/presentation/components/cards/student_id_card.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   Future<void> _launchUnecCabinet() async {
@@ -17,10 +20,13 @@ class ProfileScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Scaffold(
+        backgroundColor: appColors.background,
         body: Column(
           children: [
             Expanded(
@@ -30,7 +36,7 @@ class ProfileScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Center(
+                    const Center(
                       child: StudentIdCard(
                         studentName: 'Zümrüd Verdiyeva',
                         groupCode: '575-1',
@@ -40,19 +46,20 @@ class ProfileScreen extends StatelessWidget {
                         yearBadge: '1-ci kurs',
                         quote: '"too pretty to worry about midterms"',
                         profileImage:
-                            const AssetImage('assets/images/profile.jpg'),
+                            AssetImage('assets/images/profile.jpg'),
                       ),
                     ),
 
                     const SizedBox(height: 20),
 
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 10.0),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
                       child: Text(
                         'Academic',
-                        style: TextStyle(
-                          color: Color(0xFF838A97),
+                        style: GoogleFonts.redditSans(
+                          color: appColors.textSecondary,
                           fontSize: 15,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -69,13 +76,14 @@ class ProfileScreen extends StatelessWidget {
 
                     const SizedBox(height: 10),
 
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 10.0),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
                       child: Text(
                         'Application',
-                        style: TextStyle(
-                          color: Color(0xFF838A97),
+                        style: GoogleFonts.redditSans(
+                          color: appColors.textSecondary,
                           fontSize: 15,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -88,13 +96,14 @@ class ProfileScreen extends StatelessWidget {
 
                     const SizedBox(height: 10),
 
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 10.0),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
                       child: Text(
                         'Feedback & Support',
-                        style: TextStyle(
-                          color: Color(0xFF838A97),
+                        style: GoogleFonts.redditSans(
+                          color: appColors.textSecondary,
                           fontSize: 15,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),

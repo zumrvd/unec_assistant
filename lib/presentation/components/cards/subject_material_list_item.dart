@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import '../../../models/subject_detail.dart';
 
-class SubjectMaterialListItem extends StatelessWidget {
+class SubjectMaterialListItem extends ConsumerWidget {
   final SubjectDetail data;
   final VoidCallback? onTap;
 
@@ -13,16 +15,19 @@ class SubjectMaterialListItem extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+
     return GestureDetector(
       onTap: onTap ?? () {},
+      behavior: HitTestBehavior.opaque,
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: const Color(0xFFFFFFFF),
+          color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
-            color: const Color(0xFFE0E4F0),
+            color: appColors.borderColor,
             width: 1,
           ),
         ),
@@ -58,7 +63,7 @@ class SubjectMaterialListItem extends StatelessWidget {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 15,
-                      color: const Color(0xFF1F1F1F),
+                      color: appColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -67,16 +72,16 @@ class SubjectMaterialListItem extends StatelessWidget {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 10,
-                      color: const Color(0xFF838A97),
+                      color: appColors.textSecondary,
                     ),
                   ),
                 ],
               ),
             ),
-            const Icon(
+            Icon(
               Icons.chevron_right_rounded,
               size: 20,
-              color: Color(0xFF838A97),
+              color: appColors.textSecondary,
             ),
           ],
         ),
@@ -84,3 +89,4 @@ class SubjectMaterialListItem extends StatelessWidget {
     );
   }
 }
+

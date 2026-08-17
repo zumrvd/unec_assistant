@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import '../../../models/subject_detail.dart';
 
-class FinalGradeCard extends StatelessWidget {
+class FinalGradeCard extends ConsumerWidget {
   final SubjectDetail data;
 
   const FinalGradeCard({
@@ -11,13 +13,15 @@ class FinalGradeCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFE0E4F0), width: 1),
+        border: Border.all(color: appColors.borderColor, width: 1),
       ),
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -25,7 +29,7 @@ class FinalGradeCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.star_rounded, size: 20, color: Color(0xFFE3993C)),
+              Icon(Icons.star_rounded, size: 20, color: appColors.attendanceOrange),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -33,7 +37,7 @@ class FinalGradeCard extends StatelessWidget {
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 14,
-                    color: const Color(0xFF1F1F1F),
+                    color: appColors.textPrimary,
                   ),
                 ),
               ),
@@ -43,8 +47,8 @@ class FinalGradeCard extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                   fontSize: 16,
                   color: data.finalScheduled
-                      ? const Color(0xFF1F1F1F)
-                      : const Color(0x80838A97),
+                      ? appColors.textPrimary
+                      : appColors.textMuted,
                 ),
               ),
               if (data.finalScheduled) ...[
@@ -57,7 +61,7 @@ class FinalGradeCard extends StatelessWidget {
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w700,
                           fontSize: 20,
-                          color: const Color(0xFF1F1F1F),
+                          color: appColors.textPrimary,
                         ),
                       ),
                       TextSpan(
@@ -65,7 +69,7 @@ class FinalGradeCard extends StatelessWidget {
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w700,
                           fontSize: 13,
-                          color: const Color(0x80838A97),
+                          color: appColors.textMuted,
                         ),
                       ),
                     ],
@@ -81,7 +85,7 @@ class FinalGradeCard extends StatelessWidget {
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w700,
                 fontSize: 10,
-                color: const Color(0x80838A97),
+                color: appColors.textMuted,
               ),
             ),
           ],
@@ -145,3 +149,4 @@ class FinalGradeCard extends StatelessWidget {
     );
   }
 }
+

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 
-class SettingsCard1 extends StatelessWidget {
+class SettingsCard1 extends ConsumerWidget {
   const SettingsCard1({
     required this.onProfileInfoTap,
     required this.onUnecCabinetTap,
@@ -12,12 +15,6 @@ class SettingsCard1 extends StatelessWidget {
   final VoidCallback onProfileInfoTap;
   final VoidCallback onUnecCabinetTap;
   final VoidCallback onChangePassTap;
-
-
-  static const _borderColor = Color(0xFFE0E4F0);
-  static const _labelGrey = Color(0x80838A97);
-  static const _subtitleColor = Color(0x80838A97);
-
 
   Widget _iconBox(IconData icon, Color bgColor, Color iconColor) {
     return Container(
@@ -35,27 +32,29 @@ class SettingsCard1 extends StatelessWidget {
     );
   }
 
-  TextStyle _labelStyle() {
+  TextStyle _labelStyle(AppColors appColors) {
     return GoogleFonts.redditSans(
       fontWeight: FontWeight.w700,
       fontSize: 13,
-      color: const Color(0xFF000000),
+      color: appColors.textPrimary,
     );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: _borderColor,
+          color: appColors.borderColor,
           width: 1,
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 25,vertical: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
@@ -72,21 +71,22 @@ class SettingsCard1 extends StatelessWidget {
                   children: [
                     _iconBox(
                       Icons.badge_outlined,
-                      const Color(0x260F6E56),
-                      const Color(0xFF0F6E56),
+                      appColors.primaryContainer,
+                      appColors.primaryOnContainer,
                     ),
                     const SizedBox(width: 12),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Profile İnformations', style: _labelStyle()),
+                        Text('Profile Informations',
+                            style: _labelStyle(appColors)),
                         const SizedBox(height: 2),
                         Text(
                           'Your full transcript',
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w400,
                             fontSize: 11,
-                            color: _subtitleColor,
+                            color: appColors.textSecondary,
                           ),
                         ),
                       ],
@@ -97,29 +97,25 @@ class SettingsCard1 extends StatelessWidget {
                   width: 28,
                   height: 28,
                   decoration: BoxDecoration(
-                    color: const Color(0x26838A97),
+                    color: appColors.iconBoxArrowBg,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.arrow_right_rounded,
                     size: 25,
-                    color: _labelGrey,
+                    color: appColors.textSecondary,
                   ),
                 ),
               ],
             ),
           ),
-
           const SizedBox(height: 15),
-
-          const Divider(
-            color: _borderColor,
+          Divider(
+            color: appColors.divider,
             thickness: 1,
             height: 1,
           ),
-
           const SizedBox(height: 15),
-
           GestureDetector(
             onTap: onUnecCabinetTap,
             behavior: HitTestBehavior.opaque,
@@ -132,23 +128,21 @@ class SettingsCard1 extends StatelessWidget {
                   children: [
                     _iconBox(
                       Icons.add_box,
-                      const Color(0x260569FF),
-                      const Color(0xFF0569FF),
+                      appColors.primaryContainer,
+                      appColors.primaryOnContainer,
                     ),
-
                     const SizedBox(width: 12),
-
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Unec Cabinet', style: _labelStyle()),
+                        Text('Unec Cabinet', style: _labelStyle(appColors)),
                         const SizedBox(height: 2),
                         Text(
                           'Direct link to your cabinet',
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w400,
                             fontSize: 11,
-                            color: _subtitleColor,
+                            color: appColors.textSecondary,
                           ),
                         ),
                       ],
@@ -159,29 +153,25 @@ class SettingsCard1 extends StatelessWidget {
                   width: 28,
                   height: 28,
                   decoration: BoxDecoration(
-                    color: const Color(0x26838A97),
+                    color: appColors.iconBoxArrowBg,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.arrow_outward_rounded,
                     size: 15,
-                    color: _labelGrey,
+                    color: appColors.textSecondary,
                   ),
                 ),
               ],
             ),
           ),
-
           const SizedBox(height: 15),
-
-          const Divider(
-            color: _borderColor,
+          Divider(
+            color: appColors.divider,
             thickness: 1,
             height: 1,
           ),
-
           const SizedBox(height: 15),
-
           GestureDetector(
             onTap: onChangePassTap,
             behavior: HitTestBehavior.opaque,
@@ -194,21 +184,21 @@ class SettingsCard1 extends StatelessWidget {
                   children: [
                     _iconBox(
                       Icons.password_rounded,
-                      const Color(0x26993C1D),
-                      const Color(0xFF993C1D),
+                      appColors.warningContainer,
+                      appColors.warningOnContainer,
                     ),
                     const SizedBox(width: 12),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Change Password', style: _labelStyle()),
+                        Text('Change Password', style: _labelStyle(appColors)),
                         const SizedBox(height: 2),
                         Text(
                           'Resets your password',
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w400,
                             fontSize: 11,
-                            color: _subtitleColor,
+                            color: appColors.textSecondary,
                           ),
                         ),
                       ],
@@ -219,13 +209,13 @@ class SettingsCard1 extends StatelessWidget {
                   width: 28,
                   height: 28,
                   decoration: BoxDecoration(
-                    color: const Color(0x26838A97),
+                    color: appColors.iconBoxArrowBg,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.arrow_right_rounded,
                     size: 25,
-                    color: _labelGrey,
+                    color: appColors.textSecondary,
                   ),
                 ),
               ],

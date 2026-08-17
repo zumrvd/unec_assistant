@@ -5,6 +5,7 @@ import 'package:unec_assistant/models/calendar_event.dart';
 import 'package:unec_assistant/presentation/components/cards/current_class_detailed_card.dart';
 import 'package:unec_assistant/presentation/components/cards/subject_attendance_card.dart';
 import 'package:unec_assistant/presentation/components/cards/teaching_materials_card.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import 'package:unec_assistant/providers/current_class_provider.dart';
 import '../../../presentation/components/lists/labels.dart';
 
@@ -120,9 +121,10 @@ class CurrentClassScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(currentClassProvider);
+    final appColors = ref.watch(appColorsProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FC),
+      backgroundColor: appColors.background,
       appBar: CustomAppBar(
         title: 'Current Class',
         trailing: state.hasActive ? _activeBadge() : null,
@@ -144,7 +146,7 @@ class CurrentClassScreen extends ConsumerWidget {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w600,
                   fontSize: 14,
-                  color: const Color(0xFF838A97),
+                  color: appColors.textSecondary,
                 ),
               ),
               const SizedBox(height: 8),
@@ -153,7 +155,7 @@ class CurrentClassScreen extends ConsumerWidget {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w600,
                   fontSize: 13,
-                  color: const Color(0xFF0569FF),
+                  color: appColors.primary,
                 ),
               ),
               const SizedBox(height: 20),
@@ -162,7 +164,7 @@ class CurrentClassScreen extends ConsumerWidget {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 16,
-                  color: const Color(0xFF1F1F1F),
+                  color: appColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 10),
@@ -180,7 +182,7 @@ class CurrentClassScreen extends ConsumerWidget {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
-                      color: const Color(0xFF838A97),
+                      color: appColors.textSecondary,
                     ),
                   ),
                 ),
@@ -192,3 +194,4 @@ class CurrentClassScreen extends ConsumerWidget {
     );
   }
 }
+

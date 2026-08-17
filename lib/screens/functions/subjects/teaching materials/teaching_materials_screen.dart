@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import '../../../../providers/subject_detail_provider.dart';
 import '../../../../presentation/components/lists/subject_materials_list.dart';
 import '../../../../presentation/components/buttons/materials/smart_sync_button.dart';
@@ -12,9 +13,10 @@ class TeachingMaterialsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final allSubjects = ref.watch(allSubjectsProvider);
+    final appColors = ref.watch(appColorsProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FC),
+      backgroundColor: appColors.background,
       appBar: const CustomAppBar(title: 'Teaching Materials'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 16),
@@ -22,7 +24,7 @@ class TeachingMaterialsScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 10,
           children: [
-            SmartSyncButton(onTap: () => context.push('/functions/teaching-materials/smart-sync'),),
+            SmartSyncButton(onTap: () => context.push('/functions/teaching-materials/smart-sync')),
             SectionLabel('All subjects  ${allSubjects.length}'),
             SubjectMaterialsList(
               items: allSubjects,
@@ -34,3 +36,4 @@ class TeachingMaterialsScreen extends ConsumerWidget {
     );
   }
 }
+

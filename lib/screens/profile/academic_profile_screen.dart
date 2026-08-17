@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unec_assistant/presentation/components/lists/labels.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/student_profile_provider.dart';
 
 class AcademicProfileScreen extends ConsumerWidget {
@@ -18,9 +20,10 @@ class AcademicProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(studentProfileProvider);
+    final appColors = ref.watch(appColorsProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FC),
+      backgroundColor: appColors.background,
       appBar: CustomAppBar(
         title: 'Academic profile',
         onBackTap: () => context.pop(),
@@ -30,20 +33,21 @@ class AcademicProfileScreen extends ConsumerWidget {
         child: Column(
           children: [
             // Card 1: Student Name + Status
-            _buildMainInfoCard(profile),
+            _buildMainInfoCard(profile, appColors),
             const SizedBox(height: 16),
 
             // Card 2: Academic Information
             _buildInfoCard(
               icon: Icons.menu_rounded,
-              iconColor: const Color(0xFF0569FF),
-              iconBgColor: const Color(0xFFEEF4FF),
+              iconColor: appColors.primary,
+              iconBgColor: appColors.primaryContainer,
               title: 'Academic information',
+              appColors: appColors,
               rows: [
-                _buildInfoRow('Faculty', profile.faculty),
-                _buildInfoRow('Major', profile.major),
-                _buildInfoRow('Year', profile.year),
-                _buildInfoRow('Enrolled', profile.enrollmentDate),
+                _buildInfoRow('Faculty', profile.faculty, appColors),
+                _buildInfoRow('Major', profile.major, appColors),
+                _buildInfoRow('Year', profile.year, appColors),
+                _buildInfoRow('Enrolled', profile.enrollmentDate, appColors),
               ],
             ),
             const SizedBox(height: 16),
@@ -51,15 +55,17 @@ class AcademicProfileScreen extends ConsumerWidget {
             // Card 3: Academic Standing
             _buildInfoCard(
               icon: Icons.star_rounded,
-              iconColor: const Color(0xFF0F6E56),
-              iconBgColor: const Color(0xFFE7F4F0),
+              iconColor: appColors.success,
+              iconBgColor: appColors.success.withValues(alpha: 0.15),
               title: 'Academic standing',
+              appColors: appColors,
               rows: [
                 _buildInfoRow(
                   'Cumulative GPA',
                   '${profile.gpa.toStringAsFixed(2)} / 100.00',
+                  appColors,
                   isBoldValue: true,
-                  valueColor: const Color(0xFF6E8E15),
+                  valueColor: appColors.success,
                 ),
               ],
             ),
@@ -68,9 +74,10 @@ class AcademicProfileScreen extends ConsumerWidget {
             // Card 4: Club Memberships
             _buildInfoCard(
               icon: Icons.person_rounded,
-              iconColor: const Color(0xFF5E5CE6),
-              iconBgColor: const Color(0xFFF0F0FF),
+              iconColor: appColors.notificationPurple,
+              iconBgColor: appColors.notificationPurpleContainer,
               title: 'Club memberships',
+              appColors: appColors,
               rows: [
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -83,7 +90,7 @@ class AcademicProfileScreen extends ConsumerWidget {
                       runSpacing: 10,
                       alignment: WrapAlignment.center,
                       children: profile.clubMemberships
-                          .map((club) => _buildClubBadge(club))
+                          .map((club) => _buildClubBadge(club, appColors))
                           .toList(),
                     ),
                   ),
@@ -100,13 +107,13 @@ class AcademicProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildMainInfoCard(dynamic profile) {
+  Widget _buildMainInfoCard(dynamic profile, AppColors appColors) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFE0E4F0)),
+        border: Border.all(color: appColors.borderColor),
       ),
       child: Row(
         children: [
@@ -114,7 +121,7 @@ class AcademicProfileScreen extends ConsumerWidget {
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: const Color(0xFFEEF4FF),
+              color: appColors.primaryContainer,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Center(
@@ -123,7 +130,7 @@ class AcademicProfileScreen extends ConsumerWidget {
                 style: GoogleFonts.redditSans(
                   fontSize: 28,
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFF0569FF),
+                  color: appColors.primary,
                 ),
               ),
             ),
@@ -142,7 +149,7 @@ class AcademicProfileScreen extends ConsumerWidget {
                         style: GoogleFonts.redditSans(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
-                          color: const Color(0xFF1E1E1E),
+                          color: appColors.textPrimary,
                         ),
                       ),
                     ),
@@ -153,12 +160,10 @@ class AcademicProfileScreen extends ConsumerWidget {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE7F4F0),
+                          color: appColors.success.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: const Color(
-                              0xFF6E8E15,
-                            ).withValues(alpha: 0.2),
+                            color: appColors.success.withValues(alpha: 0.3),
                           ),
                         ),
                         child: Text(
@@ -166,7 +171,7 @@ class AcademicProfileScreen extends ConsumerWidget {
                           style: GoogleFonts.redditSans(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: const Color(0xFF6E8E15),
+                            color: appColors.success,
                           ),
                         ),
                       ),
@@ -177,14 +182,14 @@ class AcademicProfileScreen extends ConsumerWidget {
                   'ID:',
                   style: GoogleFonts.redditSans(
                     fontSize: 14,
-                    color: const Color(0xFF838A97),
+                    color: appColors.textSecondary,
                   ),
                 ),
                 Text(
                   profile.studentId,
                   style: GoogleFonts.redditSans(
                     fontSize: 14,
-                    color: const Color(0xFF838A97).withValues(alpha: 0.6),
+                    color: appColors.textMuted,
                   ),
                 ),
               ],
@@ -201,12 +206,13 @@ class AcademicProfileScreen extends ConsumerWidget {
     required Color iconBgColor,
     required String title,
     required List<Widget> rows,
+    required AppColors appColors,
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFE0E4F0)),
+        border: Border.all(color: appColors.borderColor),
       ),
       child: Column(
         children: [
@@ -229,13 +235,13 @@ class AcademicProfileScreen extends ConsumerWidget {
                   style: GoogleFonts.redditSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF1E1E1E),
+                    color: appColors.textPrimary,
                   ),
                 ),
               ],
             ),
           ),
-          const Divider(height: 1, color: Color(0xFFE0E4F0)),
+          Divider(height: 1, color: appColors.divider),
           ...rows,
         ],
       ),
@@ -244,7 +250,8 @@ class AcademicProfileScreen extends ConsumerWidget {
 
   Widget _buildInfoRow(
     String label,
-    String value, {
+    String value,
+    AppColors appColors, {
     bool isBoldValue = false,
     Color? valueColor,
     bool showLabel = true,
@@ -262,7 +269,7 @@ class AcademicProfileScreen extends ConsumerWidget {
               label,
               style: GoogleFonts.redditSans(
                 fontSize: 14,
-                color: const Color(0xFF838A97).withValues(alpha: 0.6),
+                color: appColors.textSecondary,
               ),
             ),
           Expanded(
@@ -272,7 +279,7 @@ class AcademicProfileScreen extends ConsumerWidget {
               style: GoogleFonts.redditSans(
                 fontSize: 14,
                 fontWeight: isBoldValue ? FontWeight.w700 : FontWeight.w600,
-                color: valueColor ?? const Color(0xFF1E1E1E),
+                color: valueColor ?? appColors.textPrimary,
               ),
             ),
           ),
@@ -281,27 +288,27 @@ class AcademicProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildClubBadge(String club) {
+  Widget _buildClubBadge(String club, AppColors appColors) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-        color: const Color(0xFFF0F0FF),
+        color: appColors.notificationPurpleContainer,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: const Color(0xFF5E5CE6).withValues(alpha: 0.1),
+          color: appColors.notificationPurple.withValues(alpha: 0.2),
         ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.stars_rounded, size: 14, color: Color(0xFF5E5CE6)),
+          Icon(Icons.stars_rounded, size: 14, color: appColors.notificationPurple),
           const SizedBox(width: 6),
           Text(
             club,
             style: GoogleFonts.redditSans(
               fontSize: 13,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF5E5CE6),
+              color: appColors.notificationPurple,
             ),
           ),
         ],
@@ -312,6 +319,7 @@ class AcademicProfileScreen extends ConsumerWidget {
   Widget _buildShareButton(BuildContext context) {
     return GestureDetector(
       onTap: () => context.push('/profile/share_profile'),
+      behavior: HitTestBehavior.opaque,
       child: Container(
         height: 90,
         width: double.infinity,
@@ -372,3 +380,4 @@ class AcademicProfileScreen extends ConsumerWidget {
     );
   }
 }
+

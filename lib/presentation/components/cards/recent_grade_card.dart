@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import '../../../models/subject_detail.dart';
 import '../../../providers/subject_detail_provider.dart';
 
@@ -31,10 +32,6 @@ class GradeEvent {
 class RecentGradeCard extends ConsumerWidget {
   const RecentGradeCard({super.key});
 
-  static const _borderColor = Color(0xFFE0E4F0);
-  static const _labelGrey = Color(0xFF838A97);
-  static const _valueBlack = Color(0xFF1F1F1F);
-
   DateTime? _parseDate(String dateStr) {
     if (dateStr.isEmpty) return null;
     try {
@@ -52,61 +49,56 @@ class RecentGradeCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final subjects = ref.watch(allSubjectsProvider);
+    final appColors = ref.watch(appColorsProvider);
 
     final List<GradeEvent> allEvents = [];
 
     for (final s in subjects) {
       // 1. Seminars
       for (final e in s.seminarEntries) {
-        final date = _parseDate(e.date);
-        if (date != null) {
-          allEvents.add(
-            GradeEvent(
-              title: e.title,
-              dateStr: e.date,
-              date: date,
-              score: e.score,
-              max: 10,
-              type: GradeType.seminar,
-              subject: s,
-            ),
-          );
+        final parsed = _parseDate(e.date);
+        if (parsed != null) {
+          allEvents.add(GradeEvent(
+            title: e.title,
+            dateStr: e.date,
+            date: parsed,
+            score: e.score,
+            max: e.maxScore,
+            type: GradeType.seminar,
+            subject: s,
+          ));
         }
       }
 
       // 2. Midterm
       if (s.midtermScore > 0) {
-        final date = _parseDate(s.midtermDate);
-        if (date != null) {
-          allEvents.add(
-            GradeEvent(
-              title: 'Midterm Exam',
-              dateStr: s.midtermDate,
-              date: date,
-              score: s.midtermScore,
-              max: s.midtermMax,
-              type: GradeType.midterm,
-              subject: s,
-            ),
-          );
+        final parsed = _parseDate(s.midtermDate);
+        if (parsed != null) {
+          allEvents.add(GradeEvent(
+            title: 'Midterm Exam',
+            dateStr: s.midtermDate,
+            date: parsed,
+            score: s.midtermScore,
+            max: 30,
+            type: GradeType.midterm,
+            subject: s,
+          ));
         }
       }
 
       // 3. Final
       if (s.finalScore > 0) {
-        final date = _parseDate(s.endDate);
-        if (date != null) {
-          allEvents.add(
-            GradeEvent(
-              title: 'Final Exam',
-              dateStr: s.endDate,
-              date: date,
-              score: s.finalScore,
-              max: s.finalMax,
-              type: GradeType.finalGrade,
-              subject: s,
-            ),
-          );
+        final parsed = _parseDate(s.finalExamDate);
+        if (parsed != null) {
+          allEvents.add(GradeEvent(
+            title: 'Final Exam',
+            dateStr: s.finalExamDate,
+            date: parsed,
+            score: s.finalScore,
+            max: 50,
+            type: GradeType.finalGrade,
+            subject: s,
+          ));
         }
       }
     }
@@ -115,18 +107,27 @@ class RecentGradeCard extends ConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    // Sort by date descending
+    // Sort descending by date
     allEvents.sort((a, b) => b.date.compareTo(a.date));
 
     final latest = allEvents.first;
     final subject = latest.subject;
 
-    String typeLabel = 'RECENT GRADE';
-    if (latest.type == GradeType.midterm) typeLabel = 'MIDTERM RESULT';
-    if (latest.type == GradeType.finalGrade) typeLabel = 'FINAL RESULT';
+    String typeLabel;
+    switch (latest.type) {
+      case GradeType.seminar:
+        typeLabel = 'SEMINAR GRADE';
+        break;
+      case GradeType.midterm:
+        typeLabel = 'MIDTERM GRADE';
+        break;
+      case GradeType.finalGrade:
+        typeLabel = 'FINAL EXAM GRADE';
+        break;
+    }
 
     final String semanticLabel =
-        'Recent Grade in ${subject.subjectName}: ${latest.title}, Score ${latest.score} out of ${latest.max}';
+        'Recent Grade: $typeLabel for ${subject.subjectName}, ${latest.title}, score ${latest.score} out of ${latest.max} on ${latest.dateStr}';
 
     return Column(
       children: [
@@ -143,9 +144,9 @@ class RecentGradeCard extends ConsumerWidget {
               width: 330,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: appColors.cardBackground,
                 borderRadius: BorderRadius.circular(18),
-                border: Border.all(color: _borderColor, width: 1),
+                border: Border.all(color: appColors.borderColor, width: 1),
               ),
               child: ExcludeSemantics(
                 child: Column(
@@ -202,7 +203,7 @@ class RecentGradeCard extends ConsumerWidget {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 14,
-                        color: _valueBlack,
+                        color: appColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -214,9 +215,9 @@ class RecentGradeCard extends ConsumerWidget {
                         vertical: 15,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF8F9FC),
+                        color: appColors.surface,
                         borderRadius: BorderRadius.circular(15),
-                        border: Border.all(color: _borderColor, width: 1),
+                        border: Border.all(color: appColors.borderColor, width: 1),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -230,7 +231,7 @@ class RecentGradeCard extends ConsumerWidget {
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 32,
-                                  color: const Color(0xFF1F1F1F),
+                                  color: appColors.textPrimary,
                                   height: 1.1,
                                 ),
                               ),
@@ -239,14 +240,14 @@ class RecentGradeCard extends ConsumerWidget {
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 12,
-                                  color: _labelGrey,
+                                  color: appColors.textSecondary,
                                   height: 1.1,
                                 ),
                               ),
                             ],
                           ),
                           const SizedBox(width: 15),
-                          Container(width: 1, height: 40, color: _borderColor),
+                          Container(width: 1, height: 40, color: appColors.divider),
                           const SizedBox(width: 15),
                           Expanded(
                             child: Column(
@@ -257,7 +258,7 @@ class RecentGradeCard extends ConsumerWidget {
                                   style: GoogleFonts.redditSans(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 11,
-                                    color: _labelGrey,
+                                    color: appColors.textSecondary,
                                   ),
                                 ),
                                 const SizedBox(height: 2),
@@ -266,7 +267,7 @@ class RecentGradeCard extends ConsumerWidget {
                                   style: GoogleFonts.redditSans(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 14,
-                                    color: _valueBlack,
+                                    color: appColors.textPrimary,
                                   ),
                                 ),
                               ],

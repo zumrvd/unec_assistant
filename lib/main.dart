@@ -3,35 +3,77 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/routing/app_router.dart';
 import 'package:device_preview/device_preview.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 
 void main() => runApp(
   DevicePreview(
-    enabled: !kReleaseMode,
-    builder: (context) => const ProviderScope(
-      child: UnecAssistantApp(),
-    ),
+    enabled: kIsWeb,
+    builder: (context) => const ProviderScope(child: UnecAssistantApp()),
   ),
 );
 
-class UnecAssistantApp extends StatelessWidget {
+class UnecAssistantApp extends ConsumerWidget {
   const UnecAssistantApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appThemeMode = ref.watch(themeModeProvider);
+
+    final ThemeMode themeMode = switch (appThemeMode) {
+      AppThemeMode.light => ThemeMode.light,
+      AppThemeMode.dark => ThemeMode.dark,
+      AppThemeMode.system => ThemeMode.system,
+    };
+
+    const lightColors = AppColors.light();
+    const darkColors = AppColors.dark();
+
     return MaterialApp.router(
-      locale: DevicePreview.locale(context),
-      builder: DevicePreview.appBuilder,
+      locale: kIsWeb ? DevicePreview.locale(context) : null,
+      builder: kIsWeb ? DevicePreview.appBuilder : null,
       title: 'UNEC Assistant',
       debugShowCheckedModeBanner: false,
+      themeMode: themeMode,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0569FF)),
         useMaterial3: true,
-        scaffoldBackgroundColor: const Color(0xFFF8F9FC),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFFF8F9FC),
+        brightness: Brightness.light,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: lightColors.primary,
+          brightness: Brightness.light,
+        ),
+        scaffoldBackgroundColor: lightColors.background,
+        textTheme: GoogleFonts.redditSansTextTheme(ThemeData.light().textTheme),
+        appBarTheme: AppBarTheme(
+          backgroundColor: lightColors.background,
           elevation: 0,
+          titleTextStyle: GoogleFonts.redditSans(
+            color: lightColors.textPrimary,
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.dark,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: darkColors.primary,
+          brightness: Brightness.dark,
+        ),
+        scaffoldBackgroundColor: darkColors.background,
+        textTheme: GoogleFonts.redditSansTextTheme(ThemeData.dark().textTheme),
+        appBarTheme: AppBarTheme(
+          backgroundColor: darkColors.background,
+          elevation: 0,
+          titleTextStyle: GoogleFonts.redditSans(
+            color: darkColors.textPrimary,
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
       routerConfig: appRouter,
@@ -41,10 +83,7 @@ class UnecAssistantApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
         FlutterQuillLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('en', 'US'),
-        Locale('az', 'AZ'),
-      ],
+      supportedLocales: const [Locale('en', 'US'), Locale('az', 'AZ')],
     );
   }
-} 
+}

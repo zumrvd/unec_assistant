@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import '../../../providers/subject_detail_provider.dart';
 
 class AttendanceCard extends ConsumerWidget {
@@ -10,6 +11,7 @@ class AttendanceCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final attentionSubjects = ref.watch(attentionSubjectsProvider);
+    final appColors = ref.watch(appColorsProvider);
 
     if (attentionSubjects.isEmpty) {
       return const SizedBox.shrink();
@@ -32,34 +34,34 @@ class AttendanceCard extends ConsumerWidget {
     final bool isCaution = !isSafe && !isDanger;
 
     final Color dotColor = isDanger
-        ? const Color(0xFFD54829)
+        ? appColors.error
         : isCaution
-            ? const Color(0xFFE3993C)
-            : const Color(0xFF0569FF);
+            ? appColors.warning
+            : appColors.primary;
 
     final Color borderColor = isDanger
-        ? const Color(0x80D54829)
+        ? appColors.error.withValues(alpha: 0.5)
         : isCaution
-            ? const Color(0x80E3993C)
-            : const Color(0xFFE0E4F0);
+            ? appColors.warning.withValues(alpha: 0.5)
+            : appColors.borderColor;
 
     final Color pillBg = isDanger
-        ? const Color(0x26D54829)
+        ? appColors.error.withValues(alpha: 0.15)
         : isCaution
-            ? const Color(0x26E3993C)
-            : const Color(0x260F6E11);
+            ? appColors.warning.withValues(alpha: 0.15)
+            : appColors.success.withValues(alpha: 0.15);
 
     final Color pillTextColor = isDanger
-        ? const Color(0xFFD54829)
+        ? appColors.error
         : isCaution
-            ? const Color(0xFF985909)
-            : const Color(0xFF0F6E11);
+            ? appColors.warning
+            : appColors.success;
 
     final Color barColor = isDanger
-        ? const Color(0xFFD54829)
+        ? appColors.error
         : isCaution
-            ? const Color(0xFFE3993C)
-            : const Color(0xFF0F6E11);
+            ? appColors.warning
+            : appColors.success;
 
     final String pillLabel = '$absencesLeft Left';
 
@@ -76,7 +78,7 @@ class AttendanceCard extends ConsumerWidget {
           child: Container(
             width: 330,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: appColors.cardBackground,
               borderRadius: BorderRadius.circular(18),
               border: Border.all(color: borderColor, width: 1),
             ),
@@ -110,7 +112,7 @@ class AttendanceCard extends ConsumerWidget {
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 14,
-                                color: const Color(0xFF1F1F1F),
+                                color: appColors.textPrimary,
                               ),
                             ),
                           ),
@@ -144,9 +146,9 @@ class AttendanceCard extends ConsumerWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF8F9FC),
+                    color: appColors.surface,
                     borderRadius: BorderRadius.circular(15),
-                    border: Border.all(color: const Color(0xFFE0E4F0), width: 1),
+                    border: Border.all(color: appColors.borderColor, width: 1),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -160,7 +162,7 @@ class AttendanceCard extends ConsumerWidget {
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w700,
                               fontSize: 36,
-                              color: const Color(0xFF1F1F1F),
+                              color: appColors.textPrimary,
                               height: 1.1,
                             ),
                           ),
@@ -169,14 +171,14 @@ class AttendanceCard extends ConsumerWidget {
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w700,
                               fontSize: 13,
-                              color: const Color(0xFF838A97),
+                              color: appColors.textSecondary,
                               height: 1.1,
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(width: 15),
-                      Container(width: 1, height: 40, color: const Color(0xFFE0E4F0)),
+                      Container(width: 1, height: 40, color: appColors.divider),
                       const SizedBox(width: 15),
                       Expanded(
                         child: Column(
@@ -187,7 +189,7 @@ class AttendanceCard extends ConsumerWidget {
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 12,
-                                color: const Color(0xFF838A97),
+                                color: appColors.textSecondary,
                               ),
                             ),
                             const SizedBox(height: 2),
@@ -196,7 +198,7 @@ class AttendanceCard extends ConsumerWidget {
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 14,
-                                color: const Color(0xFF1F1F1F),
+                                color: appColors.textPrimary,
                               ),
                             ),
                             const SizedBox(height: 10),
@@ -207,7 +209,7 @@ class AttendanceCard extends ConsumerWidget {
                                 child: LinearProgressIndicator(
                                   value: usedRatio.clamp(0.0, 1.0),
                                   minHeight: 6,
-                                  backgroundColor: const Color(0xFFE0E4F0),
+                                  backgroundColor: appColors.borderColor,
                                   valueColor: AlwaysStoppedAnimation<Color>(barColor),
                                 ),
                               ),
@@ -226,3 +228,4 @@ class AttendanceCard extends ConsumerWidget {
     );
   }
 }
+

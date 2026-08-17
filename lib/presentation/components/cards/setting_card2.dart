@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/notification_provider.dart';
 
 class SettingsCard2 extends ConsumerStatefulWidget {
@@ -16,15 +18,18 @@ class SettingsCard2 extends ConsumerStatefulWidget {
 }
 
 class _SettingsCardState extends ConsumerState<SettingsCard2> {
-  String _selectedTheme = 'System';
   String _selectedLanguage = 'English';
 
-  static const _borderColor = Color(0xFFE0E4F0);
-  static const _labelGrey = Color(0x80838A97);
-  static const _subtitleColor = Color(0xFF838A97);
-  static const _primaryBlue = Color(0xFF0569FF);
-  static const _themeOptions = ['System', 'Light', 'Dark'];
-  static const _languageOptions = ['English', 'Azərbaycan dili', 'Русский язык'];
+  static const _themeOptions = [
+    AppThemeMode.system,
+    AppThemeMode.light,
+    AppThemeMode.dark,
+  ];
+  static const _languageOptions = [
+    'English',
+    'Azərbaycan dili',
+    'Русский язык'
+  ];
 
   Widget _iconBox(IconData icon, Color bgColor, Color iconColor) {
     return Container(
@@ -42,54 +47,55 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
     );
   }
 
-  TextStyle _labelStyle() {
+  TextStyle _labelStyle(AppColors appColors) {
     return GoogleFonts.redditSans(
       fontWeight: FontWeight.w700,
       fontSize: 13,
-      color: const Color(0xFF000000),
+      color: appColors.textPrimary,
     );
   }
 
-  Widget _themeToggle(String option) {
-    final isSelected = _selectedTheme == option;
+  Widget _themeToggle(AppThemeMode mode, AppThemeMode currentMode, AppColors appColors) {
+    final isSelected = currentMode == mode;
     return GestureDetector(
-      onTap: () => setState(() => _selectedTheme = option),
+      onTap: () => ref.read(themeModeProvider.notifier).setMode(mode),
+      behavior: HitTestBehavior.opaque,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 7),
+        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFF2C415C)
-              : const Color(0xFFF8F9FC),
+              ? appColors.pillSelectedBg
+              : appColors.pillUnselectedBg,
           borderRadius: BorderRadius.circular(6),
           border: Border.all(
-            color: _borderColor,
+            color: appColors.borderColor,
             width: 1,
           ),
         ),
         child: Text(
-          option,
+          mode.label,
           style: GoogleFonts.redditSans(
             fontWeight: FontWeight.w700,
-            fontSize: 9,
+            fontSize: 10,
             color: isSelected
-                ? const Color(0xFFFFFFFF)
-                : const Color(0xFF838A97),
+                ? appColors.pillSelectedText
+                : appColors.pillUnselectedText,
           ),
         ),
       ),
     );
   }
 
-  Widget _languageDropdown() {
+  Widget _languageDropdown(AppColors appColors) {
     final textStyle = GoogleFonts.redditSans(
       fontWeight: FontWeight.w700,
       fontSize: 11,
-      color: const Color(0xFFFFFFFF),
+      color: appColors.pillSelectedText,
     );
 
     return Container(
       decoration: BoxDecoration(
-        color: _primaryBlue,
+        color: appColors.dropdownBg,
         borderRadius: BorderRadius.circular(10),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -98,11 +104,11 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
         child: DropdownButton<String>(
           value: _selectedLanguage,
           onChanged: (val) => setState(() => _selectedLanguage = val!),
-          dropdownColor: _primaryBlue,
+          dropdownColor: appColors.dropdownBg,
           borderRadius: BorderRadius.circular(12),
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_drop_down_rounded,
-            color: Color(0xFFFFFFFF),
+            color: appColors.pillSelectedText,
             size: 25,
           ),
           style: textStyle,
@@ -110,19 +116,19 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
             return _languageOptions
                 .map(
                   (option) => Align(
-                alignment: Alignment.centerLeft,
-                child: Text(option, style: textStyle),
-              ),
-            )
+                    alignment: Alignment.centerLeft,
+                    child: Text(option, style: textStyle),
+                  ),
+                )
                 .toList();
           },
           items: _languageOptions
               .map(
                 (option) => DropdownMenuItem<String>(
-              value: option,
-              child: Text(option, style: textStyle),
-            ),
-          )
+                  value: option,
+                  child: Text(option, style: textStyle),
+                ),
+              )
               .toList(),
         ),
       ),
@@ -131,17 +137,20 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = ref.watch(appColorsProvider);
+    final currentTheme = ref.watch(themeModeProvider);
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: _borderColor,
+          color: appColors.borderColor,
           width: 1,
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 25,vertical: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
@@ -156,29 +165,29 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
                   children: [
                     _iconBox(
                       Icons.palette_rounded,
-                      const Color(0x26E3993C),
-                      const Color(0xFF854F0B),
+                      appColors.warningContainer,
+                      appColors.warningOnContainer,
                     ),
                     const SizedBox(width: 12),
-                    Expanded(child: Text('App Theme', style: _labelStyle())),
+                    Expanded(child: Text('App Theme', style: _labelStyle(appColors))),
                   ],
                 ),
               ),
               const SizedBox(width: 8),
               Row(
                 children: [
-                  _themeToggle(_themeOptions[0]),
+                  _themeToggle(_themeOptions[0], currentTheme, appColors),
                   const SizedBox(width: 7),
-                  _themeToggle(_themeOptions[1]),
+                  _themeToggle(_themeOptions[1], currentTheme, appColors),
                   const SizedBox(width: 7),
-                  _themeToggle(_themeOptions[2]),
+                  _themeToggle(_themeOptions[2], currentTheme, appColors),
                 ],
               ),
             ],
           ),
           const SizedBox(height: 15),
-          const Divider(
-            color: _borderColor,
+          Divider(
+            color: appColors.divider,
             thickness: 1,
             height: 1,
           ),
@@ -193,28 +202,29 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
                   children: [
                     _iconBox(
                       Icons.notifications_rounded,
-                      const Color(0x26534AB7),
-                      const Color(0xFF534AB7),
+                      appColors.notificationPurpleContainer,
+                      appColors.notificationPurple,
                     ),
                     const SizedBox(width: 12),
-                    Expanded(child: Text('Notifications', style: _labelStyle())),
+                    Expanded(child: Text('Notifications', style: _labelStyle(appColors))),
                   ],
                 ),
               ),
               const SizedBox(width: 8),
               Switch(
                 value: ref.watch(notificationsEnabledProvider),
-                onChanged: (val) => ref.read(notificationsEnabledProvider.notifier).toggle(val),
-                activeThumbColor: const Color(0xFFFFFFFF),
-                activeTrackColor: const Color(0xFF0569FF),
-                inactiveThumbColor: const Color(0xFFFFFFFF),
-                inactiveTrackColor: const Color(0x80838A97),
+                onChanged: (val) =>
+                    ref.read(notificationsEnabledProvider.notifier).toggle(val),
+                activeThumbColor: appColors.pillSelectedText,
+                activeTrackColor: appColors.primary,
+                inactiveThumbColor: appColors.pillSelectedText,
+                inactiveTrackColor: appColors.textMuted,
               ),
             ],
           ),
           const SizedBox(height: 15),
-          const Divider(
-            color: _borderColor,
+          Divider(
+            color: appColors.divider,
             thickness: 1,
             height: 1,
           ),
@@ -222,8 +232,7 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
           GestureDetector(
             onTap: widget.onAboutAppTap,
             behavior: HitTestBehavior.opaque,
-            child:
-            Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -233,22 +242,22 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
                     children: [
                       _iconBox(
                         Icons.info_rounded,
-                        const Color(0x26DA4979),
-                        const Color(0xFFDA4979),
+                        appColors.infoPinkContainer,
+                        appColors.infoPink,
                       ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('About App', style: _labelStyle()),
+                            Text('About App', style: _labelStyle(appColors)),
                             const SizedBox(height: 2),
                             Text(
                               'v 1.1.0 IT team inc.',
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 9,
-                                color: _subtitleColor,
+                                color: appColors.textSecondary,
                               ),
                             ),
                           ],
@@ -262,28 +271,25 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
                   width: 28,
                   height: 28,
                   decoration: BoxDecoration(
-                    color: const Color(0x26838A97),
+                    color: appColors.iconBoxArrowBg,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.arrow_right_rounded,
                     size: 25,
-                    color: _labelGrey,
+                    color: appColors.textSecondary,
                   ),
                 ),
               ],
             ),
           ),
           const SizedBox(height: 15),
-
-          const Divider(
-            color: _borderColor,
+          Divider(
+            color: appColors.divider,
             thickness: 1,
             height: 1,
           ),
-
           const SizedBox(height: 15),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -294,18 +300,16 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
                   children: [
                     _iconBox(
                       Icons.language_rounded,
-                      const Color(0x260569FF),
-                      const Color(0xFF0569FF),
+                      appColors.primaryContainer,
+                      appColors.primaryOnContainer,
                     ),
-
                     const SizedBox(width: 12),
-
-                    Expanded(child: Text('Language', style: _labelStyle())),
+                    Expanded(child: Text('Language', style: _labelStyle(appColors))),
                   ],
                 ),
               ),
               const SizedBox(width: 8),
-              _languageDropdown(),
+              _languageDropdown(appColors),
             ],
           ),
         ],

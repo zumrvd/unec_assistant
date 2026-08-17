@@ -6,7 +6,7 @@ class CalendarEventsNotifier extends Notifier<List<CalendarEvent>> {
   @override
   List<CalendarEvent> build() {
     return generateSemesterSchedule(
-      startDate: DateTime(2026, 7, 15),
+      startDate: DateTime(2026, 9, 15),
       numberOfWeeks: 15,
     );
   }
@@ -30,8 +30,9 @@ class CalendarEventsNotifier extends Notifier<List<CalendarEvent>> {
     for (var cycle = 0; cycle < cycles; cycle++) {
       final cycleStart = mondayOfBase.add(Duration(days: cycle * 14));
       for (final event in tpl) {
-        final templateDay =
-            normalizeDay(event.startTime).difference(templateAnchor).inDays;
+        final templateDay = normalizeDay(
+          event.startTime,
+        ).difference(templateAnchor).inDays;
         final duration = event.endTime.difference(event.startTime);
         final start = DateTime(
           cycleStart.year,
@@ -40,7 +41,7 @@ class CalendarEventsNotifier extends Notifier<List<CalendarEvent>> {
           event.startTime.hour,
           event.startTime.minute,
         );
-        
+
         if (start.isBefore(base)) continue;
 
         final end = start.add(duration);
@@ -108,8 +109,7 @@ class CalendarEventsNotifier extends Notifier<List<CalendarEvent>> {
       final start = e.startDay;
       final end = e.endDay;
       return !d.isBefore(start) && !d.isAfter(end);
-    }).toList()
-      ..sort((a, b) => a.startTime.compareTo(b.startTime));
+    }).toList()..sort((a, b) => a.startTime.compareTo(b.startTime));
     return matches;
   }
 
@@ -130,8 +130,8 @@ class CalendarEventsNotifier extends Notifier<List<CalendarEvent>> {
 
 final calendarEventsProvider =
     NotifierProvider<CalendarEventsNotifier, List<CalendarEvent>>(
-  CalendarEventsNotifier.new,
-);
+      CalendarEventsNotifier.new,
+    );
 
 /// Convenience: events for a specific day from the notifier.
 List<CalendarEvent> eventsForDay(WidgetRef ref, DateTime day) {

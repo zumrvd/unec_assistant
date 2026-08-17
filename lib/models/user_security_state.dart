@@ -33,4 +33,9 @@ class UserSecurityState {
     if (blockUntil == null) return false;
     return DateTime.now().isBefore(blockUntil!);
   }
+
+  bool isPasswordInHistory(String pwd) => passwordHistory.contains(pwd);
+
+  int get remainingAttempts => (3 - failedAttempts).clamp(0, 3);
 }
+

@@ -1,11 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/note.dart';
 
-class NoteFileTile extends StatelessWidget {
+class NoteFileTile extends ConsumerWidget {
   final Note data;
   final VoidCallback? onTap;
   final VoidCallback? onDelete;
@@ -28,34 +31,36 @@ class NoteFileTile extends StatelessWidget {
     }
   }
 
-  Color _getSkinColor(PaperSkin skin) {
+  Color _getSkinColor(PaperSkin skin, AppColors appColors) {
     switch (skin) {
       case PaperSkin.plain:
-        return const Color(0xFF838A97);
+        return appColors.textSecondary;
       case PaperSkin.ruled:
-        return const Color(0xFF0569FF);
+        return appColors.primary;
       case PaperSkin.grid:
-        return const Color(0xFF0F6E11);
+        return appColors.success;
       case PaperSkin.dotted:
-        return const Color(0xFFE3993C);
+        return appColors.attendanceOrange;
       case PaperSkin.cream:
         return const Color(0xFFDA4979);
       case PaperSkin.blue:
-        return const Color(0xFF534AB7);
+        return appColors.notificationPurple;
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    final skinColor = _getSkinColor(data.paperSkin);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+    final skinColor = _getSkinColor(data.paperSkin, appColors);
 
     return GestureDetector(
       onTap: onTap ?? () {},
+      behavior: HitTestBehavior.opaque,
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFFFFFFFF),
+          color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFE0E4F0), width: 1),
+          border: Border.all(color: appColors.borderColor, width: 1),
         ),
         clipBehavior: Clip.antiAlias,
         child: Stack(
@@ -82,7 +87,7 @@ class NoteFileTile extends StatelessWidget {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 13,
-                      color: const Color(0xFF1F1F1F),
+                      color: appColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -94,7 +99,7 @@ class NoteFileTile extends StatelessWidget {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w500,
                         fontSize: 11,
-                        color: const Color(0xFF838A97),
+                        color: appColors.textSecondary,
                       ),
                     ),
                   ),
@@ -107,15 +112,16 @@ class NoteFileTile extends StatelessWidget {
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w600,
                           fontSize: 9,
-                          color: const Color(0x80838A97),
+                          color: appColors.textMuted,
                         ),
                       ),
                       GestureDetector(
                         onTap: onDelete,
-                        child: const Icon(
+                        behavior: HitTestBehavior.opaque,
+                        child: Icon(
                           Icons.more_horiz_rounded,
                           size: 16,
-                          color: Color(0xFF838A97),
+                          color: appColors.textSecondary,
                         ),
                       ),
                     ],
@@ -129,3 +135,4 @@ class NoteFileTile extends StatelessWidget {
     );
   }
 }
+

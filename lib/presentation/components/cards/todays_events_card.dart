@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/models/calendar_event.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 
-class TodaysEventsCard extends StatefulWidget {
+class TodaysEventsCard extends ConsumerStatefulWidget {
   final List<CalendarEvent> events;
 
   const TodaysEventsCard({
@@ -12,10 +15,10 @@ class TodaysEventsCard extends StatefulWidget {
   });
 
   @override
-  State<TodaysEventsCard> createState() => _TodaysEventsCardState();
+  ConsumerState<TodaysEventsCard> createState() => _TodaysEventsCardState();
 }
 
-class _TodaysEventsCardState extends State<TodaysEventsCard> {
+class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
   late Timer _timer;
   DateTime _now = DateTime.now();
 
@@ -37,39 +40,39 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
 
   String _pad(int n) => n.toString().padLeft(2, '0');
 
-  Widget _buildEventTile(CalendarEvent e) {
+  Widget _buildEventTile(CalendarEvent e, AppColors appColors) {
     final bool isPersonal = e.type == EventType.personalEvent;
     final bool isExam = e.type == EventType.exam;
     
     final Color accentColor = isPersonal 
-        ? const Color(0xFFE3993C) 
+        ? appColors.warning 
         : isExam 
-            ? const Color(0xFF0F6E56) 
-            : const Color(0xFF0569FF);
+            ? appColors.success 
+            : appColors.primary;
             
     final Color bgColor = isPersonal 
-        ? const Color(0x26E3993C) 
+        ? appColors.warning.withValues(alpha: 0.15) 
         : isExam 
-            ? const Color(0xFFE8F6F1) 
-            : const Color(0xFFE8F0FE);
+            ? appColors.success.withValues(alpha: 0.15) 
+            : appColors.primaryContainer;
             
     final Color borderColor = isPersonal 
-        ? const Color(0x26E3993C) 
+        ? appColors.warning.withValues(alpha: 0.25) 
         : isExam 
-            ? const Color(0x260F6E56) 
-            : const Color(0x260569FF);
+            ? appColors.success.withValues(alpha: 0.25) 
+            : appColors.primary.withValues(alpha: 0.25);
             
     final Color subtitleColor = isPersonal 
-        ? const Color(0xFF985909).withValues(alpha: 0.5) 
+        ? appColors.warningOnContainer 
         : isExam 
-            ? const Color(0x800F6E56) 
-            : const Color(0x800569FF);
+            ? appColors.success 
+            : appColors.primary;
             
     final Color locationColor = isPersonal 
-        ? const Color(0xFF985909).withValues(alpha: 0.7) 
+        ? appColors.warningOnContainer 
         : isExam 
-            ? const Color(0xBF0F6E56) 
-            : const Color(0xBF0569FF);
+            ? appColors.success 
+            : appColors.primary;
 
     return Container(
       width: double.infinity,
@@ -105,7 +108,7 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
-                        color: const Color(0xFF1F1F1F),
+                        color: appColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -141,6 +144,7 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = ref.watch(appColorsProvider);
     final int classCount =
         widget.events.where((e) => e.type == EventType.classEvent).length;
     final int personalCount =
@@ -203,9 +207,9 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
       width: 300,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFE0E4F0), width: 1),
+        border: Border.all(color: appColors.borderColor, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,7 +219,7 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
             style: GoogleFonts.redditSans(
               fontWeight: FontWeight.w700,
               fontSize: 14,
-              color: const Color(0xFF1F1F1F),
+              color: appColors.textPrimary,
             ),
           ),
           const SizedBox(height: 15),
@@ -226,9 +230,9 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
-                  color: const Color(0x80E0E4F0),
+                  color: appColors.surface,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: const Color(0xFFE0E4F0), width: 1),
+                  border: Border.all(color: appColors.borderColor, width: 1),
                 ),
                 child: Row(
                   children: [
@@ -237,7 +241,7 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 12,
-                        color: const Color(0xFF0569FF),
+                        color: appColors.primary,
                       ),
                     ),
                     const SizedBox(width: 4),
@@ -246,7 +250,7 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 12,
-                        color: const Color(0xFF838A97),
+                        color: appColors.textSecondary,
                       ),
                     ),
                   ],
@@ -256,8 +260,8 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
               Container(
                 width: 5,
                 height: 5,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFE0E4F0),
+                decoration: BoxDecoration(
+                  color: appColors.borderColor,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -265,9 +269,9 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
-                  color: const Color(0x80E0E4F0),
+                  color: appColors.surface,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: const Color(0xFFE0E4F0), width: 1),
+                  border: Border.all(color: appColors.borderColor, width: 1),
                 ),
                 child: Row(
                   children: [
@@ -276,7 +280,7 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 12,
-                        color: const Color(0xFFC27719),
+                        color: appColors.warning,
                       ),
                     ),
                     const SizedBox(width: 4),
@@ -285,7 +289,7 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 12,
-                        color: const Color(0xFF838A97),
+                        color: appColors.textSecondary,
                       ),
                     ),
                   ],
@@ -298,7 +302,7 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
               decoration: BoxDecoration(
-                color: const Color(0x260569FF),
+                color: appColors.primaryContainer,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
@@ -306,12 +310,12 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 12,
-                  color: const Color(0xFF0569FF),
+                  color: appColors.primary,
                 ),
               ),
             ),
             const SizedBox(height: 15),
-            _buildEventTile(activeEvent),
+            _buildEventTile(activeEvent, appColors),
           ],
           const SizedBox(height: 15),
           Row(
@@ -323,7 +327,7 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w600,
                   fontSize: 14,
-                  color: const Color(0x80838A97),
+                  color: appColors.textSecondary,
                 ),
               ),
               if (upNextEvent != null)
@@ -331,7 +335,7 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: const Color(0x260569FF),
+                    color: appColors.primaryContainer,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -339,7 +343,7 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 12,
-                      color: const Color(0xFF0569FF),
+                      color: appColors.primary,
                     ),
                   ),
                 ),
@@ -347,7 +351,7 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
           ),
           const SizedBox(height: 15),
           if (upNextEvent != null)
-            _buildEventTile(upNextEvent)
+            _buildEventTile(upNextEvent, appColors)
           else
             Padding(
               padding: const EdgeInsets.only(top: 4),
@@ -356,7 +360,7 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w600,
                   fontSize: 12,
-                  color: const Color(0xFF838A97),
+                  color: appColors.textMuted,
                 ),
               ),
             ),
@@ -365,3 +369,4 @@ class _TodaysEventsCardState extends State<TodaysEventsCard> {
     );
   }
 }
+

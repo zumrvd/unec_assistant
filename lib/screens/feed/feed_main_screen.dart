@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import '../../../presentation/components/buttons/feed_filter_tabs.dart';
 import '../../../presentation/components/cards/post_card.dart';
 import '../../../presentation/components/inputs/app_search_bar.dart';
@@ -25,11 +26,12 @@ class _FeedMainScreenState extends ConsumerState<FeedMainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = ref.watch(appColorsProvider);
     final feedState = ref.watch(feedProvider);
     final repo = ref.read(feedRepositoryProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FC),
+      backgroundColor: appColors.background,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -38,7 +40,7 @@ class _FeedMainScreenState extends ConsumerState<FeedMainScreen> {
             child: Text(
               'News Feed',
               style: GoogleFonts.redditSans(
-                color: const Color(0xFF838A97),
+                color: appColors.textSecondary,
                 fontSize: 15,
                 fontWeight: FontWeight.w400,
               ),
@@ -63,12 +65,12 @@ class _FeedMainScreenState extends ConsumerState<FeedMainScreen> {
           const SizedBox(height: 20),
           Expanded(
             child: feedState.isLoading && feedState.posts.isEmpty
-                ? const Center(child: CircularProgressIndicator(color: Color(0xFF0569FF)))
+                ? Center(child: CircularProgressIndicator(color: appColors.primary))
                 : feedState.posts.isEmpty
                 ? Center(
               child: Text(
                 'No posts found',
-                style: GoogleFonts.redditSans(color: const Color(0xFF838A97)),
+                style: GoogleFonts.redditSans(color: appColors.textSecondary),
               ),
             )
                 : ListView.separated(
@@ -100,7 +102,7 @@ class _FeedMainScreenState extends ConsumerState<FeedMainScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push('/feed/create-post'),
-        backgroundColor: const Color(0xFF0569FF),
+        backgroundColor: appColors.primary,
         shape: const CircleBorder(),
         elevation: 0,
         child: const Icon(Icons.add_rounded, color: Colors.white, size: 28),
@@ -108,3 +110,4 @@ class _FeedMainScreenState extends ConsumerState<FeedMainScreen> {
     );
   }
 }
+

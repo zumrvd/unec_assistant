@@ -5,17 +5,34 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/note.dart';
 import '../../../providers/notes_provider.dart';
 
 class RecentNoteCard extends ConsumerWidget {
   const RecentNoteCard({super.key});
 
-  static const _borderColor = Color(0xFFE0E4F0);
-  static const _labelGrey = Color(0xFF838A97);
-  static const _valueBlack = Color(0xFF1F1F1F);
-
-  Color _getSkinBgColor(PaperSkin skin) {
+  Color _getSkinBgColor(PaperSkin skin, AppColors appColors, bool isDark) {
+    if (skin == PaperSkin.plain) {
+      return appColors.cardBackground;
+    }
+    if (isDark) {
+      switch (skin) {
+        case PaperSkin.plain:
+          return appColors.cardBackground;
+        case PaperSkin.ruled:
+          return const Color(0xFF162036);
+        case PaperSkin.grid:
+          return const Color(0xFF142918);
+        case PaperSkin.dotted:
+          return const Color(0xFF2C2216);
+        case PaperSkin.cream:
+          return const Color(0xFF2B1822);
+        case PaperSkin.blue:
+          return const Color(0xFF1E1A34);
+      }
+    }
     switch (skin) {
       case PaperSkin.plain:
         return const Color(0xFFFFFFFF);
@@ -32,20 +49,20 @@ class RecentNoteCard extends ConsumerWidget {
     }
   }
 
-  Color _getSkinAccentColor(PaperSkin skin) {
+  Color _getSkinAccentColor(PaperSkin skin, AppColors appColors) {
     switch (skin) {
       case PaperSkin.plain:
-        return const Color(0xFF838A97);
+        return appColors.textSecondary;
       case PaperSkin.ruled:
-        return const Color(0xFF0569FF);
+        return appColors.primary;
       case PaperSkin.grid:
-        return const Color(0xFF0F6E11);
+        return appColors.success;
       case PaperSkin.dotted:
-        return const Color(0xFFE3993C);
+        return appColors.warning;
       case PaperSkin.cream:
-        return const Color(0xFFDA4979);
+        return appColors.error;
       case PaperSkin.blue:
-        return const Color(0xFF534AB7);
+        return appColors.notificationPurple;
     }
   }
 
@@ -62,6 +79,8 @@ class RecentNoteCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final notes = ref.watch(notesProvider);
+    final appColors = ref.watch(appColorsProvider);
+    final isDark = ref.watch(isDarkModeProvider);
 
     if (notes.isEmpty) {
       return const SizedBox.shrink();
@@ -72,8 +91,8 @@ class RecentNoteCard extends ConsumerWidget {
     sortedNotes.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
 
     final note = sortedNotes.first;
-    final accentColor = _getSkinAccentColor(note.paperSkin);
-    final bgColor = _getSkinBgColor(note.paperSkin);
+    final accentColor = _getSkinAccentColor(note.paperSkin, appColors);
+    final bgColor = _getSkinBgColor(note.paperSkin, appColors, isDark);
     final plainText = _getPlainText(note.content);
 
     final String semanticLabel =
@@ -94,7 +113,7 @@ class RecentNoteCard extends ConsumerWidget {
               decoration: BoxDecoration(
                 color: bgColor,
                 borderRadius: BorderRadius.circular(18),
-                border: Border.all(color: _borderColor, width: 1),
+                border: Border.all(color: appColors.borderColor, width: 1),
               ),
               padding: const EdgeInsets.all(16),
               child: ExcludeSemantics(
@@ -145,7 +164,7 @@ class RecentNoteCard extends ConsumerWidget {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 18,
-                        color: _valueBlack,
+                        color: appColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -155,11 +174,11 @@ class RecentNoteCard extends ConsumerWidget {
                       padding: const EdgeInsets.all(15),
                       decoration: BoxDecoration(
                         color: note.paperSkin == PaperSkin.plain
-                            ? const Color(0xFFF8F9FC)
-                            : Colors.white.withValues(alpha: 0.5),
+                            ? appColors.surface
+                            : (isDark ? Colors.black.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.5)),
                         borderRadius: BorderRadius.circular(15),
                         border: Border.all(
-                          color: _borderColor.withValues(alpha: 0.5),
+                          color: appColors.borderColor.withValues(alpha: 0.5),
                           width: 1,
                         ),
                       ),
@@ -170,7 +189,7 @@ class RecentNoteCard extends ConsumerWidget {
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w500,
                           fontSize: 13,
-                          color: _labelGrey,
+                          color: appColors.textSecondary,
                           height: 1.4,
                         ),
                       ),
@@ -185,3 +204,4 @@ class RecentNoteCard extends ConsumerWidget {
     );
   }
 }
+

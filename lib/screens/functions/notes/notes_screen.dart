@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import '../../../models/note_folder.dart';
 import '../../../presentation/components/lists/labels.dart';
 import '../../../presentation/components/inputs/app_search_bar.dart';
@@ -26,12 +27,13 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = ref.watch(appColorsProvider);
     final folders = ref.watch(searchedFoldersProvider(_searchQuery));
     final personalFolders = folders.where((f) => f.type == FolderType.personal).toList();
     final subjectFolders = folders.where((f) => f.type == FolderType.subject).toList();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FC),
+      backgroundColor: appColors.background,
       appBar: const CustomAppBar(title: 'Notes'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
@@ -77,3 +79,4 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
     );
   }
 }
+

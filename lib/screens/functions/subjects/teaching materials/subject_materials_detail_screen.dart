@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import '../../../../providers/materials_provider.dart';
 import '../../../../providers/subject_detail_provider.dart';
 import '../../../../models/lecture_material.dart';
@@ -19,6 +20,7 @@ class SubjectMaterialsDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final allSubjects = ref.watch(allSubjectsProvider);
     final subject = allSubjects.firstWhere((s) => s.subjectId == subjectId);
+    final appColors = ref.watch(appColorsProvider);
     
     List<LectureMaterial> lectures;
     switch (subjectId) {
@@ -32,7 +34,7 @@ class SubjectMaterialsDetailScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FC),
+      backgroundColor: appColors.background,
       appBar: CustomAppBar(title: subject.subjectName),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 16),
@@ -48,7 +50,7 @@ class SubjectMaterialsDetailScreen extends ConsumerWidget {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 14,
-                      color: const Color(0xFF838A97),
+                      color: appColors.textSecondary,
                     ),
                   ),
                 ),
@@ -70,3 +72,4 @@ class SubjectMaterialsDetailScreen extends ConsumerWidget {
     );
   }
 }
+

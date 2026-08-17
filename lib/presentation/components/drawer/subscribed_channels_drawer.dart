@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import '../../../providers/subscriptions_provider.dart';
 
 class SubscribedChannelsDrawer extends ConsumerWidget {
@@ -10,10 +11,11 @@ class SubscribedChannelsDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final channels = ref.watch(subscriptionsProvider);
+    final appColors = ref.watch(appColorsProvider);
 
     return Drawer(
       width: MediaQuery.of(context).size.width * 0.75,
-      backgroundColor: const Color(0xFFF8F9FC),
+      backgroundColor: appColors.background,
       child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,7 +27,7 @@ class SubscribedChannelsDrawer extends ConsumerWidget {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
-                  color: const Color(0xFF1F1F1F),
+                  color: appColors.textPrimary,
                 ),
               ),
             ),
@@ -48,16 +50,16 @@ class SubscribedChannelsDrawer extends ConsumerWidget {
                           Container(
                             width: 40,
                             height: 40,
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Color(0xFFE8F0FE),
+                              color: appColors.primaryContainer,
                             ),
                             alignment: Alignment.center,
                             child: Text(
                               channel.channelName.substring(0, 1).toUpperCase(),
                               style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF0569FF)),
+                                  color: appColors.primary),
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -67,12 +69,12 @@ class SubscribedChannelsDrawer extends ConsumerWidget {
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14,
-                                color: const Color(0xFF1F1F1F),
+                                color: appColors.textPrimary,
                               ),
                             ),
                           ),
-                          const Icon(Icons.chevron_right_rounded,
-                              size: 18, color: Color(0xFF838A97)),
+                          Icon(Icons.chevron_right_rounded,
+                              size: 18, color: appColors.textSecondary),
                         ],
                       ),
                     ),
@@ -87,13 +89,14 @@ class SubscribedChannelsDrawer extends ConsumerWidget {
                   Navigator.pop(context);
                   context.push('/feed/manage-channels');
                 },
+                behavior: HitTestBehavior.opaque,
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFFFFF),
+                    color: appColors.cardBackground,
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: const Color(0xFFE0E4F0)),
+                    border: Border.all(color: appColors.borderColor),
                   ),
                   alignment: Alignment.center,
                   child: Text(
@@ -101,7 +104,7 @@ class SubscribedChannelsDrawer extends ConsumerWidget {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 14,
-                      color: const Color(0xFF0569FF),
+                      color: appColors.primary,
                     ),
                   ),
                 ),
@@ -113,3 +116,4 @@ class SubscribedChannelsDrawer extends ConsumerWidget {
     );
   }
 }
+

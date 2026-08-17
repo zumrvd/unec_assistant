@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unec_assistant/presentation/components/lists/labels.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/current_user_provider.dart';
 import 'package:unec_assistant/providers/user_security_provider.dart';
 import 'package:intl/intl.dart';
@@ -14,9 +16,10 @@ class ProfileInfoScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(currentUserProvider);
     final security = ref.watch(userSecurityProvider);
+    final appColors = ref.watch(appColorsProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FC),
+      backgroundColor: appColors.background,
       appBar: CustomAppBar(
         title: 'Profile Information',
         onBackTap: () => context.pop(),
@@ -29,42 +32,46 @@ class ProfileInfoScreen extends ConsumerWidget {
             const SectionLabel('PERSONAL DETAILS'),
             const SizedBox(height: 12),
             _buildInfoCard([
-              _buildInfoRow('Full Name', user.displayName),
-              _buildInfoRow('User ID', user.userId),
-              _buildInfoRow('Initials', user.initials),
-            ]),
+              _buildInfoRow('Full Name', user.displayName, appColors),
+              _buildInfoRow('User ID', user.userId, appColors),
+              _buildInfoRow('Initials', user.initials, appColors),
+            ], appColors),
             
             const SizedBox(height: 25),
             
             const SectionLabel('SECURITY'),
             const SizedBox(height: 12),
             _buildInfoCard([
-              _buildInfoRow('Password', '••••••••'),
+              _buildInfoRow('Password', '••••••••', appColors),
               _buildInfoRow(
                 'Last Updated', 
                 security.lastChangeTimestamp != null 
                     ? DateFormat('dd MMM yyyy, HH:mm').format(security.lastChangeTimestamp!)
-                    : 'Never'
+                    : 'Never',
+                appColors,
               ),
-              _buildInfoRow('Status', 'Secure', isSuccess: true),
-            ]),
+              _buildInfoRow('Status', 'Secure', appColors, isSuccess: true),
+            ], appColors),
             
             const SizedBox(height: 30),
             
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: OutlinedButton(
-                onPressed: () => context.push('/profile/change_pass'),
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Color(0xFF0569FF)),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            GestureDetector(
+              onTap: () => context.push('/profile/change_pass'),
+              behavior: HitTestBehavior.opaque,
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: appColors.primary),
                 ),
+                alignment: Alignment.center,
                 child: Text(
                   'Change Password',
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF0569FF),
+                    fontSize: 15,
+                    color: appColors.primary,
                   ),
                 ),
               ),
@@ -75,12 +82,12 @@ class ProfileInfoScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildInfoCard(List<Widget> children) {
+  Widget _buildInfoCard(List<Widget> children, AppColors appColors) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFE0E4F0)),
+        border: Border.all(color: appColors.borderColor),
       ),
       child: Column(
         children: children,
@@ -88,7 +95,7 @@ class ProfileInfoScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildInfoRow(String label, String value, {bool isSuccess = false}) {
+  Widget _buildInfoRow(String label, String value, AppColors appColors, {bool isSuccess = false}) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -99,7 +106,7 @@ class ProfileInfoScreen extends ConsumerWidget {
             style: GoogleFonts.redditSans(
               fontWeight: FontWeight.w600,
               fontSize: 14,
-              color: const Color(0xFF838A97),
+              color: appColors.textSecondary,
             ),
           ),
           Text(
@@ -107,7 +114,7 @@ class ProfileInfoScreen extends ConsumerWidget {
             style: GoogleFonts.redditSans(
               fontWeight: FontWeight.w700,
               fontSize: 14,
-              color: isSuccess ? const Color(0xFF0F6E56) : const Color(0xFF1E1E1E),
+              color: isSuccess ? appColors.success : appColors.textPrimary,
             ),
           ),
         ],

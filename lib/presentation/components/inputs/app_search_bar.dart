@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 
-class AppSearchBar extends StatelessWidget {
+class AppSearchBar extends ConsumerWidget {
   final TextEditingController? controller;
   final String hintText;
   final ValueChanged<String>? onChanged;
@@ -14,33 +16,35 @@ class AppSearchBar extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 14),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE0E4F0), width: 1),
+        border: Border.all(color: appColors.borderColor, width: 1),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Icon(
+          Icon(
             Icons.search_rounded,
             size: 18,
-            color: Color(0xFF838A97),
+            color: appColors.textSecondary,
           ),
           const SizedBox(width: 8),
           Expanded(
             child: TextField(
               controller: controller,
               onChanged: onChanged,
-              cursorColor: const Color(0xFF0569FF),
+              cursorColor: appColors.primary,
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w500,
                 fontSize: 12,
-                color: const Color(0xFF1F1F1F),
+                color: appColors.textPrimary,
               ),
               decoration: InputDecoration(
                 border: InputBorder.none,
@@ -48,7 +52,7 @@ class AppSearchBar extends StatelessWidget {
                 hintStyle: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w500,
                   fontSize: 12,
-                  color: const Color(0xFF838A97),
+                  color: appColors.textSecondary,
                 ),
                 isDense: true,
                 contentPadding: const EdgeInsets.symmetric(vertical: 12),
@@ -60,3 +64,4 @@ class AppSearchBar extends StatelessWidget {
     );
   }
 }
+

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/user_security_provider.dart';
 import 'package:unec_assistant/presentation/components/lists/labels.dart';
 import 'package:unec_assistant/utils/app_toast.dart';
@@ -68,68 +70,65 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
   }
 
   bool _meetsRequirement(String requirement) {
-    final password = _newPasswordController.text;
-    final securityState = ref.read(userSecurityProvider);
-
+    final text = _newPasswordController.text;
     switch (requirement) {
       case '8-32 characters long':
-        return password.length >= 8 && password.length <= 32;
+        return text.length >= 8 && text.length <= 32;
       case 'One uppercase letter (A-Z)':
-        return RegExp(r'[A-Z]').hasMatch(password);
+        return text.contains(RegExp(r'[A-Z]'));
       case 'One lowercase letter (a-z)':
-        return RegExp(r'[a-z]').hasMatch(password);
+        return text.contains(RegExp(r'[a-z]'));
       case 'One number':
-        return RegExp(r'[0-9]').hasMatch(password);
+        return text.contains(RegExp(r'[0-9]'));
       case 'One special character (!@#\$...)':
-        return RegExp(r'[!@#\$%^&*(),.?":{}|<>]').hasMatch(password);
+        return text.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'));
       case 'Different from last 3 passwords':
-        return !securityState.passwordHistory.contains(password);
+        final security = ref.read(userSecurityProvider);
+        return !security.isPasswordInHistory(text);
       default:
         return false;
     }
   }
 
-  void _handleUpdate() async {
-    setState(() => _isLoading = true);
-
+  Future<void> _handleUpdate() async {
     if (_newPasswordController.text != _confirmPasswordController.text) {
-      AppToast.show(
-        context,
-        'Passwords do not match',
-        textColor: const Color(0xFF993C1D),
-      );
+      AppToast.show(context, 'Passwords do not match');
+      return;
     }
 
-    final error = await ref
+    setState(() => _isLoading = true);
+
+    final success = await ref
         .read(userSecurityProvider.notifier)
         .changePassword(
-          _currentPasswordController.text,
-          _newPasswordController.text,
+          currentPassword: _currentPasswordController.text,
+          newPassword: _newPasswordController.text,
         );
 
-    if (mounted) {
-      setState(() => _isLoading = false);
-      if (error != null) {
-        AppToast.show(context, error, textColor: const Color(0xFF993C1D));
-        if (error.contains('cooldown') || error.contains('blocked')) {
-          _startCooldownTimer();
-        }
+    setState(() => _isLoading = false);
+
+    if (!mounted) return;
+
+    if (success) {
+      AppToast.show(context, 'Password changed successfully!');
+      context.pop();
+    } else {
+      final security = ref.read(userSecurityProvider);
+      if (security.isBlocked) {
+        AppToast.show(context, 'Account temporarily locked. Try again later.');
+        _startCooldownTimer();
       } else {
         AppToast.show(
           context,
-          'Password updated successfully',
-          textColor: const Color(0xFF0F6E56),
+          'Incorrect current password. ${security.remainingAttempts} attempts remaining.',
         );
-        _startCooldownTimer();
-        Future.delayed(const Duration(seconds: 1), () {
-          if (mounted) context.pop();
-        });
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final appColors = ref.watch(appColorsProvider);
     final securityState = ref.watch(userSecurityProvider);
     final allRequirementsMet = [
       '8-32 characters long',
@@ -141,7 +140,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
     ].every(_meetsRequirement);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FC),
+      backgroundColor: appColors.background,
       appBar: CustomAppBar(
         title: 'Change Password',
         onBackTap: () => context.pop(),
@@ -155,12 +154,12 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                 width: 60,
                 height: 60,
                 decoration: BoxDecoration(
-                  color: const Color(0x260569FF),
+                  color: appColors.primaryContainer,
                   borderRadius: BorderRadius.circular(15),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.shield_moon,
-                  color: Color(0xFF0569FF),
+                  color: appColors.primary,
                   size: 30,
                 ),
               ),
@@ -171,7 +170,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w800,
                 fontSize: 20,
-                color: const Color(0xFF1E1E1E),
+                color: appColors.textPrimary,
               ),
             ),
             const SizedBox(height: 4),
@@ -181,7 +180,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w500,
                 fontSize: 13,
-                color: const Color(0xFFB0B3B8),
+                color: appColors.textSecondary,
               ),
             ),
             const SizedBox(height: 30),
@@ -189,9 +188,9 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
             // Input Fields Card
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: appColors.cardBackground,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: const Color(0xFFE0E4F0)),
+                border: Border.all(color: appColors.borderColor),
               ),
               child: Column(
                 children: [
@@ -203,8 +202,9 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                     onToggle: () => setState(
                       () => _isCurrentObscured = !_isCurrentObscured,
                     ),
+                    appColors: appColors,
                   ),
-                  const Divider(height: 1, color: Color(0xFFE0E4F0)),
+                  Divider(height: 1, color: appColors.divider),
                   _buildPasswordField(
                     label: 'New password',
                     controller: _newPasswordController,
@@ -213,8 +213,9 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                     onToggle: () =>
                         setState(() => _isNewObscured = !_isNewObscured),
                     onChanged: (_) => setState(() {}),
+                    appColors: appColors,
                   ),
-                  const Divider(height: 1, color: Color(0xFFE0E4F0)),
+                  Divider(height: 1, color: appColors.divider),
                   _buildPasswordField(
                     label: 'Confirm password',
                     controller: _confirmPasswordController,
@@ -223,6 +224,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                     onToggle: () => setState(
                       () => _isConfirmObscured = !_isConfirmObscured,
                     ),
+                    appColors: appColors,
                   ),
                 ],
               ),
@@ -233,9 +235,9 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
             // Requirements Card
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: appColors.cardBackground,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: const Color(0xFFE0E4F0)),
+                border: Border.all(color: appColors.borderColor),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -247,17 +249,17 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 15,
-                        color: const Color(0xFF1E1E1E),
+                        color: appColors.textPrimary,
                       ),
                     ),
                   ),
-                  const Divider(height: 1, color: Color(0xFFE0E4F0)),
-                  _buildRequirementItem('8-32 characters long'),
-                  _buildRequirementItem('One uppercase letter (A-Z)'),
-                  _buildRequirementItem('One lowercase letter (a-z)'),
-                  _buildRequirementItem('One number'),
-                  _buildRequirementItem('One special character (!@#\$...)'),
-                  _buildRequirementItem('Different from last 3 passwords'),
+                  Divider(height: 1, color: appColors.divider),
+                  _buildRequirementItem('8-32 characters long', appColors),
+                  _buildRequirementItem('One uppercase letter (A-Z)', appColors),
+                  _buildRequirementItem('One lowercase letter (a-z)', appColors),
+                  _buildRequirementItem('One number', appColors),
+                  _buildRequirementItem('One special character (!@#\$...)', appColors),
+                  _buildRequirementItem('Different from last 3 passwords', appColors),
                 ],
               ),
             ),
@@ -273,17 +275,17 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                     vertical: 10,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF993C1D).withValues(alpha: 0.1),
+                    color: appColors.error.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: const Color(0xFF993C1D).withValues(alpha: 0.3),
+                      color: appColors.error.withValues(alpha: 0.3),
                     ),
                   ),
                   child: Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.timer_outlined,
-                        color: Color(0xFF993C1D),
+                        color: appColors.error,
                         size: 18,
                       ),
                       const SizedBox(width: 10),
@@ -291,7 +293,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                         child: Text(
                           _cooldownText,
                           style: GoogleFonts.redditSans(
-                            color: const Color(0xFF993C1D),
+                            color: appColors.error,
                             fontWeight: FontWeight.w600,
                             fontSize: 13,
                           ),
@@ -319,27 +321,27 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                         (allRequirementsMet &&
                             !_isLoading &&
                             !securityState.isBlocked)
-                        ? const Color(0xFF0569FF)
-                        : const Color(0xFFB0B3B8).withValues(alpha: 0.3),
+                        ? appColors.primary
+                        : appColors.buttonDisabledBg,
                     borderRadius: BorderRadius.circular(15),
                   ),
                   alignment: Alignment.center,
                   child: _isLoading
-                      ? const SizedBox(
+                      ? SizedBox(
                           width: 24,
                           height: 24,
                           child: CircularProgressIndicator(
-                            color: Colors.white,
+                            color: appColors.pillSelectedText,
                             strokeWidth: 2,
                           ),
                         )
                       : Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.history_rounded,
                               size: 20,
-                              color: Colors.white,
+                              color: appColors.pillSelectedText,
                             ),
                             const SizedBox(width: 10),
                             Text(
@@ -347,7 +349,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 16,
-                                color: Colors.white,
+                                color: appColors.pillSelectedText,
                               ),
                             ),
                           ],
@@ -366,7 +368,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                 child: Text(
                   'Forgot current password?',
                   style: GoogleFonts.redditSans(
-                    color: const Color(0xFF0569FF),
+                    color: appColors.primary,
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),
@@ -382,7 +384,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                   'Having troubles with your Unec Kabinet password?',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.redditSans(
-                    color: const Color(0xFF0569FF),
+                    color: appColors.primary,
                     fontWeight: FontWeight.w600,
                     fontSize: 13,
                   ),
@@ -402,6 +404,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
     required bool isObscured,
     required IconData icon,
     required VoidCallback onToggle,
+    required AppColors appColors,
     ValueChanged<String>? onChanged,
   }) {
     return Padding(
@@ -414,7 +417,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
             style: GoogleFonts.redditSans(
               fontWeight: FontWeight.w600,
               fontSize: 13,
-              color: const Color(0xFF838A97),
+              color: appColors.textSecondary,
             ),
           ),
           const SizedBox(height: 8),
@@ -424,10 +427,10 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: const Color(0x1A0569FF),
+                  color: appColors.primaryContainer,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(icon, color: const Color(0xFF0569FF), size: 20),
+                child: Icon(icon, color: appColors.primary, size: 20),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -435,19 +438,23 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                   controller: controller,
                   obscureText: isObscured,
                   onChanged: onChanged,
+                  style: GoogleFonts.redditSans(
+                    color: appColors.textPrimary,
+                    fontSize: 15,
+                  ),
                   decoration: InputDecoration(
                     hintText: 'Enter password',
                     hintStyle: GoogleFonts.redditSans(
-                      color: const Color(0xFFB0B3B8),
+                      color: appColors.textMuted,
                       fontSize: 15,
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Color(0xFFE0E4F0)),
+                      borderSide: BorderSide(color: appColors.borderColor),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Color(0xFFE0E4F0)),
+                      borderSide: BorderSide(color: appColors.borderColor),
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16,
@@ -464,7 +471,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                               ? Icons.visibility_off_outlined
                               : Icons.visibility_outlined,
                           size: 20,
-                          color: const Color(0xFF838A97),
+                          color: appColors.textSecondary,
                         ),
                       ),
                     ),
@@ -478,7 +485,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
     );
   }
 
-  Widget _buildRequirementItem(String text) {
+  Widget _buildRequirementItem(String text, AppColors appColors) {
     final isMet = _meetsRequirement(text);
     final hasText = _newPasswordController.text.isNotEmpty;
 
@@ -486,13 +493,13 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
     IconData iconData;
 
     if (!hasText) {
-      iconColor = const Color(0xFFB0B3B8);
+      iconColor = appColors.textMuted;
       iconData = Icons.radio_button_unchecked;
     } else if (isMet) {
-      iconColor = const Color(0xFF0F6E56);
+      iconColor = appColors.success;
       iconData = Icons.check_circle_rounded;
     } else {
-      iconColor = const Color(0xFF993C1D);
+      iconColor = appColors.error;
       iconData = Icons.cancel_rounded;
     }
 
@@ -508,8 +515,8 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
               fontWeight: FontWeight.w600,
               fontSize: 14,
               color: hasText
-                  ? (isMet ? const Color(0xFF1E1E1E) : const Color(0xFF993C1D))
-                  : const Color(0xFF838A97),
+                  ? (isMet ? appColors.textPrimary : appColors.error)
+                  : appColors.textSecondary,
             ),
           ),
         ],

@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 
-class AboutUsCard extends StatelessWidget {
+class AboutUsCard extends ConsumerWidget {
   const AboutUsCard({super.key});
 
   Widget _aboutSection({
     required String emoji,
     required String heading,
     required InlineSpan body,
+    required AppColors appColors,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,7 +29,7 @@ class AboutUsCard extends StatelessWidget {
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w700,
                 fontSize: 14,
-                color: const Color(0xFF1F1F1F),
+                color: appColors.textPrimary,
               ),
             ),
           ],
@@ -37,7 +41,7 @@ class AboutUsCard extends StatelessWidget {
           style: GoogleFonts.redditSans(
             fontWeight: FontWeight.w500,
             fontSize: 12,
-            color: const Color(0xFF838A97),
+            color: appColors.textSecondary,
             height: 1.5,
           ),
         ),
@@ -46,14 +50,16 @@ class AboutUsCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: const Color(0xFFE0E4F0),
+          color: appColors.borderColor,
           width: 1,
         ),
       ),
@@ -64,6 +70,7 @@ class AboutUsCard extends StatelessWidget {
           _aboutSection(
             emoji: '👋',
             heading: 'Hello World,',
+            appColors: appColors,
             body: TextSpan(
               children: [
                 const TextSpan(text: 'I am a first-year '),
@@ -71,7 +78,7 @@ class AboutUsCard extends StatelessWidget {
                   text: 'IT student at UNEC',
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1F1F1F),
+                    color: appColors.textPrimary,
                   ),
                 ),
                 const TextSpan(
@@ -84,6 +91,7 @@ class AboutUsCard extends StatelessWidget {
           _aboutSection(
             emoji: '🚀',
             heading: 'How it started?',
+            appColors: appColors,
             body: TextSpan(
               children: [
                 const TextSpan(
@@ -94,7 +102,7 @@ class AboutUsCard extends StatelessWidget {
                   style: GoogleFonts.redditSans(
                     fontStyle: FontStyle.italic,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1F1F1F),
+                    color: appColors.textPrimary,
                   ),
                 ),
               ],
@@ -105,3 +113,4 @@ class AboutUsCard extends StatelessWidget {
     );
   }
 }
+

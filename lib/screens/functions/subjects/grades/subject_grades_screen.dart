@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import '../../../../models/subject_detail.dart';
 import '../../../../presentation/components/cards/subject_grade_header_card.dart';
 import '../../../../presentation/components/cards/midterm_grade_card.dart';
@@ -7,7 +9,7 @@ import '../../../../presentation/components/cards/final_grade_card.dart';
 
 import '../../../../presentation/components/lists/labels.dart';
 
-class SubjectGradesScreen extends StatelessWidget {
+class SubjectGradesScreen extends ConsumerWidget {
   final SubjectDetail data;
 
   const SubjectGradesScreen({
@@ -16,9 +18,11 @@ class SubjectGradesScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FC),
+      backgroundColor: appColors.background,
       appBar: CustomAppBar(title: data.subjectName),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 16),
@@ -38,3 +42,4 @@ class SubjectGradesScreen extends StatelessWidget {
     );
   }
 }
+

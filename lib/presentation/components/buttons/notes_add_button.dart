@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 
-class NotesAddButton extends StatelessWidget {
+class NotesAddButton extends ConsumerWidget {
   final VoidCallback onTap;
 
   const NotesAddButton({
@@ -9,14 +11,17 @@ class NotesAddButton extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Container(
         width: 56,
         height: 56,
-        decoration: const BoxDecoration(
-          color: Color(0xFF0569FF),
+        decoration: BoxDecoration(
+          color: appColors.primary,
           shape: BoxShape.circle,
         ),
         child: const Icon(
@@ -28,3 +33,4 @@ class NotesAddButton extends StatelessWidget {
     );
   }
 }
+

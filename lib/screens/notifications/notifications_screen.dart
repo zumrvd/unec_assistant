@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../models/app_notification.dart';
 import '../../providers/notification_provider.dart';
 import '../../presentation/components/lists/labels.dart';
@@ -13,6 +15,7 @@ class NotificationsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final notifications = ref.watch(notificationListProvider);
     final isEnabled = ref.watch(notificationsEnabledProvider);
+    final appColors = ref.watch(appColorsProvider);
 
     // Grouping logic
     final Map<String, List<AppNotification>> grouped = {};
@@ -24,28 +27,29 @@ class NotificationsScreen extends ConsumerWidget {
     final sortedKeys = grouped.keys.toList();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FC),
+      backgroundColor: appColors.background,
       appBar: CustomAppBar(
         title: 'Notifications',
         trailing: notifications.any((n) => !n.isRead)
             ? GestureDetector(
                 onTap: () =>
                     ref.read(notificationListProvider.notifier).markAllAsRead(),
+                behavior: HitTestBehavior.opaque,
                 child: Text(
                   'Mark all as read',
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w600,
                     fontSize: 12,
-                    color: const Color(0xFF0569FF),
+                    color: appColors.primary,
                   ),
                 ),
               )
             : null,
       ),
       body: !isEnabled
-          ? _buildDisabledState()
+          ? _buildDisabledState(appColors)
           : notifications.isEmpty
-          ? _buildEmptyState()
+          ? _buildEmptyState(appColors)
           : ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               itemCount: sortedKeys.length,
@@ -66,7 +70,7 @@ class NotificationsScreen extends ConsumerWidget {
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w700,
                           fontSize: 12,
-                          color: const Color(0xFF838A97),
+                          color: appColors.textSecondary,
                           letterSpacing: 1.1,
                         ),
                       ),
@@ -92,15 +96,15 @@ class NotificationsScreen extends ConsumerWidget {
     return DateFormat('MMMM dd').format(date);
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(AppColors appColors) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
+          Icon(
             Icons.notifications_none_rounded,
             size: 80,
-            color: Color(0xFFE0E4F0),
+            color: appColors.borderColor,
           ),
           const SizedBox(height: 16),
           Text(
@@ -108,7 +112,7 @@ class NotificationsScreen extends ConsumerWidget {
             style: GoogleFonts.redditSans(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF838A97),
+              color: appColors.textSecondary,
             ),
           ),
         ],
@@ -116,17 +120,17 @@ class NotificationsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildDisabledState() {
+  Widget _buildDisabledState(AppColors appColors) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(40.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
+            Icon(
               Icons.notifications_off_outlined,
               size: 80,
-              color: Color(0xFFE0E4F0),
+              color: appColors.borderColor,
             ),
             const SizedBox(height: 16),
             Text(
@@ -135,7 +139,7 @@ class NotificationsScreen extends ConsumerWidget {
               style: GoogleFonts.redditSans(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF838A97),
+                color: appColors.textSecondary,
               ),
             ),
             const SizedBox(height: 8),
@@ -145,7 +149,7 @@ class NotificationsScreen extends ConsumerWidget {
               style: GoogleFonts.redditSans(
                 fontSize: 13,
                 fontWeight: FontWeight.w400,
-                color: const Color(0xFF838A97),
+                color: appColors.textSecondary,
               ),
             ),
           ],
@@ -162,6 +166,8 @@ class _NotificationTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+
     return Dismissible(
       key: Key(notification.id),
       direction: DismissDirection.endToStart,
@@ -172,7 +178,7 @@ class _NotificationTile extends ConsumerWidget {
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
         decoration: BoxDecoration(
-          color: Colors.red.shade400,
+          color: appColors.error,
           borderRadius: BorderRadius.circular(16),
         ),
         child: const Icon(Icons.delete_outline_rounded, color: Colors.white),
@@ -181,23 +187,24 @@ class _NotificationTile extends ConsumerWidget {
         onTap: () => ref
             .read(notificationListProvider.notifier)
             .markAsRead(notification.id),
+        behavior: HitTestBehavior.opaque,
         child: Container(
           margin: const EdgeInsets.only(bottom: 12),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: appColors.cardBackground,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: notification.isRead
-                  ? const Color(0xFFE0E4F0)
-                  : const Color(0xFF0569FF).withValues(alpha: 0.3),
+                  ? appColors.borderColor
+                  : appColors.primary.withValues(alpha: 0.3),
               width: 1,
             ),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildIcon(),
+              _buildIcon(appColors),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -212,7 +219,7 @@ class _NotificationTile extends ConsumerWidget {
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w700,
                               fontSize: 14,
-                              color: const Color(0xFF1F1F1F),
+                              color: appColors.textPrimary,
                             ),
                           ),
                         ),
@@ -220,8 +227,8 @@ class _NotificationTile extends ConsumerWidget {
                           Container(
                             width: 8,
                             height: 8,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFFF3B30),
+                            decoration: BoxDecoration(
+                              color: appColors.error,
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -233,7 +240,7 @@ class _NotificationTile extends ConsumerWidget {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w400,
                         fontSize: 13,
-                        color: const Color(0xFF4B5563),
+                        color: appColors.textSecondary,
                         height: 1.4,
                       ),
                     ),
@@ -243,7 +250,7 @@ class _NotificationTile extends ConsumerWidget {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w500,
                         fontSize: 11,
-                        color: const Color(0xFF838A97),
+                        color: appColors.textMuted,
                       ),
                     ),
                   ],
@@ -256,36 +263,37 @@ class _NotificationTile extends ConsumerWidget {
     );
   }
 
-  Widget _buildIcon() {
+  Widget _buildIcon(AppColors appColors) {
     IconData iconData;
     Color color;
 
     switch (notification.type) {
       case NotificationType.academic:
         iconData = Icons.school_rounded;
-        color = const Color(0xFF0569FF);
+        color = appColors.primary;
         break;
       case NotificationType.feed:
         iconData = Icons.newspaper_rounded;
-        color = const Color(0xFF34C759);
+        color = appColors.success;
         break;
       case NotificationType.alert:
         iconData = Icons.warning_amber_rounded;
-        color = const Color(0xFFFF9500);
+        color = appColors.warning;
         break;
       case NotificationType.info:
-      default:
         iconData = Icons.info_outline_rounded;
-        color = const Color(0xFF5856D6);
+        color = appColors.notificationPurple;
+        break;
     }
 
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
+        color: color.withValues(alpha: 0.15),
         shape: BoxShape.circle,
       ),
       child: Icon(iconData, color: color, size: 18),
     );
   }
 }
+

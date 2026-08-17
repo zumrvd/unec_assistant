@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import '../../../models/post.dart';
 import '../../../models/channel.dart';
 import '../../../utils/app_toast.dart';
@@ -11,7 +13,7 @@ const _kCategoryLabels = {
   ChannelCategory.devTeam: 'Dev Team',
 };
 
-class PostCard extends StatefulWidget {
+class PostCard extends ConsumerStatefulWidget {
   final Post data;
   final Channel channel;
   final VoidCallback onTap;
@@ -28,10 +30,10 @@ class PostCard extends StatefulWidget {
   });
 
   @override
-  State<PostCard> createState() => _PostCardState();
+  ConsumerState<PostCard> createState() => _PostCardState();
 }
 
-class _PostCardState extends State<PostCard> {
+class _PostCardState extends ConsumerState<PostCard> {
   bool _isExpanded = false;
 
   /// Fixed: was returning "hours ago" for day-level diffs.
@@ -45,6 +47,7 @@ class _PostCardState extends State<PostCard> {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = ref.watch(appColorsProvider);
     final categoryLabel = _kCategoryLabels[widget.channel.category] ?? '';
 
     return GestureDetector(
@@ -53,9 +56,9 @@ class _PostCardState extends State<PostCard> {
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: const Color(0xFFFFFFFF),
+          color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: const Color(0xFFE0E4F0), width: 1),
+          border: Border.all(color: appColors.borderColor, width: 1),
         ),
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -67,9 +70,9 @@ class _PostCardState extends State<PostCard> {
                 Container(
                   width: 40,
                   height: 40,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Color(0xFFE8F0FE),
+                    color: appColors.primaryContainer,
                   ),
                   alignment: Alignment.center,
                   child: Text(
@@ -77,7 +80,7 @@ class _PostCardState extends State<PostCard> {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w800,
                       fontSize: 16,
-                      color: const Color(0xFF0569FF),
+                      color: appColors.primaryOnContainer,
                     ),
                   ),
                 ),
@@ -96,13 +99,14 @@ class _PostCardState extends State<PostCard> {
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 15,
-                                color: const Color(0xFF1F1F1F),
+                                color: appColors.textPrimary,
                               ),
                             ),
                           ),
                           if (widget.channel.isVerified) ...[
                             const SizedBox(width: 4),
-                            const Icon(Icons.verified_rounded, size: 16, color: Color(0xFF0569FF)),
+                            Icon(Icons.verified_rounded,
+                                size: 16, color: appColors.primary),
                           ],
                         ],
                       ),
@@ -111,7 +115,7 @@ class _PostCardState extends State<PostCard> {
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w500,
                           fontSize: 11,
-                          color: const Color(0xFF838A97),
+                          color: appColors.textSecondary,
                         ),
                       ),
                     ],
@@ -126,17 +130,17 @@ class _PostCardState extends State<PostCard> {
               width: double.infinity,
               height: 160,
               decoration: BoxDecoration(
-                color: const Color(0xFFE8F0FE),
+                color: appColors.placeholderImageBg,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Center(
-                child: Icon(Icons.school_outlined, size: 40, color: Color(0xFF75A4FF)),
+              child: Center(
+                child: Icon(Icons.school_outlined,
+                    size: 40, color: appColors.placeholderImageIcon),
               ),
             ),
             const SizedBox(height: 12),
 
             // Body Text + Read More
-            // GestureDetector absorbs the tap so it does NOT bubble to the card nav.
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -144,11 +148,12 @@ class _PostCardState extends State<PostCard> {
                   widget.data.bodyText,
                   maxLines: _isExpanded ? null : 2,
                   softWrap: true,
-                  overflow: _isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                  overflow:
+                      _isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w500,
                     fontSize: 13,
-                    color: const Color(0xFF1F1F1F),
+                    color: appColors.textPrimary,
                     height: 1.4,
                   ),
                 ),
@@ -159,7 +164,7 @@ class _PostCardState extends State<PostCard> {
                   child: Text(
                     _isExpanded ? 'Show less' : 'Read more',
                     style: GoogleFonts.redditSans(
-                      color: const Color(0xFF0569FF),
+                      color: appColors.primary,
                       fontWeight: FontWeight.w700,
                       fontSize: 12,
                     ),
@@ -169,7 +174,7 @@ class _PostCardState extends State<PostCard> {
             ),
             const SizedBox(height: 15),
 
-            // Action Row — each inner GestureDetector stops propagation to the card.
+            // Action Row
             Row(
               children: [
                 GestureDetector(
@@ -185,8 +190,8 @@ class _PostCardState extends State<PostCard> {
                             : Icons.favorite_border_rounded,
                         size: 18,
                         color: widget.data.isLikedByCurrentUser
-                            ? const Color(0xFFDA4979)
-                            : const Color(0xFF838A97),
+                            ? appColors.heartColor
+                            : appColors.textSecondary,
                       ),
                       const SizedBox(width: 6),
                       Text(
@@ -195,8 +200,8 @@ class _PostCardState extends State<PostCard> {
                           fontWeight: FontWeight.w600,
                           fontSize: 11,
                           color: widget.data.isLikedByCurrentUser
-                              ? const Color(0xFFDA4979)
-                              : const Color(0xFF838A97),
+                              ? appColors.heartColor
+                              : appColors.textSecondary,
                         ),
                       ),
                     ],
@@ -208,14 +213,15 @@ class _PostCardState extends State<PostCard> {
                   behavior: HitTestBehavior.opaque,
                   child: Row(
                     children: [
-                      const Icon(Icons.chat_bubble_outline_rounded, size: 16, color: Color(0xFF838A97)),
+                      Icon(Icons.chat_bubble_outline_rounded,
+                          size: 16, color: appColors.textSecondary),
                       const SizedBox(width: 6),
                       Text(
                         '${widget.data.commentCount}',
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w600,
                           fontSize: 11,
-                          color: const Color(0xFF838A97),
+                          color: appColors.textSecondary,
                         ),
                       ),
                     ],
@@ -228,7 +234,8 @@ class _PostCardState extends State<PostCard> {
                     widget.onShareTap();
                   },
                   behavior: HitTestBehavior.opaque,
-                  child: const Icon(Icons.ios_share_rounded, size: 18, color: Color(0xFF838A97)),
+                  child: Icon(Icons.ios_share_rounded,
+                      size: 18, color: appColors.textSecondary),
                 ),
               ],
             ),

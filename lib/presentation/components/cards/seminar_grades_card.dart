@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/subject_detail.dart';
 import '../../../models/seminar_entry.dart';
 
-class SeminarGradesCard extends StatefulWidget {
+class SeminarGradesCard extends ConsumerStatefulWidget {
   final SubjectDetail data;
 
   const SeminarGradesCard({
@@ -12,10 +15,10 @@ class SeminarGradesCard extends StatefulWidget {
   });
 
   @override
-  State<SeminarGradesCard> createState() => _SeminarGradesCardState();
+  ConsumerState<SeminarGradesCard> createState() => _SeminarGradesCardState();
 }
 
-class _SeminarGradesCardState extends State<SeminarGradesCard> {
+class _SeminarGradesCardState extends ConsumerState<SeminarGradesCard> {
   bool _isExpanded = false;
 
   static const _buttonGradient = LinearGradient(
@@ -29,7 +32,7 @@ class _SeminarGradesCardState extends State<SeminarGradesCard> {
     stops: [0.0, 0.5, 1.0],
   );
 
-  Widget _seminarRow(SeminarEntry e) {
+  Widget _seminarRow(SeminarEntry e, AppColors appColors) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Column(
@@ -47,7 +50,7 @@ class _SeminarGradesCardState extends State<SeminarGradesCard> {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 13,
-                        color: const Color(0xFF1F1F1F),
+                        color: appColors.textPrimary,
                       ),
                     ),
                     Text(
@@ -55,7 +58,7 @@ class _SeminarGradesCardState extends State<SeminarGradesCard> {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 10,
-                        color: const Color(0x80838A97),
+                        color: appColors.textMuted,
                       ),
                     ),
                   ],
@@ -66,13 +69,13 @@ class _SeminarGradesCardState extends State<SeminarGradesCard> {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 15,
-                  color: const Color(0xFF1F1F1F),
+                  color: appColors.textPrimary,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 4),
-          const Divider(color: Color(0xFFE0E4F0), thickness: 1),
+          Divider(color: appColors.divider, thickness: 1),
         ],
       ),
     );
@@ -80,12 +83,14 @@ class _SeminarGradesCardState extends State<SeminarGradesCard> {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = ref.watch(appColorsProvider);
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFE0E4F0), width: 1),
+        border: Border.all(color: appColors.borderColor, width: 1),
       ),
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -93,7 +98,7 @@ class _SeminarGradesCardState extends State<SeminarGradesCard> {
         children: [
           Row(
             children: [
-              const Icon(Icons.flag_rounded, size: 20, color: Color(0xFF0F6E11)),
+              Icon(Icons.flag_rounded, size: 20, color: appColors.success),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -101,7 +106,7 @@ class _SeminarGradesCardState extends State<SeminarGradesCard> {
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 15,
-                    color: const Color(0xFF1F1F1F),
+                    color: appColors.textPrimary,
                   ),
                 ),
               ),
@@ -113,7 +118,7 @@ class _SeminarGradesCardState extends State<SeminarGradesCard> {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 25,
-                        color: const Color(0xFF1F1F1F),
+                        color: appColors.textPrimary,
                       ),
                     ),
                     TextSpan(
@@ -121,7 +126,7 @@ class _SeminarGradesCardState extends State<SeminarGradesCard> {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 15,
-                        color: const Color(0x80838A97),
+                        color: appColors.textMuted,
                       ),
                     ),
                   ],
@@ -139,14 +144,15 @@ class _SeminarGradesCardState extends State<SeminarGradesCard> {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 13,
-                  color: const Color(0x80838A97),
+                  color: appColors.textSecondary,
                 ),
               ),
               const SizedBox(width: 6),
-              const Icon(Icons.schedule_rounded, size: 14, color: Color(0xFF0F6E11)),
+              Icon(Icons.schedule_rounded, size: 14, color: appColors.success),
               const Spacer(),
               GestureDetector(
                 onTap: () => setState(() => _isExpanded = !_isExpanded),
+                behavior: HitTestBehavior.opaque,
                 child: AnimatedRotation(
                   turns: _isExpanded ? 0.5 : 0.0,
                   duration: const Duration(milliseconds: 300),
@@ -154,10 +160,10 @@ class _SeminarGradesCardState extends State<SeminarGradesCard> {
                     width: 24,
                     height: 24,
                     decoration: BoxDecoration(
-                      color: const Color(0x80E0E4F0),
+                      color: appColors.iconBoxArrowBg,
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: const Icon(Icons.keyboard_arrow_down_rounded, size: 14, color: Color(0x80838A97)),
+                    child: Icon(Icons.keyboard_arrow_down_rounded, size: 14, color: appColors.textSecondary),
                   ),
                 ),
               ),
@@ -168,7 +174,7 @@ class _SeminarGradesCardState extends State<SeminarGradesCard> {
             secondChild: Padding(
               padding: const EdgeInsets.only(top: 12),
               child: Column(
-                children: widget.data.seminarEntries.map((e) => _seminarRow(e)).toList(),
+                children: widget.data.seminarEntries.map((e) => _seminarRow(e, appColors)).toList(),
               ),
             ),
             crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
@@ -221,3 +227,4 @@ class _SeminarGradesCardState extends State<SeminarGradesCard> {
     );
   }
 }
+

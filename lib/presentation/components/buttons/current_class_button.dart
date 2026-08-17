@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 
-class CurrentClassButton extends StatelessWidget {
+class CurrentClassButton extends ConsumerWidget {
   const CurrentClassButton({
     required this.onTap,
     super.key,
@@ -9,23 +11,20 @@ class CurrentClassButton extends StatelessWidget {
 
   final VoidCallback onTap;
 
-  static const _primaryBlue = Color(0xFF0569FF);
-  static const _titleColor = Color(0xFF1F1F1F);
-  static const _subtitleColor = Color(0x80838A97);
-  static const _borderColor = Color(0xFFE0E4F0);
-  static const _iconBackgroundColor = Color(0x260569FF);
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: const Color(0xFFFFFFFF),
+          color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: _borderColor,
+            color: appColors.borderColor,
             width: 1,
           ),
         ),
@@ -47,13 +46,13 @@ class CurrentClassButton extends StatelessWidget {
                     width: 54,
                     height: 54,
                     decoration: BoxDecoration(
-                      color: _iconBackgroundColor,
+                      color: appColors.primaryContainer,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       size: 40,
                       Icons.bolt_outlined,
-                      color: _primaryBlue,
+                      color: appColors.primary,
                     ),
                   ),
                   const SizedBox(width: 15),
@@ -67,7 +66,7 @@ class CurrentClassButton extends StatelessWidget {
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w800,
                             fontSize: 16,
-                            color: _titleColor,
+                            color: appColors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -76,7 +75,7 @@ class CurrentClassButton extends StatelessWidget {
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w700,
                             fontSize: 10,
-                            color: _subtitleColor,
+                            color: appColors.textMuted,
                           ),
                         ),
                       ],
@@ -98,3 +97,4 @@ class CurrentClassButton extends StatelessWidget {
     );
   }
 }
+

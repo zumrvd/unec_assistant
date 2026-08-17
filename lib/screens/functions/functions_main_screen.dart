@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unec_assistant/presentation/components/buttons/current_class_button.dart';
 import 'package:unec_assistant/presentation/components/buttons/schedule_button.dart';
 import 'package:unec_assistant/presentation/components/buttons/subjects/subjects_button.dart';
 import 'package:unec_assistant/presentation/components/buttons/attendance/attendance_button.dart';
 import 'package:unec_assistant/presentation/components/buttons/notes_button.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 
 import '../../presentation/components/lists/labels.dart';
 
-
-
-class FunctionsMainScreen extends StatelessWidget {
+class FunctionsMainScreen extends ConsumerWidget {
   const FunctionsMainScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FC),
+      backgroundColor: appColors.background,
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 35.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             const SectionLabel('Class & Attendance'),
             const SizedBox(height: 10),
 

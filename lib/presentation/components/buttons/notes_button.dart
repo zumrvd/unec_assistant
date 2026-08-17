@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 
-class NotesButton extends StatelessWidget {
+class NotesButton extends ConsumerWidget {
   const NotesButton({
     required this.onTap,
     super.key,
@@ -9,23 +11,21 @@ class NotesButton extends StatelessWidget {
 
   final VoidCallback onTap;
 
-  static const _primaryPink = Color(0xFFDA4979);
-  static const _titleColor = Color(0xFF1F1F1F);
-  static const _subtitleColor = Color(0x80838A97);
-  static const _borderColor = Color(0xFFE0E4F0);
-  static const _iconBackgroundColor = Color(0x26DA4979);
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+    final pinkColor = const Color(0xFFDA4979);
+
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: const Color(0xFFFFFFFF),
+          color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: _borderColor,
+            color: appColors.borderColor,
             width: 1,
           ),
         ),
@@ -46,13 +46,13 @@ class NotesButton extends StatelessWidget {
                   width: 54,
                   height: 54,
                   decoration: BoxDecoration(
-                    color: _iconBackgroundColor,
+                    color: pinkColor.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.edit_note_rounded,
                     size: 35,
-                    color: _primaryPink,
+                    color: pinkColor,
                   ),
                 ),
                 const SizedBox(width: 15),
@@ -65,7 +65,7 @@ class NotesButton extends StatelessWidget {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
-                        color: _titleColor,
+                        color: appColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -74,7 +74,7 @@ class NotesButton extends StatelessWidget {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 8,
-                        color: _subtitleColor,
+                        color: appColors.textMuted,
                       ),
                     ),
                   ],
@@ -87,3 +87,4 @@ class NotesButton extends StatelessWidget {
     );
   }
 }
+

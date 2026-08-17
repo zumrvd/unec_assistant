@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/post.dart';
 
-class FeedFilterTabs extends StatelessWidget {
+class FeedFilterTabs extends ConsumerWidget {
   final Set<PostFeedType> selectedFilters;
   final ValueChanged<PostFeedType?> onSelect;
 
@@ -15,6 +18,7 @@ class FeedFilterTabs extends StatelessWidget {
   Widget _buildPill({
     required String label,
     required PostFeedType? type,
+    required AppColors appColors,
     bool showCheckbox = true,
   }) {
     final isSelected = type == null ? selectedFilters.isEmpty : selectedFilters.contains(type);
@@ -26,10 +30,10 @@ class FeedFilterTabs extends StatelessWidget {
         margin: const EdgeInsets.only(right: 8),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF0569FF) : const Color(0xFFFFFFFF),
+          color: isSelected ? appColors.primary : appColors.cardBackground,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: isSelected ? const Color(0xFF0569FF) : const Color(0xFFE0E4F0),
+            color: isSelected ? appColors.primary : appColors.borderColor,
             width: 1,
           ),
         ),
@@ -41,7 +45,7 @@ class FeedFilterTabs extends StatelessWidget {
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w700,
                 fontSize: 12,
-                color: isSelected ? const Color(0xFFFFFFFF) : const Color(0xFF838A97),
+                color: isSelected ? Colors.white : appColors.textSecondary,
               ),
             ),
             if (showCheckbox) ...[
@@ -49,7 +53,7 @@ class FeedFilterTabs extends StatelessWidget {
               Icon(
                 isSelected ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded,
                 size: 16,
-                color: isSelected ? const Color(0xFFFFFFFF) : const Color(0xFF838A97),
+                color: isSelected ? Colors.white : appColors.textSecondary,
               ),
             ],
           ],
@@ -59,18 +63,21 @@ class FeedFilterTabs extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          _buildPill(label: 'Discover', type: null, showCheckbox: false),
-          _buildPill(label: 'Subscribed', type: PostFeedType.subscribed),
-          _buildPill(label: 'Official', type: PostFeedType.official),
-          _buildPill(label: 'Clubs', type: PostFeedType.clubs),
-          _buildPill(label: 'Dev Team', type: PostFeedType.devTeam),
+          _buildPill(label: 'Discover', type: null, appColors: appColors, showCheckbox: false),
+          _buildPill(label: 'Subscribed', type: PostFeedType.subscribed, appColors: appColors),
+          _buildPill(label: 'Official', type: PostFeedType.official, appColors: appColors),
+          _buildPill(label: 'Clubs', type: PostFeedType.clubs, appColors: appColors),
+          _buildPill(label: 'Dev Team', type: PostFeedType.devTeam, appColors: appColors),
         ],
       ),
     );
   }
 }
+

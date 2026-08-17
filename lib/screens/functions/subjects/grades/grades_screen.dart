@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import '../../../../providers/subject_detail_provider.dart';
 import '../../../../presentation/components/buttons/grade_calculator_button.dart';
 import '../../../../presentation/components/cards/subject_grade_list_item.dart';
@@ -14,9 +15,10 @@ class GradesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final allSubjects = ref.watch(allSubjectsProvider);
+    final appColors = ref.watch(appColorsProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FC),
+      backgroundColor: appColors.background,
       appBar: const CustomAppBar(title: 'Grades'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 16),
@@ -34,7 +36,7 @@ class GradesScreen extends ConsumerWidget {
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w700,
                 fontSize: 13,
-                color: const Color(0xFF838A97),
+                color: appColors.textSecondary,
               ),
             ),
             ...allSubjects.map((s) => Padding(
@@ -51,3 +53,4 @@ class GradesScreen extends ConsumerWidget {
     );
   }
 }
+

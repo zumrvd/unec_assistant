@@ -93,6 +93,7 @@ class _StudentIdCardState extends State<StudentIdCard> with SingleTickerProvider
       padding: const EdgeInsets.all(10.0),
       child: GestureDetector(
         onTap: _toggleCard,
+        behavior: HitTestBehavior.opaque,
         child: AnimatedBuilder(
           animation: _controller,
           builder: (context, child) {

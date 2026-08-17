@@ -26,15 +26,17 @@ class UserSecurityNotifier extends Notifier<UserSecurityState> {
     return null;
   }
 
-  Future<String?> changePassword(String oldPass, String newPass) async {
+  Future<bool> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
     // 1. Check block
     if (state.isBlocked) {
-      final remaining = state.blockUntil!.difference(DateTime.now());
-      return 'Too many attempts. Try again in ${remaining.inMinutes} minutes.';
+      return false;
     }
 
     // 2. Validate current password
-    if (oldPass != state.currentPassword) {
+    if (currentPassword != state.currentPassword) {
       final newFailedAttempts = state.failedAttempts + 1;
       DateTime? newBlock;
       if (newFailedAttempts >= 3) {
@@ -45,34 +47,30 @@ class UserSecurityNotifier extends Notifier<UserSecurityState> {
         failedAttempts: newFailedAttempts,
         blockUntil: newBlock,
       );
-      
-      if (newBlock != null) {
-        return 'Too many failed attempts. You are blocked for 1 hour.';
-      }
-      return 'Current password is incorrect.';
+      return false;
     }
 
     // 3. Validate new password
-    final error = validateNewPassword(newPass);
-    if (error != null) return error;
+    final error = validateNewPassword(newPassword);
+    if (error != null) return false;
 
     // 4. Update state
-    final newHistory = [newPass, ...state.passwordHistory];
+    final newHistory = [newPassword, ...state.passwordHistory];
     if (newHistory.length > 3) {
       newHistory.removeLast();
     }
 
     state = state.copyWith(
-      currentPassword: newPass,
+      currentPassword: newPassword,
       passwordHistory: newHistory,
       lastChangeTimestamp: DateTime.now(),
       failedAttempts: 0,
-      blockUntil: DateTime.now().add(const Duration(minutes: 5)), // Optional: block for 5 mins after success
     );
 
-    return null; // Success
+    return true; // Success
   }
 }
+
 
 final userSecurityProvider = NotifierProvider<UserSecurityNotifier, UserSecurityState>(() {
   return UserSecurityNotifier();

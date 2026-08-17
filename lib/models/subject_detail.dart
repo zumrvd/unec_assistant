@@ -120,6 +120,8 @@ class SubjectDetail {
 
   bool get needsAttention => (absencesUsed / absenceLimit) >= 0.5;
 
+  String get finalExamDate => endDate;
+
   SubjectDetail copyWith({
     String? subjectId,
     String? subjectCode,

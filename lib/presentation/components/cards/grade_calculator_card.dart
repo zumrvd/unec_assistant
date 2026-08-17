@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/subject_detail.dart';
 
-class GradeCalculatorCard extends StatefulWidget {
+class GradeCalculatorCard extends ConsumerStatefulWidget {
   final List<SubjectDetail> subjects;
   final BorderRadius? borderRadius;
 
@@ -13,10 +16,10 @@ class GradeCalculatorCard extends StatefulWidget {
   });
 
   @override
-  State<GradeCalculatorCard> createState() => _GradeCalculatorCardState();
+  ConsumerState<GradeCalculatorCard> createState() => _GradeCalculatorCardState();
 }
 
-class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
+class _GradeCalculatorCardState extends ConsumerState<GradeCalculatorCard> {
   String? _selectedSubject;
   String? _selectedGrade;
   String? _hoveredGrade;
@@ -28,21 +31,23 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
   static const Map<String, int> _gradeMinScore = {
     'A': 91, 'B': 81, 'C': 71, 'D': 61,
   };
-  static const Map<String, Color> _gradeColors = {
-    'A': Color(0xFF0F6E11),
-    'B': Color(0xFF0569FF),
-    'C': Color(0xFFE3993C),
-    'D': Color(0xFFD54829),
-  };
 
   @override
   Widget build(BuildContext context) {
+    final appColors = ref.watch(appColorsProvider);
+    final Map<String, Color> gradeColors = {
+      'A': appColors.success,
+      'B': appColors.primary,
+      'C': appColors.attendanceOrange,
+      'D': appColors.error,
+    };
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
+        color: appColors.cardBackground,
         borderRadius: widget.borderRadius ?? BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFE0E4F0), width: 1),
+        border: Border.all(color: appColors.borderColor, width: 1),
       ),
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -53,14 +58,14 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
             style: GoogleFonts.redditSans(
               fontWeight: FontWeight.w700,
               fontSize: 12,
-              color: const Color(0x80838A97),
+              color: appColors.textMuted,
             ),
           ),
           const SizedBox(height: 14),
           Container(
             decoration: BoxDecoration(
-              color: const Color(0xFFF8F9FC),
-              border: Border.all(color: const Color(0xFFE0E4F0)),
+              color: appColors.surface,
+              border: Border.all(color: appColors.borderColor),
               borderRadius: BorderRadius.circular(12),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -71,13 +76,13 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                   "Choose a Subject you want to calculate...",
                   style: GoogleFonts.redditSans(
                     fontSize: 14,
-                    color: const Color(0x80838A97),
+                    color: appColors.textMuted,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 isExpanded: true,
-                icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0x80838A97)),
-                dropdownColor: const Color(0xFFFFFFFF),
+                icon: Icon(Icons.keyboard_arrow_down_rounded, color: appColors.textSecondary),
+                dropdownColor: appColors.cardBackground,
                 borderRadius: BorderRadius.circular(12),
                 onChanged: (val) => setState(() {
                   _selectedSubject = val;
@@ -91,7 +96,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                       style: GoogleFonts.redditSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF1F1F1F),
+                        color: appColors.textPrimary,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -106,7 +111,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
             style: GoogleFonts.redditSans(
               fontWeight: FontWeight.w700,
               fontSize: 14,
-              color: const Color(0xFF838A97),
+              color: appColors.textSecondary,
             ),
           ),
           const SizedBox(height: 14),
@@ -114,17 +119,17 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
             children: ['A', 'B', 'C', 'D'].map((grade) {
               final isSelected = _selectedGrade == grade;
               final isHovered = _hoveredGrade == grade;
-              final gradeColor = _gradeColors[grade]!;
+              final gradeColor = gradeColors[grade]!;
 
-              Color bgColor = const Color(0xFFF8F9FC);
-              Color borderColor = const Color(0xFFE0E4F0);
+              Color bgColor = appColors.surface;
+              Color borderColor = appColors.borderColor;
               double borderWidth = 1.0;
 
               if (isSelected) {
                 bgColor = gradeColor.withValues(alpha: 0.15);
                 borderColor = gradeColor.withValues(alpha: 0.2);
               } else if (isHovered) {
-                bgColor = Colors.white;
+                bgColor = appColors.cardBackground;
                 borderColor = gradeColor;
                 borderWidth = 1.5;
               }
@@ -138,6 +143,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                       _selectedGrade = grade;
                       _calculated = false;
                     }),
+                    behavior: HitTestBehavior.opaque,
                     child: Container(
                       margin: EdgeInsets.only(
                         right: grade != 'D' ? 8 : 0,
@@ -167,7 +173,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w700,
                               fontSize: 10,
-                              color: const Color(0x80838A97),
+                              color: appColors.textMuted,
                             ),
                           ),
                         ],
@@ -186,6 +192,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                   setState(() => _calculated = true);
                 }
               },
+              behavior: HitTestBehavior.opaque,
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
@@ -215,13 +222,13 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
               ),
             )
           else
-            _buildResultSection(),
+            _buildResultSection(appColors),
         ],
       ),
     );
   }
 
-  Widget _buildResultSection() {
+  Widget _buildResultSection(AppColors appColors) {
     final subject = widget.subjects.firstWhere((s) => s.subjectName == _selectedSubject);
     final targetMin = _gradeMinScore[_selectedGrade]!;
     final ptsNeeded = (targetMin - subject.currentScore).clamp(0, 100);
@@ -231,9 +238,9 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FC),
+        color: appColors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE0E4F0)),
+        border: Border.all(color: appColors.borderColor),
       ),
       padding: const EdgeInsets.all(18),
       child: Column(
@@ -247,7 +254,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
-                  color: const Color(0xFF838A97),
+                  color: appColors.textSecondary,
                   height: 1.1,
                 ),
               ),
@@ -259,7 +266,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w800,
                         fontSize: 36,
-                        color: const Color(0xFF1F1F1F),
+                        color: appColors.textPrimary,
                       ),
                     ),
                     TextSpan(
@@ -267,7 +274,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 22,
-                        color: const Color(0x80838A97),
+                        color: appColors.textMuted,
                       ),
                     ),
                     TextSpan(
@@ -275,7 +282,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 14,
-                        color: const Color(0x80838A97),
+                        color: appColors.textMuted,
                       ),
                     ),
                   ],
@@ -290,7 +297,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                 height: 12,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE0E4F0),
+                  color: appColors.borderColor,
                   borderRadius: BorderRadius.circular(6),
                 ),
               ),
@@ -299,7 +306,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                 child: Container(
                   height: 12,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0F6E11).withValues(alpha: 0.3),
+                    color: appColors.success.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(6),
                   ),
                 ),
@@ -309,7 +316,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                 child: Container(
                   height: 12,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0569FF),
+                    color: appColors.primary,
                     borderRadius: BorderRadius.circular(6),
                   ),
                 ),
@@ -328,7 +335,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w800,
                       fontSize: 14,
-                      color: const Color(0xFF0569FF),
+                      color: appColors.primary,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -343,7 +350,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w800,
                       fontSize: 14,
-                      color: const Color(0xFF0F6E11),
+                      color: appColors.success,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -356,9 +363,9 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                     width: 54,
                     height: 54,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF0F6E11).withValues(alpha: 0.15),
+                      color: appColors.success.withValues(alpha: 0.15),
                       shape: BoxShape.circle,
-                      border: Border.all(color: const Color(0xFF0F6E11), width: 1.5),
+                      border: Border.all(color: appColors.success, width: 1.5),
                     ),
                     child: Center(
                       child: Text(
@@ -366,7 +373,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w800,
                           fontSize: 24,
-                          color: const Color(0xFF0F6E11),
+                          color: appColors.success,
                         ),
                       ),
                     ),
@@ -383,7 +390,7 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w700,
                 fontSize: 11,
-                color: const Color(0x80838A97),
+                color: appColors.textMuted,
               ),
             ),
           ),
@@ -392,3 +399,4 @@ class _GradeCalculatorCardState extends State<GradeCalculatorCard> {
     );
   }
 }
+

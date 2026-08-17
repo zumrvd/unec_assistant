@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import '../../../models/about_app_info.dart';
 import '../dialogs/contact_redirect_dialog.dart';
 
-class ContactTile extends StatefulWidget {
+class ContactTile extends ConsumerStatefulWidget {
   final ContactMethod data;
 
   const ContactTile({
@@ -13,14 +15,16 @@ class ContactTile extends StatefulWidget {
   });
 
   @override
-  State<ContactTile> createState() => _ContactTileState();
+  ConsumerState<ContactTile> createState() => _ContactTileState();
 }
 
-class _ContactTileState extends State<ContactTile> {
+class _ContactTileState extends ConsumerState<ContactTile> {
   bool _isActive = false;
 
   @override
   Widget build(BuildContext context) {
+    final appColors = ref.watch(appColorsProvider);
+
     return MouseRegion(
       onEnter: (_) => setState(() => _isActive = true),
       onExit: (_) => setState(() => _isActive = false),
@@ -28,6 +32,7 @@ class _ContactTileState extends State<ContactTile> {
         onTapDown: (_) => setState(() => _isActive = true),
         onTapCancel: () => setState(() => _isActive = false),
         onTapUp: (_) => setState(() => _isActive = false),
+        behavior: HitTestBehavior.opaque,
         onTap: () {
           setState(() => _isActive = false);
           showContactRedirectDialog(context, widget.data);
@@ -36,10 +41,10 @@ class _ContactTileState extends State<ContactTile> {
           duration: const Duration(milliseconds: 150),
           height: 72,
           decoration: BoxDecoration(
-            color: const Color(0xFFFFFFFF),
+            color: appColors.cardBackground,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: _isActive ? widget.data.brandColor : const Color(0xFFE0E4F0),
+              color: _isActive ? widget.data.brandColor : appColors.borderColor,
               width: 1.5,
             ),
           ),
@@ -63,7 +68,7 @@ class _ContactTileState extends State<ContactTile> {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 11,
-                  color: _isActive ? widget.data.brandColor : const Color(0xFF1F1F1F),
+                  color: _isActive ? widget.data.brandColor : appColors.textPrimary,
                 ),
               ),
             ],
@@ -73,3 +78,4 @@ class _ContactTileState extends State<ContactTile> {
     );
   }
 }
+

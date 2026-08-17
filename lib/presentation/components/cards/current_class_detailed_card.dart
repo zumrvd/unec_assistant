@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/models/calendar_event.dart';
 import 'package:unec_assistant/models/subject_detail.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 
-class CurrentClassDetailedCard extends StatelessWidget {
+class CurrentClassDetailedCard extends ConsumerWidget {
   const CurrentClassDetailedCard({
     required this.subject,
     required this.event,
@@ -20,14 +23,6 @@ class CurrentClassDetailedCard extends StatelessWidget {
 
   /// Optional clock override for tests / parent timers; defaults to [DateTime.now].
   final DateTime? now;
-
-  static const _primaryBlue = Color(0xFF0569FF);
-  static const _labelGrey = Color(0xFF838A97);
-  static const _valueBlack = Color(0xFF1F1F1F);
-  static const _borderColor = Color(0xFFE0E4F0);
-  static const _iconBackgroundColor = Color(0x260569FF);
-  static const _lightLabelGrey = Color(0x80838A97);
-  static const _completedOrange = Color(0xFFE3993C);
 
   static String _pad(int n) => n.toString().padLeft(2, '0');
 
@@ -50,7 +45,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
     return 'on the $floor$suffix floor';
   }
 
-  Widget _infoRow(IconData icon, String label, String value) {
+  Widget _infoRow(IconData icon, String label, String value, AppColors appColors) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -58,13 +53,13 @@ class CurrentClassDetailedCard extends StatelessWidget {
           width: 28,
           height: 28,
           decoration: BoxDecoration(
-            color: _iconBackgroundColor,
+            color: appColors.primaryContainer,
             borderRadius: BorderRadius.circular(6),
           ),
           child: Icon(
             icon,
             size: 16,
-            color: _primaryBlue,
+            color: appColors.primary,
           ),
         ),
         const SizedBox(width: 10),
@@ -73,7 +68,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
           style: GoogleFonts.redditSans(
             fontWeight: FontWeight.w700,
             fontSize: 10,
-            color: _labelGrey,
+            color: appColors.textSecondary,
           ),
         ),
         const SizedBox(width: 10),
@@ -84,7 +79,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
             style: GoogleFonts.redditSans(
               fontWeight: FontWeight.w800,
               fontSize: 13,
-              color: _valueBlack,
+              color: appColors.textPrimary,
             ),
           ),
         ),
@@ -93,7 +88,8 @@ class CurrentClassDetailedCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
     final clock = now ?? DateTime.now();
     final startMin = event.startTime.hour * 60 + event.startTime.minute;
     final endMin = event.endTime.hour * 60 + event.endTime.minute;
@@ -116,10 +112,10 @@ class CurrentClassDetailedCard extends StatelessWidget {
     return Container(
       width: .maxFinite,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: _borderColor,
+          color: appColors.borderColor,
           width: 1,
         ),
       ),
@@ -132,7 +128,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
             style: GoogleFonts.redditSans(
               fontWeight: FontWeight.w700,
               fontSize: 16,
-              color: _primaryBlue,
+              color: appColors.primary,
             ),
           ),
           const SizedBox(height: 13),
@@ -145,7 +141,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 10,
-                  color: _labelGrey,
+                  color: appColors.textSecondary,
                 ),
               ),
               const SizedBox(width: 6),
@@ -154,7 +150,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 40,
-                  color: _valueBlack,
+                  color: appColors.textPrimary,
                 ),
               ),
               if (floorHint != null) ...[
@@ -166,7 +162,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 10,
-                      color: _labelGrey,
+                      color: appColors.textSecondary,
                     ),
                   ),
                 ),
@@ -174,15 +170,15 @@ class CurrentClassDetailedCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 13),
-          _infoRow(Icons.book_outlined, 'Subject', subject.subjectName),
+          _infoRow(Icons.book_outlined, 'Subject', subject.subjectName, appColors),
           const SizedBox(height: 8),
-          _infoRow(Icons.compare_outlined, 'Type', '   ${event.subtype}'),
+          _infoRow(Icons.compare_outlined, 'Type', '   ${event.subtype}', appColors),
           const SizedBox(height: 13),
-          _infoRow(Icons.badge_outlined, 'Teacher', subject.teacherName),
+          _infoRow(Icons.badge_outlined, 'Teacher', subject.teacherName, appColors),
           const SizedBox(height: 20),
 
-          const Divider(
-            color: _borderColor,
+          Divider(
+            color: appColors.divider,
             thickness: 1,
             height: 1,
           ),
@@ -199,7 +195,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w800,
                   fontSize: 15,
-                  color: _valueBlack,
+                  color: appColors.textPrimary,
                 ),
               ),
             ],
@@ -216,7 +212,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 12,
-                      color: _lightLabelGrey,
+                      color: appColors.textMuted,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -225,7 +221,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w800,
                       fontSize: 16,
-                      color: _labelGrey,
+                      color: appColors.textSecondary,
                     ),
                   ),
                 ],
@@ -248,7 +244,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                               width: width,
                               height: 10,
                               decoration: BoxDecoration(
-                                color: _lightLabelGrey,
+                                color: appColors.borderColor,
                                 borderRadius: BorderRadius.circular(5),
                               ),
                             ),
@@ -257,7 +253,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                               child: Container(
                                 height: 10,
                                 decoration: BoxDecoration(
-                                  color: _primaryBlue,
+                                  color: appColors.primary,
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                               ),
@@ -269,10 +265,10 @@ class CurrentClassDetailedCard extends StatelessWidget {
                                 width: 15,
                                 height: 15,
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFFFFFFF),
+                                  color: appColors.cardBackground,
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
-                                    color: _primaryBlue,
+                                    color: appColors.primary,
                                     width: 3,
                                   ),
                                 ),
@@ -296,7 +292,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 12,
-                      color: _lightLabelGrey,
+                      color: appColors.textMuted,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -305,7 +301,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w800,
                       fontSize: 16,
-                      color: _labelGrey,
+                      color: appColors.textSecondary,
                     ),
                   ),
                 ],
@@ -330,7 +326,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 10,
-                      color: _labelGrey,
+                      color: appColors.textSecondary,
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -347,8 +343,8 @@ class CurrentClassDetailedCard extends StatelessWidget {
                             value: timeLeftRatio.clamp(0.0, 1.0),
                             strokeWidth: 7,
                             strokeCap: StrokeCap.round,
-                            color: _primaryBlue,
-                            backgroundColor: _borderColor,
+                            color: appColors.primary,
+                            backgroundColor: appColors.borderColor,
                           ),
                         ),
                         Text(
@@ -356,7 +352,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w700,
                             fontSize: 11,
-                            color: _valueBlack,
+                            color: appColors.textPrimary,
                           ),
                         ),
                       ],
@@ -374,7 +370,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 10,
-                      color: _labelGrey,
+                      color: appColors.textSecondary,
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -391,8 +387,8 @@ class CurrentClassDetailedCard extends StatelessWidget {
                             value: completedRatio.clamp(0.0, 1.0),
                             strokeWidth: 7,
                             strokeCap: StrokeCap.round,
-                            color: _completedOrange,
-                            backgroundColor: _borderColor,
+                            color: appColors.attendanceOrange,
+                            backgroundColor: appColors.borderColor,
                           ),
                         ),
                         Text(
@@ -400,7 +396,7 @@ class CurrentClassDetailedCard extends StatelessWidget {
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w700,
                             fontSize: 11,
-                            color: _valueBlack,
+                            color: appColors.textPrimary,
                           ),
                         ),
                       ],

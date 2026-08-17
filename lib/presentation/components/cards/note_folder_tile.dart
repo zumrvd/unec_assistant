@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import '../../../models/note_folder.dart';
 
-class NoteFolderTile extends StatelessWidget {
+class NoteFolderTile extends ConsumerWidget {
   final NoteFolder data;
   final int noteCount;
   final VoidCallback? onTap;
@@ -15,19 +17,21 @@ class NoteFolderTile extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
     final String noteText = noteCount == 1 ? '1 note' : '$noteCount notes';
 
     return GestureDetector(
       onTap: onTap ?? () {},
+      behavior: HitTestBehavior.opaque,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xFFFFFFFF),
+          color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
-            color: const Color(0xFFE0E4F0),
+            color: appColors.borderColor,
             width: 1,
           ),
         ),
@@ -65,7 +69,7 @@ class NoteFolderTile extends StatelessWidget {
                     style: GoogleFonts.redditSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: const Color(0xFF1F1F1F),
+                      color: appColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -74,7 +78,7 @@ class NoteFolderTile extends StatelessWidget {
                     style: GoogleFonts.redditSans(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF838A97),
+                      color: appColors.textSecondary,
                     ),
                   ),
                 ],
@@ -84,14 +88,14 @@ class NoteFolderTile extends StatelessWidget {
               width: 28,
               height: 28,
               decoration: BoxDecoration(
-                color: const Color(0x4DE0E4F0),
+                color: appColors.iconBoxArrowBg,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Center(
+              child: Center(
                 child: Icon(
                   Icons.chevron_right_rounded,
                   size: 16,
-                  color: Color(0xFF838A97),
+                  color: appColors.textSecondary,
                 ),
               ),
             ),
@@ -100,4 +104,4 @@ class NoteFolderTile extends StatelessWidget {
       ),
     );
   }
-}
+}

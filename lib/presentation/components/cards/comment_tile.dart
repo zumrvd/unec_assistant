@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import '../../../models/comment.dart';
 import '../../../models/user_account.dart';
 
-class CommentTile extends StatefulWidget {
+class CommentTile extends ConsumerStatefulWidget {
   final Comment data;
   final UserAccount author;
   final UserAccount currentUser;
   final void Function(String commentId) onLikeTap;
-  final void Function(String replyText, String? parentCommentId, String? replyToUserId) onReplySubmit;
+  final void Function(
+          String replyText, String? parentCommentId, String? replyToUserId)
+      onReplySubmit;
   final void Function(String commentId, String newText) onEditSubmit;
   final void Function(String commentId) onDeleteTap;
   final VoidCallback onLoadReplies;
@@ -30,10 +34,10 @@ class CommentTile extends StatefulWidget {
   });
 
   @override
-  State<CommentTile> createState() => _CommentTileState();
+  ConsumerState<CommentTile> createState() => _CommentTileState();
 }
 
-class _CommentTileState extends State<CommentTile> {
+class _CommentTileState extends ConsumerState<CommentTile> {
   bool _repliesExpanded = false;
   bool _replyInputVisible = false;
   bool _editInputVisible = false;
@@ -63,9 +67,12 @@ class _CommentTileState extends State<CommentTile> {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = ref.watch(appColorsProvider);
     final bool isReply = widget.data.parentCommentId != null;
-    final Color avatarBg = isReply ? const Color(0xFFFFE5E5) : const Color(0xFFE8F0FE);
-    final Color avatarText = isReply ? const Color(0xFFD54829) : const Color(0xFF0569FF);
+    final Color avatarBg =
+        isReply ? appColors.dangerContainer : appColors.primaryContainer;
+    final Color avatarText =
+        isReply ? appColors.dangerOnContainer : appColors.primaryOnContainer;
 
     return Padding(
       padding: EdgeInsets.only(left: isReply ? 32.0 : 0.0, bottom: 20.0),
@@ -78,7 +85,8 @@ class _CommentTileState extends State<CommentTile> {
               Container(
                 width: 36,
                 height: 36,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: avatarBg),
+                decoration:
+                    BoxDecoration(shape: BoxShape.circle, color: avatarBg),
                 alignment: Alignment.center,
                 child: Text(
                   widget.author.initials,
@@ -93,7 +101,6 @@ class _CommentTileState extends State<CommentTile> {
               Expanded(
                 child: Row(
                   children: [
-                    // Flexible prevents overflow on long display names
                     Flexible(
                       child: Text(
                         widget.author.displayName,
@@ -102,7 +109,7 @@ class _CommentTileState extends State<CommentTile> {
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w700,
                           fontSize: 13,
-                          color: const Color(0xFF1F1F1F),
+                          color: appColors.textPrimary,
                         ),
                       ),
                     ),
@@ -112,23 +119,23 @@ class _CommentTileState extends State<CommentTile> {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w500,
                         fontSize: 10,
-                        color: const Color(0xFF838A97),
+                        color: appColors.textSecondary,
                       ),
                     ),
                   ],
                 ),
               ),
               if (widget.author.userId == widget.currentUser.userId)
-                // PopupMenuButton: elevation 0 + border instead of elevation 2
                 PopupMenuButton<String>(
-                  color: const Color(0xFFFFFFFF),
+                  color: appColors.surface,
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
-                    side: const BorderSide(color: Color(0xFFE0E4F0), width: 1),
+                    side: BorderSide(color: appColors.borderColor, width: 1),
                   ),
                   padding: EdgeInsets.zero,
-                  icon: const Icon(Icons.more_vert_rounded, size: 18, color: Color(0xFF838A97)),
+                  icon: Icon(Icons.more_vert_rounded,
+                      size: 18, color: appColors.textSecondary),
                   onSelected: (value) {
                     if (value == 'edit') {
                       setState(() {
@@ -142,13 +149,23 @@ class _CommentTileState extends State<CommentTile> {
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       value: 'edit',
-                      child: Text('Edit',
-                          style: GoogleFonts.redditSans(fontSize: 13, color: const Color(0xFF1F1F1F))),
+                      child: Text(
+                        'Edit',
+                        style: GoogleFonts.redditSans(
+                          fontSize: 13,
+                          color: appColors.textPrimary,
+                        ),
+                      ),
                     ),
                     PopupMenuItem(
                       value: 'delete',
-                      child: Text('Delete',
-                          style: GoogleFonts.redditSans(fontSize: 13, color: const Color(0xFFD54829))),
+                      child: Text(
+                        'Delete',
+                        style: GoogleFonts.redditSans(
+                          fontSize: 13,
+                          color: appColors.danger,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -167,26 +184,35 @@ class _CommentTileState extends State<CommentTile> {
                       TextField(
                         controller: _editController,
                         autofocus: true,
-                        style: GoogleFonts.redditSans(fontSize: 13, color: const Color(0xFF1F1F1F)),
+                        style: GoogleFonts.redditSans(
+                          fontSize: 13,
+                          color: appColors.textPrimary,
+                        ),
                         maxLines: null,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           isDense: true,
-                          border: UnderlineInputBorder(),
-                          contentPadding: EdgeInsets.symmetric(vertical: 4),
+                          border: UnderlineInputBorder(
+                            borderSide:
+                                BorderSide(color: appColors.borderColor),
+                          ),
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 4),
                         ),
                       ),
                       const SizedBox(height: 8),
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Cancel — GestureDetector + styled Container (no TextButton)
                           GestureDetector(
-                            onTap: () => setState(() => _editInputVisible = false),
+                            onTap: () =>
+                                setState(() => _editInputVisible = false),
                             behavior: HitTestBehavior.opaque,
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 7),
                               decoration: BoxDecoration(
-                                border: Border.all(color: const Color(0xFFE0E4F0)),
+                                border:
+                                    Border.all(color: appColors.borderColor),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
@@ -194,26 +220,28 @@ class _CommentTileState extends State<CommentTile> {
                                 style: GoogleFonts.redditSans(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
-                                  color: const Color(0xFF838A97),
+                                  color: appColors.textSecondary,
                                 ),
                               ),
                             ),
                           ),
                           const SizedBox(width: 8),
-                          // Save — GestureDetector + styled Container (no ElevatedButton)
                           GestureDetector(
                             onTap: () {
                               if (_editController.text.isNotEmpty &&
-                                  _editController.text != widget.data.bodyText) {
-                                widget.onEditSubmit(widget.data.commentId, _editController.text);
+                                  _editController.text !=
+                                      widget.data.bodyText) {
+                                widget.onEditSubmit(widget.data.commentId,
+                                    _editController.text);
                               }
                               setState(() => _editInputVisible = false);
                             },
                             behavior: HitTestBehavior.opaque,
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 7),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF0569FF),
+                                color: appColors.primary,
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
@@ -221,7 +249,7 @@ class _CommentTileState extends State<CommentTile> {
                                 style: GoogleFonts.redditSans(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
-                                  color: const Color(0xFFFFFFFF),
+                                  color: appColors.pillSelectedText,
                                 ),
                               ),
                             ),
@@ -236,7 +264,7 @@ class _CommentTileState extends State<CommentTile> {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w400,
                       fontSize: 13,
-                      color: const Color(0xFF1F1F1F),
+                      color: appColors.textPrimary,
                       height: 1.4,
                     ),
                   ),
@@ -254,8 +282,8 @@ class _CommentTileState extends State<CommentTile> {
                                 : Icons.favorite_border_rounded,
                             size: 16,
                             color: widget.data.isLikedByCurrentUser
-                                ? const Color(0xFFDA4979)
-                                : const Color(0xFF838A97),
+                                ? appColors.heartColor
+                                : appColors.textSecondary,
                           ),
                           const SizedBox(width: 4),
                           Text(
@@ -264,8 +292,8 @@ class _CommentTileState extends State<CommentTile> {
                               fontWeight: FontWeight.w600,
                               fontSize: 11,
                               color: widget.data.isLikedByCurrentUser
-                                  ? const Color(0xFFDA4979)
-                                  : const Color(0xFF838A97),
+                                  ? appColors.heartColor
+                                  : appColors.textSecondary,
                             ),
                           ),
                         ],
@@ -273,14 +301,15 @@ class _CommentTileState extends State<CommentTile> {
                     ),
                     const SizedBox(width: 20),
                     GestureDetector(
-                      onTap: () => setState(() => _replyInputVisible = !_replyInputVisible),
+                      onTap: () => setState(
+                          () => _replyInputVisible = !_replyInputVisible),
                       behavior: HitTestBehavior.opaque,
                       child: Text(
                         'Reply',
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w700,
                           fontSize: 11,
-                          color: const Color(0xFF838A97),
+                          color: appColors.textSecondary,
                         ),
                       ),
                     ),
@@ -300,18 +329,21 @@ class _CommentTileState extends State<CommentTile> {
                       height: 36,
                       padding: const EdgeInsets.symmetric(horizontal: 14),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF8F9FC),
+                        color: appColors.inputBackground,
                         borderRadius: BorderRadius.circular(18),
-                        border: Border.all(color: const Color(0xFFE0E4F0)),
+                        border: Border.all(color: appColors.borderColor),
                       ),
                       alignment: Alignment.centerLeft,
                       child: TextField(
                         controller: _replyController,
                         autofocus: true,
-                        style: GoogleFonts.redditSans(fontSize: 12, color: const Color(0xFF1F1F1F)),
-                        decoration: const InputDecoration(
+                        style: GoogleFonts.redditSans(
+                            fontSize: 12, color: appColors.textPrimary),
+                        decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Write a reply...',
+                          hintStyle: GoogleFonts.redditSans(
+                              color: appColors.textMuted, fontSize: 12),
                           isDense: true,
                           contentPadding: EdgeInsets.zero,
                         ),
@@ -341,16 +373,20 @@ class _CommentTileState extends State<CommentTile> {
                     child: Container(
                       width: 36,
                       height: 36,
-                      decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFF0569FF)),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, color: appColors.primary),
                       alignment: Alignment.center,
-                      child: const Icon(Icons.send_rounded, size: 16, color: Color(0xFFFFFFFF)),
+                      child: Icon(Icons.send_rounded,
+                          size: 16, color: appColors.pillSelectedText),
                     ),
                   ),
                 ],
               ),
             ),
           ],
-          if (!isReply && (widget.data.replyCount > 0 || (widget.loadedReplies?.isNotEmpty ?? false))) ...[
+          if (!isReply &&
+              (widget.data.replyCount > 0 ||
+                  (widget.loadedReplies?.isNotEmpty ?? false))) ...[
             const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.only(left: 46.0),
@@ -361,11 +397,13 @@ class _CommentTileState extends State<CommentTile> {
                 },
                 behavior: HitTestBehavior.opaque,
                 child: Text(
-                  _repliesExpanded ? 'Hide replies' : 'View ${widget.data.replyCount} replies',
+                  _repliesExpanded
+                      ? 'Hide replies'
+                      : 'View ${widget.data.replyCount} replies',
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 11,
-                    color: const Color(0xFF0569FF),
+                    color: appColors.primary,
                   ),
                 ),
               ),
@@ -373,7 +411,8 @@ class _CommentTileState extends State<CommentTile> {
             if (_repliesExpanded && widget.loadedReplies != null)
               ...widget.loadedReplies!.map((reply) {
                 final author = widget.users[reply.authorUserId] ??
-                    const UserAccount(userId: '?', displayName: 'Unknown', initials: '??');
+                    const UserAccount(
+                        userId: '?', displayName: 'Unknown', initials: '??');
                 return CommentTile(
                   data: reply,
                   author: author,

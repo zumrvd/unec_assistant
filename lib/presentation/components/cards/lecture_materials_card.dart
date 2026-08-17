@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/lecture_material.dart';
 import '../../../providers/materials_provider.dart';
 
-class LectureMaterialsCard extends StatefulWidget {
+class LectureMaterialsCard extends ConsumerStatefulWidget {
   final LectureMaterial data;
   final VoidCallback? onDownloadBundle;
   final void Function(LectureFile file)? onDownloadFile;
@@ -16,10 +19,10 @@ class LectureMaterialsCard extends StatefulWidget {
   });
 
   @override
-  State<LectureMaterialsCard> createState() => _LectureMaterialsCardState();
+  ConsumerState<LectureMaterialsCard> createState() => _LectureMaterialsCardState();
 }
 
-class _LectureMaterialsCardState extends State<LectureMaterialsCard> {
+class _LectureMaterialsCardState extends ConsumerState<LectureMaterialsCard> {
   bool _isExpanded = false;
 
   static const _gradient = LinearGradient(
@@ -33,17 +36,17 @@ class _LectureMaterialsCardState extends State<LectureMaterialsCard> {
     stops: [0.0, 0.5, 1.0],
   );
 
-  Widget _fileRow(LectureFile file) {
+  Widget _fileRow(LectureFile file, AppColors appColors) {
     final IconData icon = kFileTypeIcons[file.fileType] ?? Icons.insert_drive_file_rounded;
-    final Color color = kFileTypeColors[file.fileType] ?? const Color(0xFF838A97);
+    final Color color = kFileTypeColors[file.fileType] ?? appColors.textSecondary;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Icon(
+        Icon(
           Icons.subdirectory_arrow_right_rounded,
           size: 14,
-          color: Color(0x80838A97),
+          color: appColors.textMuted,
         ),
         const SizedBox(width: 8),
         Container(
@@ -66,7 +69,7 @@ class _LectureMaterialsCardState extends State<LectureMaterialsCard> {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 11,
-                  color: const Color(0xFF1F1F1F),
+                  color: appColors.textPrimary,
                 ),
               ),
               Text(
@@ -74,7 +77,7 @@ class _LectureMaterialsCardState extends State<LectureMaterialsCard> {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w600,
                   fontSize: 8,
-                  color: const Color(0xFF838A97),
+                  color: appColors.textSecondary,
                 ),
               ),
             ],
@@ -82,14 +85,15 @@ class _LectureMaterialsCardState extends State<LectureMaterialsCard> {
         ),
         GestureDetector(
           onTap: () => widget.onDownloadFile?.call(file),
+          behavior: HitTestBehavior.opaque,
           child: Container(
             width: 28,
             height: 28,
-            decoration: const BoxDecoration(
-              color: Color(0x4DE0E4F0),
+            decoration: BoxDecoration(
+              color: appColors.iconBoxArrowBg,
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.file_download_outlined, size: 14, color: Color(0xFF838A97)),
+            child: Icon(Icons.file_download_outlined, size: 14, color: appColors.textSecondary),
           ),
         ),
       ],
@@ -98,13 +102,15 @@ class _LectureMaterialsCardState extends State<LectureMaterialsCard> {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = ref.watch(appColorsProvider);
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: const Color(0xFFE0E4F0),
+          color: appColors.borderColor,
           width: 1,
         ),
       ),
@@ -114,6 +120,7 @@ class _LectureMaterialsCardState extends State<LectureMaterialsCard> {
         children: [
           GestureDetector(
             onTap: () => setState(() => _isExpanded = !_isExpanded),
+            behavior: HitTestBehavior.opaque,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,17 +137,17 @@ class _LectureMaterialsCardState extends State<LectureMaterialsCard> {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 14,
-                      color: const Color(0xFF0569FF),
+                      color: appColors.primary,
                     ),
                   ),
                 ),
                 AnimatedRotation(
                   turns: _isExpanded ? 0.5 : 0,
                   duration: const Duration(milliseconds: 200),
-                  child: const Icon(
+                  child: Icon(
                     Icons.keyboard_arrow_down_rounded,
                     size: 20,
-                    color: Color(0xFF0569FF),
+                    color: appColors.primary,
                   ),
                 ),
               ],
@@ -217,6 +224,7 @@ class _LectureMaterialsCardState extends State<LectureMaterialsCard> {
                       const SizedBox(height: 10),
                       GestureDetector(
                         onTap: widget.onDownloadBundle,
+                        behavior: HitTestBehavior.opaque,
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.white.withValues(alpha: 0.2),
@@ -249,7 +257,7 @@ class _LectureMaterialsCardState extends State<LectureMaterialsCard> {
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 10,
-                    color: const Color(0xFF838A97),
+                    color: appColors.textMuted,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -258,7 +266,7 @@ class _LectureMaterialsCardState extends State<LectureMaterialsCard> {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: widget.data.files.length,
                   separatorBuilder: (context, index) => const SizedBox(height: 8),
-                  itemBuilder: (context, index) => _fileRow(widget.data.files[index]),
+                  itemBuilder: (context, index) => _fileRow(widget.data.files[index], appColors),
                 ),
               ],
             ),
@@ -271,3 +279,4 @@ class _LectureMaterialsCardState extends State<LectureMaterialsCard> {
     );
   }
 }
+

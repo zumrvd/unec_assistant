@@ -9,6 +9,7 @@ import 'package:unec_assistant/presentation/components/cards/schedule_card.dart'
 import 'package:unec_assistant/presentation/components/cards/recent_note_card.dart';
 import 'package:unec_assistant/presentation/components/cards/recent_grade_card.dart';
 import 'package:unec_assistant/presentation/components/cards/post_card.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import 'package:unec_assistant/providers/calendar_provider.dart';
 import 'package:unec_assistant/providers/current_class_provider.dart';
 import 'package:unec_assistant/providers/dashboard_provider.dart';
@@ -22,6 +23,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
     final posts = ref.watch(feedPostsProvider);
     final recentFunction = ref.watch(recentFunctionProvider);
 
@@ -51,6 +53,7 @@ class HomeScreen extends ConsumerWidget {
     final isPersonalVisible = notes.isNotEmpty;
 
     return Scaffold(
+      backgroundColor: appColors.background,
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 35),
         children: [

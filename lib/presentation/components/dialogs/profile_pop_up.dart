@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 
-class ProfilePopUp extends StatelessWidget {
+class ProfilePopUp extends ConsumerWidget {
   const ProfilePopUp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+
     return Dialog(
       alignment: Alignment.topRight,
       insetPadding: const EdgeInsets.only(top: 80, right: 20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-      backgroundColor: const Color(0xFFF0F4F8),
-      // Elevation 0 — no shadow per design rules. Uses border for depth.
+      backgroundColor: appColors.surface,
       elevation: 0,
       child: Container(
         width: 330,
         decoration: BoxDecoration(
-          border: Border.all(color: const Color(0xFFE0E4F0), width: 1),
+          border: Border.all(color: appColors.borderColor, width: 1),
           borderRadius: BorderRadius.circular(28),
         ),
         padding: const EdgeInsets.symmetric(vertical: 20),
@@ -34,7 +38,7 @@ class ProfilePopUp extends StatelessWidget {
                     style: GoogleFonts.redditSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF1F1F1F),
+                      color: appColors.textPrimary,
                     ),
                   ),
                   Align(
@@ -46,11 +50,12 @@ class ProfilePopUp extends StatelessWidget {
                         width: 32,
                         height: 32,
                         decoration: BoxDecoration(
-                          color: const Color(0x10000000),
+                          color: appColors.iconBoxArrowBg,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         alignment: Alignment.center,
-                        child: const Icon(Icons.close, size: 18, color: Color(0xFF838A97)),
+                        child: Icon(Icons.close,
+                            size: 18, color: appColors.textSecondary),
                       ),
                     ),
                   ),
@@ -63,15 +68,15 @@ class ProfilePopUp extends StatelessWidget {
             Container(
               width: 80,
               height: 80,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Color(0xFF0569FF),
+                color: appColors.primary,
               ),
               alignment: Alignment.center,
               child: Text(
                 'Z.V',
                 style: GoogleFonts.redditSans(
-                  color: Colors.white,
+                  color: appColors.pillSelectedText,
                   fontSize: 28,
                   fontWeight: FontWeight.w800,
                 ),
@@ -85,19 +90,20 @@ class ProfilePopUp extends StatelessWidget {
               style: GoogleFonts.redditSans(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
-                color: const Color(0xFF1F1F1F),
+                color: appColors.textPrimary,
               ),
             ),
             const SizedBox(height: 16),
 
-            // Manage Account Button (GestureDetector + styled Container)
+            // Manage Account Button
             GestureDetector(
               onTap: () {},
               behavior: HitTestBehavior.opaque,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFFE0E4F0)),
+                  border: Border.all(color: appColors.borderColor),
                   borderRadius: BorderRadius.circular(100),
                 ),
                 child: Text(
@@ -105,21 +111,21 @@ class ProfilePopUp extends StatelessWidget {
                   style: GoogleFonts.redditSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF0569FF),
+                    color: appColors.primary,
                   ),
                 ),
               ),
             ),
             const SizedBox(height: 24),
 
-            // Action List — GestureDetector rows instead of ListTile
+            // Action List
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: appColors.cardBackground,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: const Color(0xFFE0E4F0), width: 1),
+                  border: Border.all(color: appColors.borderColor, width: 1),
                 ),
                 child: Column(
                   children: [
@@ -127,12 +133,14 @@ class ProfilePopUp extends StatelessWidget {
                       icon: Icons.person_add_alt_1_outlined,
                       label: 'Add another account',
                       onTap: () {},
+                      appColors: appColors,
                     ),
-                    const Divider(height: 1, indent: 56),
+                    Divider(height: 1, indent: 56, color: appColors.divider),
                     _ActionTile(
                       icon: Icons.logout_rounded,
                       label: 'Sign out',
                       onTap: () {},
+                      appColors: appColors,
                     ),
                   ],
                 ),
@@ -143,9 +151,11 @@ class ProfilePopUp extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _FooterLink(label: 'Privacy Policy'),
-                Text(' • ', style: GoogleFonts.redditSans(color: const Color(0xFF838A97))),
-                _FooterLink(label: 'Terms of Service'),
+                _FooterLink(label: 'Privacy Policy', appColors: appColors),
+                Text(' • ',
+                    style: GoogleFonts.redditSans(
+                        color: appColors.textSecondary)),
+                _FooterLink(label: 'Terms of Service', appColors: appColors),
               ],
             ),
           ],
@@ -159,11 +169,13 @@ class _ActionTile extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
+  final AppColors appColors;
 
   const _ActionTile({
     required this.icon,
     required this.label,
     required this.onTap,
+    required this.appColors,
   });
 
   @override
@@ -175,14 +187,14 @@ class _ActionTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
           children: [
-            Icon(icon, color: const Color(0xFF1F1F1F), size: 22),
+            Icon(icon, color: appColors.textPrimary, size: 22),
             const SizedBox(width: 18),
             Text(
               label,
               style: GoogleFonts.redditSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF1F1F1F),
+                color: appColors.textPrimary,
               ),
             ),
           ],
@@ -194,7 +206,9 @@ class _ActionTile extends StatelessWidget {
 
 class _FooterLink extends StatelessWidget {
   final String label;
-  const _FooterLink({required this.label});
+  final AppColors appColors;
+
+  const _FooterLink({required this.label, required this.appColors});
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +217,7 @@ class _FooterLink extends StatelessWidget {
       style: GoogleFonts.redditSans(
         fontSize: 11,
         fontWeight: FontWeight.w500,
-        color: const Color(0xFF838A97),
+        color: appColors.textSecondary,
       ),
     );
   }

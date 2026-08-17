@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/current_class_provider.dart';
 
 class CurrentClassCard extends ConsumerWidget {
   const CurrentClassCard({required this.onTap, super.key});
 
   final VoidCallback onTap;
-
-  static const _primaryBlue = Color(0xFF0569FF);
-  static const _labelGrey = Color(0xFF838A97);
-  static const _valueBlack = Color(0xFF1F1F1F);
-  static const _borderColor = Color(0xFFE0E4F0);
-  static const _iconBackgroundColor = Color(0x260569FF);
 
   static String _roomNumber(String location) {
     final match = RegExp(
@@ -37,6 +33,7 @@ class CurrentClassCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(currentClassProvider);
+    final appColors = ref.watch(appColorsProvider);
 
     if (state.isEmpty) {
       return const SizedBox.shrink();
@@ -51,9 +48,9 @@ class CurrentClassCard extends ConsumerWidget {
       child: Container(
         width: 330,
         decoration: BoxDecoration(
-          color: const Color(0xFFFFFFFF),
+          color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: _borderColor, width: 1),
+          border: Border.all(color: appColors.borderColor, width: 1),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
         child: Column(
@@ -71,7 +68,7 @@ class CurrentClassCard extends ConsumerWidget {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
-                        color: _primaryBlue,
+                        color: appColors.primary,
                       ),
                     ),
                     if (isUpcoming) ...[
@@ -81,7 +78,7 @@ class CurrentClassCard extends ConsumerWidget {
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w600,
                           fontSize: 12,
-                          color: _labelGrey,
+                          color: appColors.textSecondary,
                         ),
                       ),
                     ],
@@ -103,7 +100,7 @@ class CurrentClassCard extends ConsumerWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF0F5FF),
+                      color: appColors.primaryContainer,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -111,7 +108,7 @@ class CurrentClassCard extends ConsumerWidget {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 10,
-                        color: _primaryBlue,
+                        color: appColors.primary,
                       ),
                     ),
                   ),
@@ -127,7 +124,7 @@ class CurrentClassCard extends ConsumerWidget {
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 10,
-                    color: _labelGrey,
+                    color: appColors.textSecondary,
                   ),
                 ),
                 const SizedBox(width: 6),
@@ -136,7 +133,7 @@ class CurrentClassCard extends ConsumerWidget {
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 40,
-                    color: _valueBlack,
+                    color: appColors.textPrimary,
                   ),
                 ),
               ],
@@ -146,12 +143,14 @@ class CurrentClassCard extends ConsumerWidget {
               Icons.book_outlined,
               'Subject',
               tracked.subject.subjectName,
+              appColors,
             ),
             const SizedBox(height: 12),
             _infoRow(
               Icons.compare_outlined,
               'Type',
-              tracked.event.subtype ?? 'Mühazirə',
+              tracked.event.subtype,
+              appColors,
             ),
           ],
         ),
@@ -159,7 +158,7 @@ class CurrentClassCard extends ConsumerWidget {
     );
   }
 
-  Widget _infoRow(IconData icon, String label, String value) {
+  Widget _infoRow(IconData icon, String label, String value, AppColors appColors) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -167,10 +166,10 @@ class CurrentClassCard extends ConsumerWidget {
           width: 28,
           height: 28,
           decoration: BoxDecoration(
-            color: _iconBackgroundColor,
+            color: appColors.primaryContainer,
             borderRadius: BorderRadius.circular(6),
           ),
-          child: Icon(icon, size: 16, color: _primaryBlue),
+          child: Icon(icon, size: 16, color: appColors.primary),
         ),
         const SizedBox(width: 8),
         Text(
@@ -178,7 +177,7 @@ class CurrentClassCard extends ConsumerWidget {
           style: GoogleFonts.redditSans(
             fontWeight: FontWeight.w700,
             fontSize: 10,
-            color: _labelGrey,
+            color: appColors.textSecondary,
           ),
         ),
         const SizedBox(width: 8),
@@ -189,33 +188,12 @@ class CurrentClassCard extends ConsumerWidget {
             style: GoogleFonts.redditSans(
               fontWeight: FontWeight.w700,
               fontSize: 13,
-              color: _valueBlack,
+              color: appColors.textPrimary,
             ),
           ),
         ),
       ],
     );
   }
-
-  Widget _buildEmptyState() {
-    return Container(
-      width: 330,
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: _borderColor, width: 1),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 40),
-      child: Center(
-        child: Text(
-          'No classes scheduled',
-          style: GoogleFonts.redditSans(
-            fontWeight: FontWeight.w600,
-            fontSize: 14,
-            color: _labelGrey,
-          ),
-        ),
-      ),
-    );
-  }
 }
+

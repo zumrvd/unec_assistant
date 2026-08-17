@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/note.dart';
 import '../../../providers/notes_provider.dart';
 
@@ -86,7 +88,24 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     ref.read(notesProvider.notifier).updateNote(updatedNote);
   }
 
-  Color _getSkinBgColor(PaperSkin skin) {
+  Color _getSkinBgColor(PaperSkin skin, AppColors appColors, bool isDark) {
+    if (isDark) {
+      switch (skin) {
+        case PaperSkin.plain:
+          return appColors.cardBackground;
+        case PaperSkin.ruled:
+          return const Color(0xFF141F30);
+        case PaperSkin.grid:
+          return const Color(0xFF13281A);
+        case PaperSkin.dotted:
+          return const Color(0xFF281F14);
+        case PaperSkin.cream:
+          return const Color(0xFF2A1620);
+        case PaperSkin.blue:
+          return const Color(0xFF1C1833);
+      }
+    }
+
     switch (skin) {
       case PaperSkin.plain:
         return const Color(0xFFFFFFFF);
@@ -103,20 +122,20 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     }
   }
 
-  Color _getSkinAccentColor(PaperSkin skin) {
+  Color _getSkinAccentColor(PaperSkin skin, AppColors appColors) {
     switch (skin) {
       case PaperSkin.plain:
-        return const Color(0xFF838A97);
+        return appColors.textSecondary;
       case PaperSkin.ruled:
-        return const Color(0xFF0569FF);
+        return appColors.primary;
       case PaperSkin.grid:
-        return const Color(0xFF0F6E11);
+        return appColors.success;
       case PaperSkin.dotted:
-        return const Color(0xFFE3993C);
+        return appColors.attendanceOrange;
       case PaperSkin.cream:
         return const Color(0xFFDA4979);
       case PaperSkin.blue:
-        return const Color(0xFF534AB7);
+        return appColors.notificationPurple;
     }
   }
 
@@ -126,21 +145,25 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
+    final appColors = ref.watch(appColorsProvider);
+    final isDark = ref.watch(isDarkModeProvider);
+    final skinBg = _getSkinBgColor(_selectedSkin, appColors, isDark);
+
     return Scaffold(
-      backgroundColor: _getSkinBgColor(_selectedSkin),
+      backgroundColor: skinBg,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(85),
         child: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             border: Border(
-              top: BorderSide(color: Color(0xFFE0E4F0), width: 1),
-              bottom: BorderSide(color: Color(0xFFE0E4F0), width: 1),
+              top: BorderSide(color: appColors.borderColor, width: 1),
+              bottom: BorderSide(color: appColors.borderColor, width: 1),
             ),
           ),
           child: Container(
             height: 70,
             width: double.infinity,
-            color: _getSkinBgColor(_selectedSkin),
+            color: skinBg,
             padding: const EdgeInsets.symmetric(horizontal: 35.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -155,17 +178,18 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                           _saveNote();
                           Navigator.pop(context);
                         },
+                        behavior: HitTestBehavior.opaque,
                         child: Container(
                           width: 40,
                           height: 40,
                           decoration: BoxDecoration(
-                            color: const Color(0x80E0E4F0),
+                            color: appColors.iconBoxArrowBg,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.arrow_back,
                             size: 20,
-                            color: Color(0x80838A97),
+                            color: appColors.textSecondary,
                           ),
                         ),
                       ),
@@ -177,11 +201,11 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                           style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w700,
                               fontSize: 18,
-                              color: const Color(0xFF838A97)),
-                          decoration: const InputDecoration(
+                              color: appColors.textPrimary),
+                          decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: 'Note Title',
-                              hintStyle: TextStyle(color: Color(0x80838A97))),
+                              hintStyle: TextStyle(color: appColors.textMuted)),
                         ),
                       ),
                     ],
@@ -193,12 +217,13 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                     _saveNote();
                     Navigator.pop(context);
                   },
+                  behavior: HitTestBehavior.opaque,
                   child: Text(
                     'Done',
                     style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 15,
-                        color: const Color(0xFF0569FF)),
+                        color: appColors.primary),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -265,7 +290,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                   style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 12,
-                      color: const Color(0xFF838A97)),
+                      color: appColors.textSecondary),
                 ),
                 const SizedBox(width: 15),
                 Expanded(
@@ -278,15 +303,16 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                           setState(() => _selectedSkin = skin);
                           _onChanged();
                         },
+                        behavior: HitTestBehavior.opaque,
                         child: Container(
                           width: 24,
                           height: 24,
                           decoration: BoxDecoration(
-                            color: _getSkinAccentColor(skin),
+                            color: _getSkinAccentColor(skin, appColors),
                             shape: BoxShape.circle,
                             border: isSelected
                                 ? Border.all(
-                                    color: const Color(0xFF0569FF), width: 2)
+                                    color: appColors.primary, width: 2)
                                 : null,
                           ),
                           child: isSelected
@@ -306,3 +332,4 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     );
   }
 }
+

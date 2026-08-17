@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import '../../../models/subject_detail.dart';
 import '../../../presentation/components/cards/subject_name_card.dart';
 import '../../../presentation/components/buttons/subjects/open_action_button.dart';
@@ -9,7 +11,7 @@ import '../../../presentation/components/cards/class_load_card.dart';
 import '../../../presentation/components/cards/subject_credit_card.dart';
 import '../../../presentation/components/lists/labels.dart';
 
-class SubjectDetailScreen extends StatelessWidget {
+class SubjectDetailScreen extends ConsumerWidget {
   final SubjectDetail data;
 
   const SubjectDetailScreen({
@@ -18,9 +20,11 @@ class SubjectDetailScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FC),
+      backgroundColor: appColors.background,
       appBar: CustomAppBar(title: data.subjectName),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 16),
@@ -60,3 +64,4 @@ class SubjectDetailScreen extends StatelessWidget {
     );
   }
 }
+

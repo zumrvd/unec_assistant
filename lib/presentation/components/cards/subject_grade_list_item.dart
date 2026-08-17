@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import '../../../models/subject_detail.dart';
 
-class SubjectGradeListItem extends StatelessWidget {
+class SubjectGradeListItem extends ConsumerWidget {
   final SubjectDetail data;
   final VoidCallback onTap;
 
@@ -13,16 +15,19 @@ class SubjectGradeListItem extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: const Color(0xFFFFFFFF),
+          color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
-            color: const Color(0xFFE0E4F0),
+            color: appColors.borderColor,
             width: 1,
           ),
         ),
@@ -59,14 +64,14 @@ class SubjectGradeListItem extends StatelessWidget {
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w700,
                             fontSize: 14,
-                            color: const Color(0xFF1F1F1F),
+                            color: appColors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
-                            color: const Color(0x260569FF),
+                            color: appColors.primaryContainer,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
@@ -74,7 +79,7 @@ class SubjectGradeListItem extends StatelessWidget {
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w700,
                               fontSize: 10,
-                              color: const Color(0xFF0569FF),
+                              color: appColors.primary,
                             ),
                           ),
                         ),
@@ -96,7 +101,7 @@ class SubjectGradeListItem extends StatelessWidget {
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w700,
                           fontSize: 20,
-                          color: const Color(0xFF1F1F1F),
+                          color: appColors.textPrimary,
                         ),
                       ),
                       TextSpan(
@@ -104,17 +109,17 @@ class SubjectGradeListItem extends StatelessWidget {
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w700,
                           fontSize: 14,
-                          color: const Color(0x80838A97),
+                          color: appColors.textMuted,
                         ),
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(width: 8),
-                const Icon(
+                Icon(
                   Icons.chevron_right_rounded,
                   size: 18,
-                  color: Color(0x80838A97),
+                  color: appColors.textMuted,
                 ),
               ],
             ),
@@ -124,3 +129,4 @@ class SubjectGradeListItem extends StatelessWidget {
     );
   }
 }
+

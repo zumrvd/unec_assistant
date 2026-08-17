@@ -7,6 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/models/calendar_event.dart';
 import 'package:unec_assistant/presentation/components/calendar/event_details_popup.dart';
 import 'package:unec_assistant/presentation/components/calendar/event_editor_sheet.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/calendar_provider.dart';
 
 enum CalendarView { month, week, day }
@@ -43,13 +45,6 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
   static const _hourHeight = 65.0;
   static const _weekDayWidth = 72.0;
   static const _totalGridHeight = 24 * _hourHeight;
-  static const _borderColor = Color(0xFFE0E4F0);
-  static const _primaryBlue = Color(0xFF0569FF);
-  static const _textDark = Color(0xFF1F1F1F);
-  static const _textGrey = Color(0xFF838A97);
-  static const _textMuted = Color(0x80838A97);
-  static const _lightSurface = Color(0xFFF8F9FC);
-  static const _nowRed = Color(0xFFF65959);
   static final _semesterStart = DateTime(2026, 9, 1);
 
   static const _monthNames = [
@@ -218,22 +213,24 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
   Widget _navButton({
     required IconData icon,
     required VoidCallback onTap,
+    required AppColors appColors,
   }) {
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Container(
         width: 30,
         height: 30,
-        decoration: const BoxDecoration(
-          color: Color(0x26838A97),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+        decoration: BoxDecoration(
+          color: appColors.iconBoxArrowBg,
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
         ),
-        child: Icon(icon, size: 25, color: Color(0x80838A97)),
+        child: Icon(icon, size: 25, color: appColors.textSecondary),
       ),
     );
   }
 
-  Widget _buildViewToggle() {
+  Widget _buildViewToggle(AppColors appColors) {
     final options = <(String, CalendarView)>[
       ('Month', CalendarView.month),
       ('Week', CalendarView.week),
@@ -249,12 +246,13 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
             if (i > 0) const SizedBox(width: 30),
             GestureDetector(
               onTap: () => setState(() => _view = options[i].$2),
+              behavior: HitTestBehavior.opaque,
               child: Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 decoration: BoxDecoration(
                   color: _view == options[i].$2
-                      ? _primaryBlue
+                      ? appColors.primary
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -265,7 +263,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                     fontSize: 13,
                     color: _view == options[i].$2
                         ? const Color(0xFFF8F9FC)
-                        : _textGrey,
+                        : appColors.textSecondary,
                   ),
                 ),
               ),
@@ -276,7 +274,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     );
   }
 
-  Widget _buildMonthView() {
+  Widget _buildMonthView(AppColors appColors) {
     ref.watch(calendarEventsProvider);
 
     final firstDayOfMonth = DateTime(_focusedDate.year, _focusedDate.month, 1);
@@ -305,13 +303,14 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                     1,
                   ),
                 ),
+                appColors: appColors,
               ),
               Text(
                 _monthName(_focusedDate.month),
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w500,
                   fontSize: 20,
-                  color: _textDark,
+                  color: appColors.textPrimary,
                 ),
               ),
               _navButton(
@@ -323,6 +322,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                     1,
                   ),
                 ),
+                appColors: appColors,
               ),
             ],
           ),
@@ -339,7 +339,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w500,
                       fontSize: 12,
-                      color: _textGrey,
+                      color: appColors.textSecondary,
                     ),
                   ),
                 ),
@@ -356,24 +356,24 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
             crossAxisCount: 7,
             childAspectRatio: 7 / 10,
           ),
-          itemBuilder: (context, index) => _buildMonthCell(days[index]),
+          itemBuilder: (context, index) => _buildMonthCell(days[index], appColors),
         ),
       ],
     );
   }
 
-  Color _chipColor(EventType type) {
+  Color _chipColor(EventType type, AppColors appColors) {
     switch (type) {
       case EventType.classEvent:
-        return _primaryBlue;
+        return appColors.primary;
       case EventType.personalEvent:
-        return const Color(0xFF985909);
+        return appColors.attendanceOrange;
       case EventType.exam:
-        return const Color(0xFF0F6E56);
+        return appColors.success;
     }
   }
 
-  Widget _buildMonthCell(DateTime date) {
+  Widget _buildMonthCell(DateTime date, AppColors appColors) {
     final isCurrentMonth = date.month == _focusedDate.month;
     final isToday = _isToday(date);
     final events = _eventsForDate(date);
@@ -387,10 +387,11 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
           _view = CalendarView.day;
         });
       },
+      behavior: HitTestBehavior.opaque,
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0x80F8F9FC),
-          border: Border.all(color: _borderColor, width: 0.5),
+          color: appColors.surface,
+          border: Border.all(color: appColors.borderColor, width: 0.5),
         ),
         padding: const EdgeInsets.all(4),
         child: Column(
@@ -400,8 +401,8 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
               Container(
                 width: 18,
                 height: 18,
-                decoration: const BoxDecoration(
-                  color: _primaryBlue,
+                decoration: BoxDecoration(
+                  color: appColors.primary,
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -409,7 +410,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                     '${date.day}',
                     style: GoogleFonts.redditSans(
                       fontSize: 10,
-                      color: _lightSurface,
+                      color: const Color(0xFFF8F9FC),
                     ),
                   ),
                 ),
@@ -419,7 +420,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                 '${date.day}',
                 style: GoogleFonts.redditSans(
                   fontSize: 10,
-                  color: isCurrentMonth ? _textDark : _textMuted,
+                  color: isCurrentMonth ? appColors.textPrimary : appColors.textMuted,
                 ),
               ),
             if (isHbd)
@@ -437,7 +438,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                     width: 6,
                     height: 6,
                     decoration: BoxDecoration(
-                      color: _chipColor(event.type),
+                      color: _chipColor(event.type, appColors),
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -449,7 +450,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.redditSans(
                         fontSize: 8,
-                        color: isCurrentMonth ? _textDark : _textMuted,
+                        color: isCurrentMonth ? appColors.textPrimary : appColors.textMuted,
                       ),
                     ),
                   ),
@@ -461,7 +462,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     );
   }
 
-  Widget _buildWeekView() {
+  Widget _buildWeekView(AppColors appColors) {
     ref.watch(calendarEventsProvider);
     final weekStart = _weekStart(_focusedDate);
 
@@ -479,13 +480,14 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                   _focusedDate = _focusedDate.subtract(const Duration(days: 7));
                   _selectedDate = _weekStart(_focusedDate);
                 }),
+                appColors: appColors,
               ),
               Text(
                 _weekCycleLabel(weekStart),
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 14,
-                  color: _primaryBlue,
+                  color: appColors.primary,
                 ),
               ),
               _navButton(
@@ -494,6 +496,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                   _focusedDate = _focusedDate.add(const Duration(days: 7));
                   _selectedDate = _weekStart(_focusedDate);
                 }),
+                appColors: appColors,
               ),
             ],
           ),
@@ -501,13 +504,13 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
         const SizedBox(height: 8),
         SizedBox(
           height: 540,
-          child: _buildWeekPage(weekStart),
+          child: _buildWeekPage(weekStart, appColors),
         ),
       ],
     );
   }
 
-  Widget _buildWeekPage(DateTime weekStart) {
+  Widget _buildWeekPage(DateTime weekStart, AppColors appColors) {
     final weekDays = List.generate(
       7,
       (i) => DateTime(weekStart.year, weekStart.month, weekStart.day + i),
@@ -518,7 +521,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
       children: [
         // STICKY Date Headers
         Container(
-          color: Colors.white, // Ensure it covers content behind if needed
+          color: appColors.cardBackground,
           padding: const EdgeInsets.only(bottom: 8),
           child: Row(
             children: [
@@ -541,6 +544,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                               _view = CalendarView.day;
                             });
                           },
+                          behavior: HitTestBehavior.opaque,
                           child: SizedBox(
                             width: _weekDayWidth,
                             child: Column(
@@ -551,7 +555,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                                   style: GoogleFonts.redditSans(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12,
-                                    color: _isToday(day) ? _primaryBlue : _textGrey,
+                                    color: _isToday(day) ? appColors.primary : appColors.textSecondary,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
@@ -559,8 +563,8 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                                   Container(
                                     width: 24,
                                     height: 24,
-                                    decoration: const BoxDecoration(
-                                      color: _primaryBlue,
+                                    decoration: BoxDecoration(
+                                      color: appColors.primary,
                                       shape: BoxShape.circle,
                                     ),
                                     child: Center(
@@ -568,7 +572,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                                         '${day.day}',
                                         style: GoogleFonts.redditSans(
                                           fontSize: 12,
-                                          color: _lightSurface,
+                                          color: const Color(0xFFF8F9FC),
                                         ),
                                       ),
                                     ),
@@ -578,7 +582,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                                     '${day.day}',
                                     style: GoogleFonts.redditSans(
                                       fontSize: 12,
-                                      color: _textDark,
+                                      color: appColors.textPrimary,
                                     ),
                                   ),
                               ],
@@ -593,7 +597,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
             ],
           ),
         ),
-        const Divider(height: 1, color: _borderColor),
+        Divider(height: 1, color: appColors.borderColor),
         // Scrollable Content
         Expanded(
           child: SingleChildScrollView(
@@ -616,7 +620,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                               '${h.toString().padLeft(2, '0')}:00',
                               style: GoogleFonts.redditSans(
                                 fontSize: 10,
-                                color: _textGrey,
+                                color: appColors.textSecondary,
                               ),
                             ),
                           ),
@@ -646,10 +650,10 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                               right: 0,
                               child: Container(
                                 height: _hourHeight,
-                                decoration: const BoxDecoration(
+                                decoration: BoxDecoration(
                                   border: Border(
                                     top: BorderSide(
-                                      color: _borderColor,
+                                      color: appColors.borderColor,
                                       width: 0.5,
                                     ),
                                   ),
@@ -671,6 +675,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                                       event,
                                       height: height,
                                       isActive: _isActiveNow(event),
+                                      appColors: appColors,
                                     ),
                                   );
                                 },
@@ -685,6 +690,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                                 child: IgnorePointer(
                                   child: _buildNowIndicator(
                                     width: _weekDayWidth,
+                                    appColors: appColors,
                                   ),
                                 ),
                               ),
@@ -701,45 +707,42 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     );
   }
 
-  Color _tileBackground(EventType type, bool isActive) {
+  Color _tileBackground(EventType type, bool isActive, AppColors appColors) {
     switch (type) {
       case EventType.classEvent:
-        return isActive ? _primaryBlue : const Color(0xFFE8F0FE);
+        return isActive ? appColors.primary : appColors.primaryContainer;
       case EventType.personalEvent:
-        return isActive ? const Color(0xFFE3993C) : const Color(0xFFF0EAE0);
+        return isActive ? appColors.attendanceOrange : appColors.attendanceOrange.withValues(alpha: 0.15);
       case EventType.exam:
-        return isActive ? const Color(0xFF0F6E56) : const Color(0xFFE8F6F1);
+        return isActive ? appColors.success : appColors.success.withValues(alpha: 0.15);
     }
   }
 
-  Color _barColor(EventType type, bool isActive) {
+  Color _barColor(EventType type, bool isActive, AppColors appColors) {
     switch (type) {
       case EventType.classEvent:
-        return isActive ? const Color(0xFF0052CE) : _primaryBlue;
+        return isActive ? const Color(0xFF0052CE) : appColors.primary;
       case EventType.personalEvent:
-        return isActive ? const Color(0xFFC27719) : const Color(0xFFE3993C);
+        return isActive ? const Color(0xFFC27719) : appColors.attendanceOrange;
       case EventType.exam:
-        return isActive ? const Color(0xFF0A5442) : const Color(0xFF0F6E56);
+        return isActive ? const Color(0xFF0A5442) : appColors.success;
     }
   }
 
-  Color _titleColor(bool isActive) =>
-      isActive ? const Color(0xFFF8F9FC) : _textDark;
+  Color _titleColor(bool isActive, AppColors appColors) =>
+      isActive ? const Color(0xFFF8F9FC) : appColors.textPrimary;
 
-  Color _detailColor(EventType type, bool isActive) {
+  Color _detailColor(EventType type, bool isActive, AppColors appColors) {
+    if (isActive) {
+      return const Color(0x80F8F9FC);
+    }
     switch (type) {
       case EventType.classEvent:
-        return isActive
-            ? const Color(0x80F8F9FC)
-            : const Color(0x800569FF);
+        return appColors.primary.withValues(alpha: 0.8);
       case EventType.personalEvent:
-        return isActive
-            ? const Color(0xFFF0EAE0)
-            : const Color(0x80E3993C);
+        return appColors.attendanceOrange.withValues(alpha: 0.8);
       case EventType.exam:
-        return isActive
-            ? const Color(0x80F8F9FC)
-            : const Color(0x800F6E56);
+        return appColors.success.withValues(alpha: 0.8);
     }
   }
 
@@ -747,19 +750,21 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     CalendarEvent e, {
     required double height,
     required bool isActive,
+    required AppColors appColors,
   }) {
     return GestureDetector(
       onTap: () => _openDetails(e),
+      behavior: HitTestBehavior.opaque,
       child: Container(
         decoration: BoxDecoration(
-          color: _tileBackground(e.type, isActive),
+          color: _tileBackground(e.type, isActive, appColors),
           borderRadius: BorderRadius.circular(6),
         ),
         clipBehavior: Clip.hardEdge,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(width: 3, color: _barColor(e.type, isActive)),
+            Container(width: 3, color: _barColor(e.type, isActive, appColors)),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(4),
@@ -773,7 +778,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                       style: GoogleFonts.redditSans(
                         fontSize: 10,
                         fontWeight: FontWeight.w500,
-                        color: _titleColor(isActive),
+                        color: _titleColor(isActive, appColors),
                       ),
                     ),
                     Text(
@@ -782,7 +787,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.redditSans(
                         fontSize: 9,
-                        color: _detailColor(e.type, isActive),
+                        color: _detailColor(e.type, isActive, appColors),
                       ),
                     ),
                     if (e.location.isNotEmpty)
@@ -792,7 +797,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.redditSans(
                           fontSize: 9,
-                          color: _detailColor(e.type, isActive),
+                          color: _detailColor(e.type, isActive, appColors),
                         ),
                       ),
                     Text(
@@ -801,7 +806,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.redditSans(
                         fontSize: 9,
-                        color: _detailColor(e.type, isActive),
+                        color: _detailColor(e.type, isActive, appColors),
                       ),
                     ),
                     if (isActive && e.type == EventType.classEvent)
@@ -833,7 +838,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     );
   }
 
-  Widget _buildDayView() {
+  Widget _buildDayView(AppColors appColors) {
     ref.watch(calendarEventsProvider);
     final events = _eventsForDate(_selectedDate);
 
@@ -852,13 +857,14 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                       _selectedDate.subtract(const Duration(days: 1));
                   _focusedDate = _selectedDate;
                 }),
+                appColors: appColors,
               ),
               Text(
                 '${_monthName(_selectedDate.month)} ${_selectedDate.day}',
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w500,
                   fontSize: 20,
-                  color: _textDark,
+                  color: appColors.textPrimary,
                 ),
               ),
               _navButton(
@@ -867,6 +873,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                   _selectedDate = _selectedDate.add(const Duration(days: 1));
                   _focusedDate = _selectedDate;
                 }),
+                appColors: appColors,
               ),
             ],
           ),
@@ -874,7 +881,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
         const SizedBox(height: 15),
         SizedBox(
           height: 500,
-          child: _buildDayPage(_selectedDate, events),
+          child: _buildDayPage(_selectedDate, events, appColors),
         ),
       ],
     );
@@ -914,7 +921,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     ];
   }
 
-  Widget _buildDayPage(DateTime day, List<CalendarEvent> events) {
+  Widget _buildDayPage(DateTime day, List<CalendarEvent> events, AppColors appColors) {
     final laidOut = _layoutOverlaps(events, day);
 
     return SingleChildScrollView(
@@ -935,7 +942,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                         '${h.toString().padLeft(2, '0')}:00',
                         style: GoogleFonts.redditSans(
                           fontSize: 10,
-                          color: _textGrey,
+                          color: appColors.textSecondary,
                         ),
                       ),
                     ),
@@ -957,10 +964,10 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                           for (var h = 0; h < 24; h++)
                             Container(
                               height: _hourHeight,
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                 border: Border(
                                   top: BorderSide(
-                                    color: _borderColor,
+                                    color: appColors.borderColor,
                                     width: 0.5,
                                   ),
                                 ),
@@ -979,7 +986,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w600,
                               fontSize: 13,
-                              color: _textGrey,
+                              color: appColors.textSecondary,
                             ),
                           ),
                         ),
@@ -997,6 +1004,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                                 event,
                                 height: height,
                                 isActive: _isActiveNow(event),
+                                appColors: appColors,
                               ),
                             );
                           },
@@ -1009,6 +1017,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                           child: IgnorePointer(
                             child: _buildNowIndicator(
                               width: fullWidth,
+                              appColors: appColors,
                             ),
                           ),
                         ),
@@ -1027,20 +1036,22 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     CalendarEvent e, {
     required double height,
     required bool isActive,
+    required AppColors appColors,
   }) {
     return GestureDetector(
       onTap: () => _openDetails(e),
+      behavior: HitTestBehavior.opaque,
       child: Container(
         height: height,
         decoration: BoxDecoration(
-          color: _tileBackground(e.type, isActive),
+          color: _tileBackground(e.type, isActive, appColors),
           borderRadius: BorderRadius.circular(6),
         ),
         clipBehavior: Clip.hardEdge,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(width: 3, color: _barColor(e.type, isActive)),
+            Container(width: 3, color: _barColor(e.type, isActive, appColors)),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(4),
@@ -1054,7 +1065,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                       style: GoogleFonts.redditSans(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        color: _titleColor(isActive),
+                        color: _titleColor(isActive, appColors),
                       ),
                     ),
                     Text(
@@ -1063,7 +1074,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.redditSans(
                         fontSize: 10,
-                        color: _detailColor(e.type, isActive),
+                        color: _detailColor(e.type, isActive, appColors),
                       ),
                     ),
                     if (e.location.isNotEmpty)
@@ -1073,7 +1084,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.redditSans(
                           fontSize: 10,
-                          color: _detailColor(e.type, isActive),
+                          color: _detailColor(e.type, isActive, appColors),
                         ),
                       ),
                     Text(
@@ -1082,7 +1093,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.redditSans(
                         fontSize: 10,
-                        color: _detailColor(e.type, isActive),
+                        color: _detailColor(e.type, isActive, appColors),
                       ),
                     ),
                     if (isActive && e.type == EventType.classEvent)
@@ -1114,7 +1125,8 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     );
   }
 
-  Widget _buildNowIndicator({required double width}) {
+  Widget _buildNowIndicator({required double width, required AppColors appColors}) {
+    final nowColor = appColors.error;
     return SizedBox(
       width: width == double.infinity ? null : width,
       child: Row(
@@ -1123,15 +1135,15 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
           Container(
             width: 8,
             height: 8,
-            decoration: const BoxDecoration(
-              color: _nowRed,
+            decoration: BoxDecoration(
+              color: nowColor,
               shape: BoxShape.circle,
             ),
           ),
-          const Expanded(
+          Expanded(
             child: SizedBox(
               height: 2,
-              child: ColoredBox(color: _nowRed),
+              child: ColoredBox(color: nowColor),
             ),
           ),
         ],
@@ -1141,25 +1153,28 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = ref.watch(appColorsProvider);
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: _borderColor, width: 1),
+        border: Border.all(color: appColors.borderColor, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildViewToggle(),
+          _buildViewToggle(appColors),
           if (_view == CalendarView.month)
-            KeyedSubtree(key: const ValueKey('cal_view_month'), child: _buildMonthView()),
+            KeyedSubtree(key: const ValueKey('cal_view_month'), child: _buildMonthView(appColors)),
           if (_view == CalendarView.week)
-            KeyedSubtree(key: const ValueKey('cal_view_week'), child: _buildWeekView()),
+            KeyedSubtree(key: const ValueKey('cal_view_week'), child: _buildWeekView(appColors)),
           if (_view == CalendarView.day)
-            KeyedSubtree(key: const ValueKey('cal_view_day'), child: _buildDayView()),
+            KeyedSubtree(key: const ValueKey('cal_view_day'), child: _buildDayView(appColors)),
         ],
       ),
     );
   }
 }
+

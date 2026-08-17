@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/subject_detail.dart';
 
-class SubjectHoursCard extends StatelessWidget {
+class SubjectHoursCard extends ConsumerWidget {
   final SubjectDetail data;
 
   const SubjectHoursCard({
@@ -10,7 +13,7 @@ class SubjectHoursCard extends StatelessWidget {
     super.key,
   });
 
-  Widget _hoursRow(String label, String value) {
+  Widget _hoursRow(String label, String value, AppColors appColors) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -19,7 +22,7 @@ class SubjectHoursCard extends StatelessWidget {
           style: GoogleFonts.redditSans(
             fontWeight: FontWeight.w700,
             fontSize: 13,
-            color: const Color(0xFF838A97),
+            color: appColors.textSecondary,
           ),
         ),
         Text(
@@ -27,23 +30,23 @@ class SubjectHoursCard extends StatelessWidget {
           style: GoogleFonts.redditSans(
             fontWeight: FontWeight.w700,
             fontSize: 16,
-            color: const Color(0xFF1F1F1F),
+            color: appColors.textPrimary,
           ),
         ),
       ],
     );
   }
 
-  Widget _breakdownRow(String label, String value) {
+  Widget _breakdownRow(String label, String value, AppColors appColors) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Row(
           children: [
-            const Icon(
+            Icon(
               Icons.subdirectory_arrow_right_rounded,
               size: 20,
-              color: Color(0xFFE0E4F0),
+              color: appColors.borderColor,
             ),
             const SizedBox(width: 6),
             Text(
@@ -51,7 +54,7 @@ class SubjectHoursCard extends StatelessWidget {
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w700,
                 fontSize: 13,
-                color: const Color(0xFF838A97),
+                color: appColors.textSecondary,
               ),
             ),
           ],
@@ -61,7 +64,7 @@ class SubjectHoursCard extends StatelessWidget {
           style: GoogleFonts.redditSans(
             fontWeight: FontWeight.w700,
             fontSize: 16,
-            color: const Color(0xFF1F1F1F),
+            color: appColors.textPrimary,
           ),
         ),
       ],
@@ -69,15 +72,17 @@ class SubjectHoursCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    const iconColor = Color(0xFF534AB7);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+    final iconColor = appColors.notificationPurple;
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: const Color(0xFFE0E4F0),
+          color: appColors.borderColor,
           width: 1,
         ),
       ),
@@ -95,7 +100,7 @@ class SubjectHoursCard extends StatelessWidget {
                     color: iconColor.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.access_time_filled_rounded,
                     size: 18,
                     color: iconColor,
@@ -114,21 +119,21 @@ class SubjectHoursCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          const Divider(color: Color(0xFFE0E4F0), thickness: 1, height: 1),
+          Divider(color: appColors.divider, thickness: 1, height: 1),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: _hoursRow("Total Hours", "${data.subjectTotalHours}hrs"),
+            child: _hoursRow("Total Hours", "${data.subjectTotalHours}hrs", appColors),
           ),
-          const Divider(color: Color(0xFFE0E4F0), thickness: 1, height: 1),
+          Divider(color: appColors.divider, thickness: 1, height: 1),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: _hoursRow("Auditorium Hours", "${data.subjectAuditoriumHours}hrs"),
+            child: _hoursRow("Auditorium Hours", "${data.subjectAuditoriumHours}hrs", appColors),
           ),
           Container(
             width: double.infinity,
-            decoration: const BoxDecoration(
-              color: Color(0xFFF8F9FC),
-              borderRadius: BorderRadius.only(
+            decoration: BoxDecoration(
+              color: appColors.surface,
+              borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(18),
                 bottomRight: Radius.circular(18),
               ),
@@ -136,7 +141,7 @@ class SubjectHoursCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Divider(color: Color(0xFFE0E4F0), thickness: 1, height: 1),
+                Divider(color: appColors.divider, thickness: 1, height: 1),
                 Padding(
                   padding: const EdgeInsets.only(left: 30, top: 16, right: 30),
                   child: Text(
@@ -144,17 +149,17 @@ class SubjectHoursCard extends StatelessWidget {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 13,
-                      color: const Color(0x80838A97),
-                    )
+                      color: appColors.textMuted,
+                    ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 6),
-                  child: _breakdownRow("Lectures", "${data.subjectLectureHours}hrs"),
+                  child: _breakdownRow("Lectures", "${data.subjectLectureHours}hrs", appColors),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 6),
-                  child: _breakdownRow("Seminars", "${data.subjectSeminarHours}hrs"),
+                  child: _breakdownRow("Seminars", "${data.subjectSeminarHours}hrs", appColors),
                 ),
               ],
             ),
@@ -164,3 +169,4 @@ class SubjectHoursCard extends StatelessWidget {
     );
   }
 }
+

@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:unec_assistant/presentation/components/lists/labels.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/student_profile_provider.dart';
 import 'package:unec_assistant/utils/app_toast.dart';
 
@@ -15,9 +17,10 @@ class ShareProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(studentProfileProvider);
     final shareText = profile.toShareableText();
+    final appColors = ref.watch(appColorsProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FC),
+      backgroundColor: appColors.background,
       appBar: CustomAppBar(
         title: 'Share profile',
         onBackTap: () => context.pop(),
@@ -28,31 +31,31 @@ class ShareProfileScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Top Summary Card
-            _buildSummaryCard(profile),
+            _buildSummaryCard(profile, appColors),
             const SizedBox(height: 25),
 
             // Generated Text Card
-            _buildGeneratedTextCard(context, shareText),
+            _buildGeneratedTextCard(context, shareText, appColors),
             const SizedBox(height: 25),
 
             const SectionLabel('ALSO SHARE VIA'),
             const SizedBox(height: 12),
 
             // Share Actions Card
-            _buildShareActionsCard(context, shareText),
+            _buildShareActionsCard(context, shareText, appColors),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSummaryCard(dynamic profile) {
+  Widget _buildSummaryCard(dynamic profile, AppColors appColors) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFE0E4F0)),
+        border: Border.all(color: appColors.borderColor),
       ),
       child: Row(
         children: [
@@ -60,7 +63,7 @@ class ShareProfileScreen extends ConsumerWidget {
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: const Color(0xFFEEF4FF),
+              color: appColors.primaryContainer,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Center(
@@ -69,7 +72,7 @@ class ShareProfileScreen extends ConsumerWidget {
                 style: GoogleFonts.redditSans(
                   fontSize: 28,
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFF0569FF),
+                  color: appColors.primary,
                 ),
               ),
             ),
@@ -88,7 +91,7 @@ class ShareProfileScreen extends ConsumerWidget {
                         style: GoogleFonts.redditSans(
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
-                          color: const Color(0xFF1E1E1E),
+                          color: appColors.textPrimary,
                         ),
                       ),
                     ),
@@ -99,7 +102,7 @@ class ShareProfileScreen extends ConsumerWidget {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE7F4F0),
+                          color: appColors.success.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -107,7 +110,7 @@ class ShareProfileScreen extends ConsumerWidget {
                           style: GoogleFonts.redditSans(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: const Color(0xFF6E8E15),
+                            color: appColors.success,
                           ),
                         ),
                       ),
@@ -118,14 +121,14 @@ class ShareProfileScreen extends ConsumerWidget {
                   '${profile.groupCode} ·',
                   style: GoogleFonts.redditSans(
                     fontSize: 14,
-                    color: const Color(0xFF838A97),
+                    color: appColors.textSecondary,
                   ),
                 ),
                 Text(
                   profile.year,
                   style: GoogleFonts.redditSans(
                     fontSize: 14,
-                    color: const Color(0xFF838A97).withValues(alpha: 0.6),
+                    color: appColors.textMuted,
                   ),
                 ),
               ],
@@ -136,14 +139,15 @@ class ShareProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildGeneratedTextCard(BuildContext context, String text) {
+  Widget _buildGeneratedTextCard(
+      BuildContext context, String text, AppColors appColors) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFE0E4F0)),
+        border: Border.all(color: appColors.borderColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,8 +159,8 @@ class ShareProfileScreen extends ConsumerWidget {
                 'GENERATED TEXT',
                 style: GoogleFonts.redditSans(
                   fontSize: 15,
-                  fontWeight: FontWeight.w400,
-                  color: const Color(0xFF838A97),
+                  fontWeight: FontWeight.w600,
+                  color: appColors.textSecondary,
                 ),
               ),
               GestureDetector(
@@ -164,13 +168,14 @@ class ShareProfileScreen extends ConsumerWidget {
                   Clipboard.setData(ClipboardData(text: text));
                   AppToast.show(context, 'Copied to clipboard!');
                 },
+                behavior: HitTestBehavior.opaque,
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFEEF4FF),
+                    color: appColors.primaryContainer,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -178,7 +183,7 @@ class ShareProfileScreen extends ConsumerWidget {
                     style: GoogleFonts.redditSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF0569FF),
+                      color: appColors.primary,
                     ),
                   ),
                 ),
@@ -191,7 +196,7 @@ class ShareProfileScreen extends ConsumerWidget {
             style: GoogleFonts.redditSans(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: const Color(0xFF1E1E1E),
+              color: appColors.textPrimary,
               height: 1.8,
             ),
           ),
@@ -200,13 +205,14 @@ class ShareProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildShareActionsCard(BuildContext context, String text) {
+  Widget _buildShareActionsCard(
+      BuildContext context, String text, AppColors appColors) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFE0E4F0)),
+        border: Border.all(color: appColors.borderColor),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -219,33 +225,37 @@ class ShareProfileScreen extends ConsumerWidget {
               width: 28,
               height: 28,
             ),
-            const Color(0xFFE1F5FE),
+            const Color(0xFF25D366).withValues(alpha: 0.15),
+            appColors,
           ),
           _buildShareIcon(
             context,
             'Email',
-            const Icon(
+            Icon(
               Icons.email_outlined,
-              color: Color(0xFF0569FF),
+              color: appColors.primary,
               size: 28,
             ),
-            const Color(0xFFEEF4FF),
+            appColors.primaryContainer,
+            appColors,
           ),
           _buildShareIcon(
             context,
             'Copy',
-            const Icon(Icons.copy_rounded, color: Color(0xFF1E1E1E), size: 28),
-            const Color(0xFFF5F5F7),
+            Icon(Icons.copy_rounded, color: appColors.textPrimary, size: 28),
+            appColors.iconBoxArrowBg,
+            appColors,
           ),
           _buildShareIcon(
             context,
             'More',
-            const Icon(
+            Icon(
               Icons.share_outlined,
-              color: Color(0xFFE67E22),
+              color: appColors.warningOnContainer,
               size: 28,
             ),
-            const Color(0xFFFFF3E0),
+            appColors.warningContainer,
+            appColors,
           ),
         ],
       ),
@@ -257,17 +267,18 @@ class ShareProfileScreen extends ConsumerWidget {
     String label,
     Widget icon,
     Color bgColor,
+    AppColors appColors,
   ) {
     return Column(
       children: [
         GestureDetector(
           onTap: () {
             if (label == 'Copy') {
-              // Copy action is already tested in the card, but let's keep it here too
               Clipboard.setData(ClipboardData(text: 'Mock profile text...'));
             }
             AppToast.show(context, 'Sharing via $label...');
           },
+          behavior: HitTestBehavior.opaque,
           child: Container(
             width: 56,
             height: 56,
@@ -284,10 +295,11 @@ class ShareProfileScreen extends ConsumerWidget {
           style: GoogleFonts.redditSans(
             fontSize: 12,
             fontWeight: FontWeight.w500,
-            color: const Color(0xFF838A97),
+            color: appColors.textSecondary,
           ),
         ),
       ],
     );
   }
 }
+

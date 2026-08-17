@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import '../../../models/subject_detail.dart';
 
-class TeacherCard extends StatelessWidget {
+class TeacherCard extends ConsumerWidget {
   final SubjectDetail data;
 
   const TeacherCard({
@@ -11,15 +13,17 @@ class TeacherCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    const iconColor = Color(0xFF0569FF);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+    final iconColor = appColors.primary;
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: const Color(0xFFE0E4F0),
+          color: appColors.borderColor,
           width: 1,
         ),
       ),
@@ -32,10 +36,10 @@ class TeacherCard extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: iconColor.withValues(alpha: 0.15),
+              color: appColors.primaryContainer,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.person_outlined,
               size: 26,
               color: iconColor,
@@ -52,7 +56,7 @@ class TeacherCard extends StatelessWidget {
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 10,
-                    color: const Color(0x80838A97),
+                    color: appColors.textMuted,
                     letterSpacing: 0.5,
                   ),
                 ),
@@ -63,7 +67,7 @@ class TeacherCard extends StatelessWidget {
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 14,
-                    color: const Color(0xFF1F1F1F),
+                    color: appColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -73,7 +77,7 @@ class TeacherCard extends StatelessWidget {
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 12,
-                    color: const Color(0xFF838A97),
+                    color: appColors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -94,3 +98,4 @@ class TeacherCard extends StatelessWidget {
     );
   }
 }
+

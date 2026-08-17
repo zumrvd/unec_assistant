@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/subject_detail.dart';
 
-class SubjectAttendanceCard extends StatefulWidget {
+class SubjectAttendanceCard extends ConsumerStatefulWidget {
   final SubjectDetail subject;
 
   const SubjectAttendanceCard({
@@ -11,14 +14,15 @@ class SubjectAttendanceCard extends StatefulWidget {
   });
 
   @override
-  State<SubjectAttendanceCard> createState() => _SubjectAttendanceCardState();
+  ConsumerState<SubjectAttendanceCard> createState() => _SubjectAttendanceCardState();
 }
 
-class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
+class _SubjectAttendanceCardState extends ConsumerState<SubjectAttendanceCard> {
   bool _isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
+    final appColors = ref.watch(appColorsProvider);
     final int absencesLeft = widget.subject.absenceLimit - widget.subject.absencesUsed;
     final double usedRatio = widget.subject.absencesUsed / widget.subject.absenceLimit;
     final bool isSafe = usedRatio < 0.5;
@@ -27,34 +31,34 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
 
     // Status colors
     final Color dotColor = isDanger
-        ? const Color(0xFFD54829)
+        ? appColors.error
         : isCaution
-            ? const Color(0xFFE3993C)
-            : const Color(0xFF0569FF);
+            ? appColors.attendanceOrange
+            : appColors.primary;
 
     final Color borderColor = isDanger
-        ? const Color(0x80D54829)
+        ? appColors.error.withValues(alpha: 0.5)
         : isCaution
-            ? const Color(0x80E3993C)
-            : const Color(0xFFE0E4F0);
+            ? appColors.attendanceOrange.withValues(alpha: 0.5)
+            : appColors.borderColor;
 
     final Color pillBg = isDanger
-        ? const Color(0x26D54829)
+        ? appColors.error.withValues(alpha: 0.15)
         : isCaution
-            ? const Color(0x26E3993C)
-            : const Color(0x260F6E11);
+            ? appColors.attendanceOrange.withValues(alpha: 0.15)
+            : appColors.success.withValues(alpha: 0.15);
 
     final Color pillTextColor = isDanger
-        ? const Color(0xFFD54829)
+        ? appColors.error
         : isCaution
-            ? const Color(0xFF985909)
-            : const Color(0xFF0F6E11);
+            ? appColors.attendanceOrange
+            : appColors.success;
 
     final Color barColor = isDanger
-        ? const Color(0xFFD54829)
+        ? appColors.error
         : isCaution
-            ? const Color(0xFFE3993C)
-            : const Color(0xFF0F6E11);
+            ? appColors.attendanceOrange
+            : appColors.success;
 
     final String pillLabel = "$absencesLeft Left";
 
@@ -63,16 +67,16 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
         : "$absencesLeft absences left";
 
     final Color statusBg = isDanger
-        ? const Color(0x0DD54829)
+        ? appColors.error.withValues(alpha: 0.08)
         : isCaution
-            ? const Color(0x0DE3993C)
-            : const Color(0x260F6E11);
+            ? appColors.attendanceOrange.withValues(alpha: 0.08)
+            : appColors.success.withValues(alpha: 0.15);
 
     final Color statusBorder = isDanger
-        ? const Color(0x26D54829)
+        ? appColors.error.withValues(alpha: 0.25)
         : isCaution
-            ? const Color(0x26E3993C)
-            : const Color(0x260F6E11);
+            ? appColors.attendanceOrange.withValues(alpha: 0.25)
+            : appColors.success.withValues(alpha: 0.25);
 
     final IconData statusIcon = isDanger
         ? Icons.warning_rounded
@@ -81,17 +85,17 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
             : Icons.check_circle_rounded;
 
     final Color statusIconColor = isDanger
-        ? const Color(0xFFD54829)
+        ? appColors.error
         : isCaution
-            ? const Color(0xFFE3993C)
-            : const Color(0xFF0F6E11);
+            ? appColors.attendanceOrange
+            : appColors.success;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: borderColor, width: 1),
       ),
@@ -122,7 +126,7 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w700,
                           fontSize: 14,
-                          color: const Color(0xFF1F1F1F),
+                          color: appColors.textPrimary,
                         ),
                       ),
                     ),
@@ -154,6 +158,7 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
                   const SizedBox(width: 8),
                   GestureDetector(
                     onTap: () => setState(() => _isExpanded = !_isExpanded),
+                    behavior: HitTestBehavior.opaque,
                     child: AnimatedRotation(
                       turns: _isExpanded ? 0.5 : 0.0,
                       duration: const Duration(milliseconds: 300),
@@ -161,13 +166,13 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
                         width: 28,
                         height: 28,
                         decoration: BoxDecoration(
-                          color: const Color(0x80E0E4F0),
+                          color: appColors.iconBoxArrowBg,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.keyboard_arrow_down_rounded,
                           size: 18,
-                          color: Color(0x80838A97),
+                          color: appColors.textSecondary,
                         ),
                       ),
                     ),
@@ -190,6 +195,7 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
               isSafe,
               isCaution,
               isDanger,
+              appColors,
             ),
             crossFadeState: _isExpanded
                 ? CrossFadeState.showSecond
@@ -211,6 +217,7 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
     bool isSafe,
     bool isCaution,
     bool isDanger,
+    AppColors appColors,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -220,9 +227,9 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
           decoration: BoxDecoration(
-            color: const Color(0xFFF8F9FC),
+            color: appColors.surface,
             borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: const Color(0xFFE0E4F0), width: 1),
+            border: Border.all(color: appColors.borderColor, width: 1),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -236,7 +243,7 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 45,
-                      color: const Color(0xFF1F1F1F),
+                      color: appColors.textPrimary,
                       height: 1.1,
                     ),
                   ),
@@ -245,14 +252,14 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
-                      color: const Color(0xFF838A97),
+                      color: appColors.textSecondary,
                       height: 1.1,
                     ),
                   ),
                 ],
               ),
               const SizedBox(width: 20),
-              Container(width: 1, height: 50, color: const Color(0xFFE0E4F0)),
+              Container(width: 1, height: 50, color: appColors.divider),
               const SizedBox(width: 20),
               Expanded(
                 child: Column(
@@ -263,7 +270,7 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w600,
                         fontSize: 13,
-                        color: const Color(0xFF838A97),
+                        color: appColors.textSecondary,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -272,7 +279,7 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
-                        color: const Color(0xFF1F1F1F),
+                        color: appColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -283,7 +290,7 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
                         child: LinearProgressIndicator(
                           value: usedRatio.clamp(0.0, 1.0),
                           minHeight: 8,
-                          backgroundColor: const Color(0xFFE0E4F0),
+                          backgroundColor: appColors.borderColor,
                           valueColor: AlwaysStoppedAnimation<Color>(barColor),
                         ),
                       ),
@@ -311,7 +318,7 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
               Expanded(
                 child: RichText(
                   text: TextSpan(
-                    children: _buildStatusSpans(isSafe, isCaution, isDanger),
+                    children: _buildStatusSpans(isSafe, isCaution, isDanger, appColors),
                   ),
                 ),
               ),
@@ -322,16 +329,16 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
     );
   }
 
-  List<TextSpan> _buildStatusSpans(bool isSafe, bool isCaution, bool isDanger) {
+  List<TextSpan> _buildStatusSpans(bool isSafe, bool isCaution, bool isDanger, AppColors appColors) {
     final normalStyle = GoogleFonts.redditSans(
       fontWeight: FontWeight.w600,
       fontSize: 12,
-      color: const Color(0xFF838A97),
+      color: appColors.textSecondary,
     );
     final boldStyle = GoogleFonts.redditSans(
       fontWeight: FontWeight.w700,
       fontSize: 12,
-      color: const Color(0xFF1F1F1F),
+      color: appColors.textPrimary,
     );
 
     if (isSafe) {
@@ -365,3 +372,4 @@ class _SubjectAttendanceCardState extends State<SubjectAttendanceCard> {
     }
   }
 }
+

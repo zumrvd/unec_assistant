@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/subject_detail.dart';
 
-class ClassLoadCard extends StatelessWidget {
+class ClassLoadCard extends ConsumerWidget {
   final SubjectDetail data;
 
   const ClassLoadCard({
@@ -10,14 +13,14 @@ class ClassLoadCard extends StatelessWidget {
     super.key,
   });
 
-  Widget _loadBox(String bigText, String smallText) {
+  Widget _loadBox(String bigText, String smallText, AppColors appColors) {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0x4DE0E4F0),
+          color: appColors.surface,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: const Color(0xFFE0E4F0),
+            color: appColors.borderColor,
             width: 1,
           ),
         ),
@@ -30,7 +33,7 @@ class ClassLoadCard extends StatelessWidget {
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w700,
                 fontSize: 17,
-                color: const Color(0xFF1F1F1F),
+                color: appColors.textPrimary,
               ),
             ),
             const SizedBox(height: 2),
@@ -40,7 +43,7 @@ class ClassLoadCard extends StatelessWidget {
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w700,
                 fontSize: 12,
-                color: const Color(0xFF838A97),
+                color: appColors.textSecondary,
               ),
             ),
           ],
@@ -50,15 +53,17 @@ class ClassLoadCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    const iconColor = Color(0xFFDA4979);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+    final iconColor = const Color(0xFFDA4979);
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: const Color(0xFFE0E4F0),
+          color: appColors.borderColor,
           width: 1,
         ),
       ),
@@ -76,7 +81,7 @@ class ClassLoadCard extends StatelessWidget {
                     color: iconColor.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.pie_chart,
                     size: 18,
                     color: iconColor,
@@ -95,17 +100,17 @@ class ClassLoadCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          const Divider(color: Color(0xFFE0E4F0), thickness: 1, height: 1),
+          Divider(color: appColors.divider, thickness: 1, height: 1),
           Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                _loadBox("${data.sessionsPerWeek}", "sessions/\nweek"),
+                _loadBox("${data.sessionsPerWeek}", "sessions/\nweek", appColors),
                 const SizedBox(width: 10),
-                _loadBox("${data.hrsPerWeek}", "hrs/\nweek"),
+                _loadBox("${data.hrsPerWeek}", "hrs/\nweek", appColors),
                 const SizedBox(width: 10),
-                _loadBox(data.classDays, "class\ndays"),
+                _loadBox(data.classDays, "class\ndays", appColors),
               ],
             ),
           ),
@@ -114,3 +119,4 @@ class ClassLoadCard extends StatelessWidget {
     );
   }
 }
+

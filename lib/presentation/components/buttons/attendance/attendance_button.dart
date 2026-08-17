@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 
-class AttendanceButton extends StatelessWidget {
+class AttendanceButton extends ConsumerWidget {
   const AttendanceButton({
     required this.onTap,
     super.key,
@@ -9,23 +11,20 @@ class AttendanceButton extends StatelessWidget {
 
   final VoidCallback onTap;
 
-  static const _primaryRed = Color(0xFF993C1D);
-  static const _titleColor = Color(0xFF1F1F1F);
-  static const _subtitleColor = Color(0x80838A97);
-  static const _borderColor = Color(0xFFE0E4F0);
-  static const _iconBackgroundColor = Color(0x26993C1D);
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: const Color(0xFFFFFFFF),
+          color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
-            color: _borderColor,
+            color: appColors.borderColor,
             width: 1,
           ),
         ),
@@ -43,13 +42,13 @@ class AttendanceButton extends StatelessWidget {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: _iconBackgroundColor,
+                color: appColors.attendanceOrange.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.front_hand_outlined,
                 size: 25,
-                color: _primaryRed,
+                color: appColors.attendanceOrange,
               ),
             ),
             const SizedBox(width: 10),
@@ -63,7 +62,7 @@ class AttendanceButton extends StatelessWidget {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 14,
-                      color: _titleColor,
+                      color: appColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -72,7 +71,7 @@ class AttendanceButton extends StatelessWidget {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 10,
-                      color: _subtitleColor,
+                      color: appColors.textMuted,
                     ),
                   ),
                 ],
@@ -84,3 +83,4 @@ class AttendanceButton extends StatelessWidget {
     );
   }
 }
+

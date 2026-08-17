@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import 'package:uuid/uuid.dart';
 import '../../../presentation/components/lists/labels.dart';
 import '../../../presentation/components/inputs/app_search_bar.dart';
@@ -47,26 +48,28 @@ class _NoteFilesScreenState extends ConsumerState<NoteFilesScreen> {
   }
 
   void _confirmDelete(Note note) {
+    final appColors = ref.read(appColorsProvider);
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: const Color(0xFFF8F9FC),
+          backgroundColor: appColors.cardBackground,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
           title: const SectionLabel('Delete Note?'),
           content: Text(
             'Are you sure you want to delete "${note.title.isEmpty ? 'Untitled' : note.title}"? This action cannot be undone.',
             style: GoogleFonts.redditSans(
-                fontSize: 14, color: const Color(0xFF838A97)),
+                fontSize: 14, color: appColors.textSecondary),
           ),
           actions: [
             GestureDetector(
               onTap: () => Navigator.pop(context),
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
+              behavior: HitTestBehavior.opaque,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child:
-                    Text('Cancel', style: TextStyle(color: Color(0xFF838A97))),
+                    Text('Cancel', style: GoogleFonts.redditSans(color: appColors.textSecondary)),
               ),
             ),
             GestureDetector(
@@ -74,11 +77,12 @@ class _NoteFilesScreenState extends ConsumerState<NoteFilesScreen> {
                 ref.read(notesProvider.notifier).deleteNote(note.noteId);
                 Navigator.pop(context);
               },
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
+              behavior: HitTestBehavior.opaque,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Text('Delete',
-                    style: TextStyle(
-                        color: Color(0xFFD54829), fontWeight: FontWeight.bold)),
+                    style: GoogleFonts.redditSans(
+                        color: appColors.error, fontWeight: FontWeight.bold)),
               ),
             ),
           ],
@@ -89,13 +93,14 @@ class _NoteFilesScreenState extends ConsumerState<NoteFilesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = ref.watch(appColorsProvider);
     final folders = ref.watch(foldersProvider);
     final folder = folders.firstWhere((f) => f.folderId == widget.folderId);
     final notes = ref.watch(searchedNotesProvider(
         (folderId: widget.folderId, query: _searchQuery)));
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FC),
+      backgroundColor: appColors.background,
       appBar: CustomAppBar(title: folder.folderName),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
@@ -119,7 +124,7 @@ class _NoteFilesScreenState extends ConsumerState<NoteFilesScreen> {
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 14,
-                      color: const Color(0xFF838A97),
+                      color: appColors.textSecondary,
                     ),
                   ),
                 ),
@@ -136,7 +141,7 @@ class _NoteFilesScreenState extends ConsumerState<NoteFilesScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _createNewNote,
-        backgroundColor: const Color(0xFF0569FF),
+        backgroundColor: appColors.primary,
         shape: const CircleBorder(),
         elevation: 4,
         child: const Icon(Icons.add_rounded, color: Colors.white, size: 28),
@@ -144,3 +149,4 @@ class _NoteFilesScreenState extends ConsumerState<NoteFilesScreen> {
     );
   }
 }
+

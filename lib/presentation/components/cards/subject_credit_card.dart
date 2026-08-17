@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/presentation/providers/theme_provider.dart';
 import '../../../models/subject_detail.dart';
 
-class SubjectCreditCard extends StatelessWidget {
+class SubjectCreditCard extends ConsumerWidget {
   final SubjectDetail data;
 
   const SubjectCreditCard({
@@ -11,15 +13,17 @@ class SubjectCreditCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    const iconColor = Color(0xFFE3993C);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appColors = ref.watch(appColorsProvider);
+    final iconColor = appColors.warning;
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFFFFFFFF),
+        color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: const Color(0xFFE0E4F0),
+          color: appColors.borderColor,
           width: 1,
         ),
       ),
@@ -37,7 +41,7 @@ class SubjectCreditCard extends StatelessWidget {
                     color: iconColor.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.diamond_rounded,
                     size: 18,
                     color: iconColor,
@@ -56,7 +60,7 @@ class SubjectCreditCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          const Divider(color: Color(0xFFE0E4F0), thickness: 1, height: 1),
+          Divider(color: appColors.divider, thickness: 1, height: 1),
           Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
@@ -66,9 +70,9 @@ class SubjectCreditCard extends StatelessWidget {
                   width: 60,
                   height: 110,
                   decoration: BoxDecoration(
-                    color: const Color(0x4DE0E4F0),
+                    color: appColors.surface,
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: const Color(0xFFE0E4F0), width: 1),
+                    border: Border.all(color: appColors.borderColor, width: 1),
                   ),
                   child: Center(
                     child: Text(
@@ -76,7 +80,7 @@ class SubjectCreditCard extends StatelessWidget {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 35,
-                        color: const Color(0xFF1F1F1F),
+                        color: appColors.textPrimary,
                       ),
                     ),
                   ),
@@ -88,10 +92,10 @@ class SubjectCreditCard extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.info_rounded,
                             size: 20,
-                            color: Color(0x80838A97),
+                            color: appColors.textMuted,
                           ),
                           const SizedBox(width: 6),
                           Text(
@@ -99,7 +103,7 @@ class SubjectCreditCard extends StatelessWidget {
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w700,
                               fontSize: 15,
-                              color: const Color(0xFF1F1F1F),
+                              color: appColors.textPrimary,
                             ),
                           ),
                         ],
@@ -108,9 +112,9 @@ class SubjectCreditCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF8F9FC),
+                          color: appColors.surface,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: const Color(0xFFE0E4F0), width: 1),
+                          border: Border.all(color: appColors.borderColor, width: 1),
                         ),
                         child: RichText(
                           text: TextSpan(
@@ -120,7 +124,7 @@ class SubjectCreditCard extends StatelessWidget {
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 11,
-                                  color: const Color(0xFF838A97),
+                                  color: appColors.textSecondary,
                                 ),
                               ),
                               TextSpan(
@@ -128,7 +132,7 @@ class SubjectCreditCard extends StatelessWidget {
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 11,
-                                  color: const Color(0xFF1F1F1F),
+                                  color: appColors.textPrimary,
                                 ),
                               ),
                               TextSpan(
@@ -136,7 +140,7 @@ class SubjectCreditCard extends StatelessWidget {
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 11,
-                                  color: const Color(0xFF838A97),
+                                  color: appColors.textSecondary,
                                 ),
                               ),
                               TextSpan(
@@ -144,7 +148,7 @@ class SubjectCreditCard extends StatelessWidget {
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 11,
-                                  color: const Color(0xFF1F1F1F),
+                                  color: appColors.textPrimary,
                                 ),
                               ),
                             ],
@@ -162,3 +166,4 @@ class SubjectCreditCard extends StatelessWidget {
     );
   }
 }
+
