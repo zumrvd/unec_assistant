@@ -33,6 +33,7 @@ class UnecAssistantApp extends ConsumerWidget {
     const darkColors = AppColors.dark();
 
     return MaterialApp.router(
+      scrollBehavior: const AppScrollBehavior(),
       locale: kIsWeb ? DevicePreview.locale(context) : null,
       builder: kIsWeb ? DevicePreview.appBuilder : null,
       title: 'UNEC Assistant',
@@ -87,3 +88,24 @@ class UnecAssistantApp extends ConsumerWidget {
     );
   }
 }
+
+class AppScrollBehavior extends MaterialScrollBehavior {
+  const AppScrollBehavior();
+
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) {
+    return const BouncingScrollPhysics(
+      parent: AlwaysScrollableScrollPhysics(),
+    );
+  }
+
+  @override
+  Widget buildOverscrollIndicator(
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) {
+    return child;
+  }
+}
+
