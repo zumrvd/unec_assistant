@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 
 class ScheduleButton extends ConsumerWidget {
-  const ScheduleButton({
-    required this.onTap,
-    super.key,
-  });
+  const ScheduleButton({required this.onTap, super.key});
 
   final VoidCallback onTap;
 
@@ -23,10 +20,7 @@ class ScheduleButton extends ConsumerWidget {
         decoration: BoxDecoration(
           color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: appColors.borderColor,
-            width: 1,
-          ),
+          border: Border.all(color: appColors.borderColor, width: 1),
         ),
         padding: const EdgeInsets.only(
           top: 20,
@@ -83,4 +77,3 @@ class ScheduleButton extends ConsumerWidget {
     );
   }
 }
-

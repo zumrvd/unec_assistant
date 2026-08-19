@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../models/about_app_info.dart';
 import '../dialogs/contact_redirect_dialog.dart';
 
 class ContactTile extends ConsumerStatefulWidget {
   final ContactMethod data;
 
-  const ContactTile({
-    required this.data,
-    super.key,
-  });
+  const ContactTile({required this.data, super.key});
 
   @override
   ConsumerState<ContactTile> createState() => _ContactTileState();
@@ -68,7 +65,9 @@ class _ContactTileState extends ConsumerState<ContactTile> {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 11,
-                  color: _isActive ? widget.data.brandColor : appColors.textPrimary,
+                  color: _isActive
+                      ? widget.data.brandColor
+                      : appColors.textPrimary,
                 ),
               ),
             ],
@@ -78,4 +77,3 @@ class _ContactTileState extends ConsumerState<ContactTile> {
     );
   }
 }
-

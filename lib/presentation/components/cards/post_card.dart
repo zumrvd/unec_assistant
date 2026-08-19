@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../models/post.dart';
 import '../../../models/channel.dart';
 import '../../../utils/app_toast.dart';
@@ -105,8 +105,11 @@ class _PostCardState extends ConsumerState<PostCard> {
                           ),
                           if (widget.channel.isVerified) ...[
                             const SizedBox(width: 4),
-                            Icon(Icons.verified_rounded,
-                                size: 16, color: appColors.primary),
+                            Icon(
+                              Icons.verified_rounded,
+                              size: 16,
+                              color: appColors.primary,
+                            ),
                           ],
                         ],
                       ),
@@ -134,8 +137,11 @@ class _PostCardState extends ConsumerState<PostCard> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
-                child: Icon(Icons.school_outlined,
-                    size: 40, color: appColors.placeholderImageIcon),
+                child: Icon(
+                  Icons.school_outlined,
+                  size: 40,
+                  color: appColors.placeholderImageIcon,
+                ),
               ),
             ),
             const SizedBox(height: 12),
@@ -148,8 +154,9 @@ class _PostCardState extends ConsumerState<PostCard> {
                   widget.data.bodyText,
                   maxLines: _isExpanded ? null : 2,
                   softWrap: true,
-                  overflow:
-                      _isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                  overflow: _isExpanded
+                      ? TextOverflow.visible
+                      : TextOverflow.ellipsis,
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w500,
                     fontSize: 13,
@@ -213,8 +220,11 @@ class _PostCardState extends ConsumerState<PostCard> {
                   behavior: HitTestBehavior.opaque,
                   child: Row(
                     children: [
-                      Icon(Icons.chat_bubble_outline_rounded,
-                          size: 16, color: appColors.textSecondary),
+                      Icon(
+                        Icons.chat_bubble_outline_rounded,
+                        size: 16,
+                        color: appColors.textSecondary,
+                      ),
                       const SizedBox(width: 6),
                       Text(
                         '${widget.data.commentCount}',
@@ -234,8 +244,11 @@ class _PostCardState extends ConsumerState<PostCard> {
                     widget.onShareTap();
                   },
                   behavior: HitTestBehavior.opaque,
-                  child: Icon(Icons.ios_share_rounded,
-                      size: 18, color: appColors.textSecondary),
+                  child: Icon(
+                    Icons.ios_share_rounded,
+                    size: 18,
+                    color: appColors.textSecondary,
+                  ),
                 ),
               ],
             ),

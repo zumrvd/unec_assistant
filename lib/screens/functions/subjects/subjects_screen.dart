@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unec_assistant/presentation/components/buttons/subjects/subject_button.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 
 import '../../../presentation/components/buttons/subjects/download_curriculum_button.dart';
 import '../../../presentation/components/cards/semester_info_card.dart';
@@ -31,14 +31,16 @@ class SubjectsScreen extends ConsumerWidget {
             SemesterInfoCard(data: progDetail),
             DownloadCurriculumButton(onTap: () {}),
             SectionLabel('All subjects  ${allSubjects.length}'),
-            ...allSubjects.map((subject) => SubjectButton(
-              subject: subject,
-              onTap: () => context.push('/functions/subjects/${subject.subjectId}'),
-            )),
+            ...allSubjects.map(
+              (subject) => SubjectButton(
+                subject: subject,
+                onTap: () =>
+                    context.push('/functions/subjects/${subject.subjectId}'),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 }
-

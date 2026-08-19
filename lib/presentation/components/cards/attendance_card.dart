@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../providers/subject_detail_provider.dart';
 
 class AttendanceCard extends ConsumerWidget {
@@ -36,32 +36,32 @@ class AttendanceCard extends ConsumerWidget {
     final Color dotColor = isDanger
         ? appColors.error
         : isCaution
-            ? appColors.warning
-            : appColors.primary;
+        ? appColors.warning
+        : appColors.primary;
 
     final Color borderColor = isDanger
         ? appColors.error.withValues(alpha: 0.5)
         : isCaution
-            ? appColors.warning.withValues(alpha: 0.5)
-            : appColors.borderColor;
+        ? appColors.warning.withValues(alpha: 0.5)
+        : appColors.borderColor;
 
     final Color pillBg = isDanger
         ? appColors.error.withValues(alpha: 0.15)
         : isCaution
-            ? appColors.warning.withValues(alpha: 0.15)
-            : appColors.success.withValues(alpha: 0.15);
+        ? appColors.warning.withValues(alpha: 0.15)
+        : appColors.success.withValues(alpha: 0.15);
 
     final Color pillTextColor = isDanger
         ? appColors.error
         : isCaution
-            ? appColors.warning
-            : appColors.success;
+        ? appColors.warning
+        : appColors.success;
 
     final Color barColor = isDanger
         ? appColors.error
         : isCaution
-            ? appColors.warning
-            : appColors.success;
+        ? appColors.warning
+        : appColors.success;
 
     final String pillLabel = '$absencesLeft Left';
 
@@ -144,7 +144,10 @@ class AttendanceCard extends ConsumerWidget {
                 // Info Card
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 15,
+                  ),
                   decoration: BoxDecoration(
                     color: appColors.surface,
                     borderRadius: BorderRadius.circular(15),
@@ -203,14 +206,18 @@ class AttendanceCard extends ConsumerWidget {
                             ),
                             const SizedBox(height: 10),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 5),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 5,
+                              ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(6),
                                 child: LinearProgressIndicator(
                                   value: usedRatio.clamp(0.0, 1.0),
                                   minHeight: 6,
                                   backgroundColor: appColors.borderColor,
-                                  valueColor: AlwaysStoppedAnimation<Color>(barColor),
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    barColor,
+                                  ),
                                 ),
                               ),
                             ),
@@ -228,4 +235,3 @@ class AttendanceCard extends ConsumerWidget {
     );
   }
 }
-

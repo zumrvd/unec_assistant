@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/note.dart';
 import '../../../providers/notes_provider.dart';
@@ -12,10 +12,7 @@ import '../../../providers/notes_provider.dart';
 class NoteEditorScreen extends ConsumerStatefulWidget {
   final String noteId;
 
-  const NoteEditorScreen({
-    required this.noteId,
-    super.key,
-  });
+  const NoteEditorScreen({required this.noteId, super.key});
 
   @override
   ConsumerState<NoteEditorScreen> createState() => _NoteEditorScreenState();
@@ -38,8 +35,9 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   }
 
   void _loadNote() {
-    final note =
-        ref.read(notesProvider).firstWhere((n) => n.noteId == widget.noteId);
+    final note = ref
+        .read(notesProvider)
+        .firstWhere((n) => n.noteId == widget.noteId);
     _titleController.text = note.title;
     _selectedSkin = note.paperSkin;
 
@@ -75,10 +73,12 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
 
   void _saveNote() {
     if (!mounted) return;
-    final contentJson =
-        jsonEncode(_quillController.document.toDelta().toJson());
-    final oldNote =
-        ref.read(notesProvider).firstWhere((n) => n.noteId == widget.noteId);
+    final contentJson = jsonEncode(
+      _quillController.document.toDelta().toJson(),
+    );
+    final oldNote = ref
+        .read(notesProvider)
+        .firstWhere((n) => n.noteId == widget.noteId);
     final updatedNote = oldNote.copyWith(
       title: _titleController.text,
       content: contentJson,
@@ -199,13 +199,15 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                           controller: _titleController,
                           onChanged: (_) => _onChanged(),
                           style: GoogleFonts.redditSans(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 18,
-                              color: appColors.textPrimary),
+                            fontWeight: FontWeight.w700,
+                            fontSize: 18,
+                            color: appColors.textPrimary,
+                          ),
                           decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Note Title',
-                              hintStyle: TextStyle(color: appColors.textMuted)),
+                            border: InputBorder.none,
+                            hintText: 'Note Title',
+                            hintStyle: TextStyle(color: appColors.textMuted),
+                          ),
                         ),
                       ),
                     ],
@@ -221,9 +223,10 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                   child: Text(
                     'Done',
                     style: GoogleFonts.redditSans(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 15,
-                        color: appColors.primary),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 15,
+                      color: appColors.primary,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -288,9 +291,10 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                 Text(
                   'Paper',
                   style: GoogleFonts.redditSans(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 12,
-                      color: appColors.textSecondary),
+                    fontWeight: FontWeight.w700,
+                    fontSize: 12,
+                    color: appColors.textSecondary,
+                  ),
                 ),
                 const SizedBox(width: 15),
                 Expanded(
@@ -311,13 +315,15 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                             color: _getSkinAccentColor(skin, appColors),
                             shape: BoxShape.circle,
                             border: isSelected
-                                ? Border.all(
-                                    color: appColors.primary, width: 2)
+                                ? Border.all(color: appColors.primary, width: 2)
                                 : null,
                           ),
                           child: isSelected
-                              ? const Icon(Icons.check_rounded,
-                                  size: 12, color: Colors.white)
+                              ? const Icon(
+                                  Icons.check_rounded,
+                                  size: 12,
+                                  color: Colors.white,
+                                )
                               : null,
                         ),
                       );
@@ -332,4 +338,3 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     );
   }
 }
-

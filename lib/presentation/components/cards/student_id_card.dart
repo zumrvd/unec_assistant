@@ -1,23 +1,38 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class StudentCardTheme {
+  final String id;
   final String name;
   final LinearGradient gradient;
   final Color bubbleColor;
   final Color badgeBackgroundColor;
 
   const StudentCardTheme({
+    required this.id,
     required this.name,
     required this.gradient,
     required this.bubbleColor,
     required this.badgeBackgroundColor,
   });
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is StudentCardTheme &&
+          runtimeType == other.runtimeType &&
+          id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
+
   static const List<StudentCardTheme> presets = [
+    // 1. Blue (Classic UNEC Primary)
     StudentCardTheme(
-      name: 'Ocean Blue',
+      id: 'blue',
+      name: 'Blue',
       gradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
@@ -31,82 +46,220 @@ class StudentCardTheme {
       bubbleColor: Color(0xFF2776F3),
       badgeBackgroundColor: Color(0xB56B98DB),
     ),
+    // 2. Navy (Deep UNEC Dark Navy)
     StudentCardTheme(
-      name: 'Emerald Mint',
+      id: 'navy',
+      name: 'Navy',
       gradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          Color(0xFF059669),
-          Color(0xCC059669),
-          Color(0xFF047857),
+          Color(0xFF174280),
+          Color(0xFF1C4B8E),
+          Color(0xFF123466),
         ],
         stops: [0.0, 0.5, 1.0],
       ),
-      bubbleColor: Color(0xFF10B981),
-      badgeBackgroundColor: Color(0xB534D399),
+      bubbleColor: Color(0xFF2258A3),
+      badgeBackgroundColor: Color(0xB55785C4),
     ),
+    // 3. Purple
     StudentCardTheme(
-      name: 'Sunset Violet',
+      id: 'purple',
+      name: 'Purple',
       gradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          Color(0xFF7C3AED),
-          Color(0xCC7C3AED),
-          Color(0xFF6D28D9),
+          Color(0xFF534AB7),
+          Color(0xCC534AB7),
+          Color(0xFF433B9B),
         ],
         stops: [0.0, 0.5, 1.0],
       ),
-      bubbleColor: Color(0xFF8B5CF6),
-      badgeBackgroundColor: Color(0xB5A78BFA),
+      bubbleColor: Color(0xFF6B62D4),
+      badgeBackgroundColor: Color(0xB58E87E6),
     ),
+    // 4. Pink
     StudentCardTheme(
-      name: 'Rose Berry',
+      id: 'pink',
+      name: 'Pink',
       gradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          Color(0xFFE11D48),
-          Color(0xCCE11D48),
-          Color(0xFFBE123C),
+          Color(0xFFDA4979),
+          Color(0xCCDA4979),
+          Color(0xFFC03666),
         ],
         stops: [0.0, 0.5, 1.0],
       ),
-      bubbleColor: Color(0xFFF43F5E),
-      badgeBackgroundColor: Color(0xB5FB7185),
+      bubbleColor: Color(0xFFE8608E),
+      badgeBackgroundColor: Color(0xB5EDA0BC),
     ),
+    // 5. Deep Pink
     StudentCardTheme(
-      name: 'Midnight Onyx',
+      id: 'deep_pink',
+      name: 'Deep Pink',
       gradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          Color(0xFF334155),
-          Color(0xCC334155),
-          Color(0xFF1E293B),
+          Color(0xFFE16890),
+          Color(0xCCE16890),
+          Color(0xFFC74C75),
         ],
         stops: [0.0, 0.5, 1.0],
       ),
-      bubbleColor: Color(0xFF475569),
-      badgeBackgroundColor: Color(0xB564748B),
+      bubbleColor: Color(0xFFEB81A4),
+      badgeBackgroundColor: Color(0xB5F2ACC2),
     ),
+    // 6. Orange-Red
     StudentCardTheme(
-      name: 'Golden Amber',
+      id: 'orange_red',
+      name: 'Orange-Red',
       gradient: LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          Color(0xFFD97706),
-          Color(0xCCD97706),
-          Color(0xFFB45309),
+          Color(0xFFD54829),
+          Color(0xCCD54829),
+          Color(0xFFB83518),
         ],
         stops: [0.0, 0.5, 1.0],
       ),
-      bubbleColor: Color(0xFFF59E0B),
-      badgeBackgroundColor: Color(0xB5FBBF24),
+      bubbleColor: Color(0xFFE56245),
+      badgeBackgroundColor: Color(0xB5F09B87),
+    ),
+    // 7. Yellow
+    StudentCardTheme(
+      id: 'yellow',
+      name: 'Yellow',
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Color(0xFFE3993C),
+          Color(0xCCE3993C),
+          Color(0xFFC47B20),
+        ],
+        stops: [0.0, 0.5, 1.0],
+      ),
+      bubbleColor: Color(0xFFF0B05F),
+      badgeBackgroundColor: Color(0xB5F7D09E),
+    ),
+    // 8. Dark Yellow / Ochre
+    StudentCardTheme(
+      id: 'yellow_dark',
+      name: 'Dark Yellow',
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Color(0xFF985909),
+          Color(0xFF854F0B),
+          Color(0xFF734105),
+        ],
+        stops: [0.0, 0.5, 1.0],
+      ),
+      bubbleColor: Color(0xFFB06B12),
+      badgeBackgroundColor: Color(0xB5CCA26E),
+    ),
+    // 9. Green
+    StudentCardTheme(
+      id: 'green',
+      name: 'Green',
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Color(0xFF0F6E11),
+          Color(0xCC0F6E11),
+          Color(0xFF0B540D),
+        ],
+        stops: [0.0, 0.5, 1.0],
+      ),
+      bubbleColor: Color(0xFF1B8A1E),
+      badgeBackgroundColor: Color(0xB571B873),
+    ),
+    // 10. Olive Green (Green2)
+    StudentCardTheme(
+      id: 'green2',
+      name: 'Olive Green',
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Color(0xFF3B6D11),
+          Color(0xCC3B6D11),
+          Color(0xFF2C530B),
+        ],
+        stops: [0.0, 0.5, 1.0],
+      ),
+      bubbleColor: Color(0xFF4F8A1B),
+      badgeBackgroundColor: Color(0xB58AB56B),
+    ),
+    // 11. Dark Red
+    StudentCardTheme(
+      id: 'red',
+      name: 'Red',
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Color(0xFF993C1D),
+          Color(0xCC993C1D),
+          Color(0xFF7A2B11),
+        ],
+        stops: [0.0, 0.5, 1.0],
+      ),
+      bubbleColor: Color(0xFFB5502E),
+      badgeBackgroundColor: Color(0xB5CF9582),
+    ),
+    // 12. Charcoal Obsidian
+    StudentCardTheme(
+      id: 'obsidian',
+      name: 'Obsidian',
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Color(0xFF2D333F),
+          Color(0xFF242A34),
+          Color(0xFF1A1F27),
+        ],
+        stops: [0.0, 0.5, 1.0],
+      ),
+      bubbleColor: Color(0xFF3E4656),
+      badgeBackgroundColor: Color(0xB5838A97),
     ),
   ];
+}
+
+class StudentIdCardController {
+  _StudentIdCardState? _state;
+
+  void _attach(_StudentIdCardState state) {
+    _state = state;
+  }
+
+  void _detach() {
+    _state = null;
+  }
+
+  bool get isFront => _state?._isFront ?? true;
+
+  void flipToFront() {
+    _state?.flipToFront();
+  }
+
+  void flipToBack() {
+    _state?.flipToBack();
+  }
+
+  void toggle() {
+    _state?._toggleCard();
+  }
 }
 
 class StudentIdCard extends ConsumerStatefulWidget {
@@ -119,6 +272,12 @@ class StudentIdCard extends ConsumerStatefulWidget {
     required this.yearBadge,
     this.quote,
     this.profileImage,
+    this.theme,
+    this.onTap,
+    this.heroTag = 'student_id_card',
+    this.initialIsFront = true,
+    this.onDoneTap,
+    this.cardController,
     super.key,
   });
 
@@ -130,6 +289,12 @@ class StudentIdCard extends ConsumerStatefulWidget {
   final String yearBadge;
   final String? quote;
   final ImageProvider? profileImage;
+  final StudentCardTheme? theme;
+  final VoidCallback? onTap;
+  final Object? heroTag;
+  final bool initialIsFront;
+  final VoidCallback? onDoneTap;
+  final StudentIdCardController? cardController;
 
   static const textColor = Color(0xFFE0E4F0);
   static const backgroundGradient = LinearGradient(
@@ -159,74 +324,21 @@ class _StudentIdCardState extends ConsumerState<StudentIdCard>
   late ImageProvider? _selectedAvatar;
   late String? _selectedQuote;
   late StudentCardTheme _selectedTheme;
-  late TextEditingController _quoteController;
-
-  // Up to 3 saved recent uploaded pictures
-  late List<({String label, ImageProvider image})> _recentUploadedImages;
-
-  static const List<String?> _quoteSuggestions = [
-    '"too pretty to worry about midterms"',
-    '"Future Software Engineer 💻"',
-    '"Coffee, Code & Dreams ☕"',
-    '"UNEC · SABAH 🎓"',
-    null,
-  ];
-
-  static const List<({String label, ImageProvider image})> _availableUploadPresets = [
-    (
-      label: 'Cat (Midterms)',
-      image: AssetImage('assets/images/profile.jpg'),
-    ),
-    (
-      label: 'Student Photo',
-      image: AssetImage('assets/images/unec_profile_picture.png'),
-    ),
-    (
-      label: 'Robot Mascot',
-      image: AssetImage('assets/images/robot_mascot.PNG'),
-    ),
-    (
-      label: 'Alternate Cat',
-      image: AssetImage('assets/images/profile.png'),
-    ),
-  ];
 
   @override
   void initState() {
     super.initState();
-    _selectedAvatar =
-        widget.profileImage ?? const AssetImage('assets/images/profile.jpg');
+    _isFront = widget.initialIsFront;
+    _selectedAvatar = widget.profileImage;
     _selectedQuote =
         widget.quote ?? '"too pretty to worry about midterms"';
-    _selectedTheme = StudentCardTheme.presets.first;
+    _selectedTheme = widget.theme ?? StudentCardTheme.presets.first;
 
-    _quoteController = TextEditingController(text: _selectedQuote ?? '');
-    _quoteController.addListener(() {
-      final text = _quoteController.text.trim();
-      if (_selectedQuote != (text.isEmpty ? null : text)) {
-        setState(() {
-          _selectedQuote = text.isEmpty ? null : text;
-        });
-      }
-    });
-
-    _recentUploadedImages = [
-      (
-        label: 'Cat',
-        image: const AssetImage('assets/images/profile.jpg'),
-      ),
-      (
-        label: 'Photo',
-        image: const AssetImage('assets/images/unec_profile_picture.png'),
-      ),
-      (
-        label: 'Mascot',
-        image: const AssetImage('assets/images/robot_mascot.PNG'),
-      ),
-    ];
+    widget.cardController?._attach(this);
 
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 700),
+      duration: const Duration(milliseconds: 800),
+      value: widget.initialIsFront ? 0.0 : 1.0,
       vsync: this,
     );
 
@@ -245,11 +357,34 @@ class _StudentIdCardState extends ConsumerState<StudentIdCard>
     );
   }
 
+  @override
+  void didUpdateWidget(covariant StudentIdCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.cardController != oldWidget.cardController) {
+      oldWidget.cardController?._detach();
+      widget.cardController?._attach(this);
+    }
+    if (widget.theme != null && widget.theme != oldWidget.theme) {
+      setState(() {
+        _selectedTheme = widget.theme!;
+      });
+    }
+    if (widget.quote != oldWidget.quote) {
+      setState(() {
+        _selectedQuote = widget.quote;
+      });
+    }
+    if (widget.profileImage != oldWidget.profileImage) {
+      setState(() {
+        _selectedAvatar = widget.profileImage;
+      });
+    }
+  }
+
   void _toggleCard() {
     if (_isFront) {
       _controller.forward();
     } else {
-      FocusScope.of(context).unfocus();
       _controller.reverse();
     }
     setState(() {
@@ -257,137 +392,37 @@ class _StudentIdCardState extends ConsumerState<StudentIdCard>
     });
   }
 
-  void _handleUploadNewPhoto() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return Container(
-          decoration: BoxDecoration(
-            color: const Color(0xFF1E293B),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-            border: Border.all(color: const Color(0xFF334155), width: 1),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Upload Profile Picture',
-                    style: GoogleFonts.redditSans(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                      color: const Color(0xFFFFFFFF),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    behavior: HitTestBehavior.opaque,
-                    child: const Icon(
-                      Icons.close_rounded,
-                      color: Color(0xFF94A3B8),
-                      size: 20,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 6),
-              Text(
-                'Select a photo to upload to your student ID card',
-                style: GoogleFonts.redditSans(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 12,
-                  color: const Color(0xFF94A3B8),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Wrap(
-                spacing: 12,
-                runSpacing: 12,
-                children: _availableUploadPresets.map((preset) {
-                  return GestureDetector(
-                    onTap: () {
-                      _onNewPhotoUploaded(preset);
-                      Navigator.pop(context);
-                    },
-                    behavior: HitTestBehavior.opaque,
-                    child: Container(
-                      width: 140,
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF0F172A),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: const Color(0xFF334155),
-                          width: 1,
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image(
-                              image: preset.image,
-                              width: 38,
-                              height: 38,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              preset.label,
-                              style: GoogleFonts.redditSans(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 11,
-                                color: const Color(0xFFFFFFFF),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 10),
-            ],
-          ),
-        );
-      },
-    );
+  void flipToFront() {
+    if (!_isFront) {
+      _controller.reverse();
+      setState(() {
+        _isFront = true;
+      });
+    }
   }
 
-  void _onNewPhotoUploaded(({String label, ImageProvider image}) newPhoto) {
-    setState(() {
-      _selectedAvatar = newPhoto.image;
-
-      // Update recent uploaded list (max 3 items)
-      _recentUploadedImages.removeWhere((item) => item.image == newPhoto.image);
-      _recentUploadedImages.insert(0, newPhoto);
-      if (_recentUploadedImages.length > 3) {
-        _recentUploadedImages = _recentUploadedImages.sublist(0, 3);
-      }
-    });
+  void flipToBack() {
+    if (_isFront) {
+      _controller.forward();
+      setState(() {
+        _isFront = false;
+      });
+    }
   }
 
   @override
   void dispose() {
-    _quoteController.dispose();
+    widget.cardController?._detach();
     _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    final cardWidget = Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: GestureDetector(
-        onTap: _isFront ? _toggleCard : null,
+        onTap: widget.onTap ?? _toggleCard,
         behavior: HitTestBehavior.opaque,
         child: AnimatedBuilder(
           animation: _controller,
@@ -412,6 +447,108 @@ class _StudentIdCardState extends ConsumerState<StudentIdCard>
         ),
       ),
     );
+
+    if (widget.heroTag != null) {
+      return Hero(
+        tag: widget.heroTag!,
+        flightShuttleBuilder: _flightShuttleBuilder,
+        child: Material(
+          type: MaterialType.transparency,
+          child: cardWidget,
+        ),
+      );
+    }
+
+    return cardWidget;
+  }
+
+  Widget _flightShuttleBuilder(
+    BuildContext flightContext,
+    Animation<double> animation,
+    HeroFlightDirection flightDirection,
+    BuildContext fromHeroContext,
+    BuildContext toHeroContext,
+  ) {
+    final curvedAnimation = CurvedAnimation(
+      parent: animation,
+      curve: Curves.easeInOutCubic,
+    );
+
+    // Determine if the card we are navigating away from is currently front-facing
+    final fromCardState =
+        fromHeroContext.findAncestorStateOfType<_StudentIdCardState>();
+    final bool isLeavingFromFront = fromCardState?._isFront ?? _isFront;
+
+    final frontCard = RepaintBoundary(
+      child: OverflowBox(
+        alignment: Alignment.center,
+        minWidth: 300,
+        maxWidth: 300,
+        minHeight: 0,
+        maxHeight: double.infinity,
+        child: _buildFrontCard(),
+      ),
+    );
+    final backCard = RepaintBoundary(
+      child: OverflowBox(
+        alignment: Alignment.center,
+        minWidth: 300,
+        maxWidth: 300,
+        minHeight: 0,
+        maxHeight: double.infinity,
+        child: Transform.scale(
+          scaleX: -1,
+          scaleY: 1,
+          child: _buildBackCard(),
+        ),
+      ),
+    );
+
+    return AnimatedBuilder(
+      animation: curvedAnimation,
+      builder: (context, child) {
+        final double progress = curvedAnimation.value;
+
+        // When returning to profile and already on the front face, smoothly return without flipping
+        if (flightDirection == HeroFlightDirection.pop && isLeavingFromFront) {
+          return Material(
+            type: MaterialType.transparency,
+            child: Center(
+              child: frontCard,
+            ),
+          );
+        }
+
+        final double rotation = progress;
+        final double scale = 1.0 + 0.05 * math.sin(progress * math.pi);
+        final bool showFront = rotation < 0.5;
+
+        return Material(
+          type: MaterialType.transparency,
+          child: Center(
+            child: Transform.scale(
+              scale: scale,
+              child: Transform(
+                transform: Matrix4.identity()
+                  ..setEntry(3, 2, 0.001) // perspective
+                  ..rotateY(rotation * math.pi),
+                alignment: Alignment.center,
+                child: showFront ? frontCard : backCard,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  String? get _formattedQuote {
+    final raw = _selectedQuote?.trim();
+    if (raw == null || raw.isEmpty) return null;
+    if (raw.startsWith('"') && raw.endsWith('"') && raw.length >= 2) {
+      return raw;
+    }
+    return '"$raw"';
   }
 
   Widget _buildFrontCard() {
@@ -463,15 +600,21 @@ class _StudentIdCardState extends ConsumerState<StudentIdCard>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'UNEC · TƏLƏBƏ',
-                          style: GoogleFonts.redditSans(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                            color: StudentIdCard.textColor,
+                        Flexible(
+                          child: Text(
+                            'UNEC · TƏLƏBƏ',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.redditSans(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: StudentIdCard.textColor,
+                            ),
                           ),
                         ),
+                        const SizedBox(width: 8),
                         Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Container(
                               decoration: BoxDecoration(
@@ -513,7 +656,7 @@ class _StudentIdCardState extends ConsumerState<StudentIdCard>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          width: 80,
+                          width: 72,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -521,31 +664,66 @@ class _StudentIdCardState extends ConsumerState<StudentIdCard>
                                 profileImage: _selectedAvatar,
                                 bubbleColor: _selectedTheme.bubbleColor,
                               ),
-                              if (_selectedQuote != null &&
-                                  _selectedQuote!.isNotEmpty) ...[
-                                const SizedBox(height: 8),
-                                Text(
-                                  _selectedQuote!,
-                                  softWrap: true,
-                                  style: GoogleFonts.redditSans(
-                                    fontStyle: FontStyle.italic,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 8.5,
-                                    color: StudentIdCard.textColor,
-                                    height: 1.15,
+                              if (_formattedQuote != null)
+                                Container(
+                                  width: 72,
+                                  margin: const EdgeInsets.only(top: 6),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 5,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withValues(alpha: 0.18),
+                                    borderRadius: BorderRadius.circular(6),
+                                    border: Border.all(
+                                      color:
+                                          Colors.white.withValues(alpha: 0.22),
+                                      width: 0.8,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black
+                                            .withValues(alpha: 0.12),
+                                        blurRadius: 3,
+                                        offset: const Offset(0, 1),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Text(
+                                    _formattedQuote!,
+                                    maxLines: 4,
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: true,
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.redditSans(
+                                      fontStyle: FontStyle.italic,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 8.5,
+                                      color: const Color(0xFFFFFFFF),
+                                      height: 1.2,
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black
+                                              .withValues(alpha: 0.4),
+                                          blurRadius: 2,
+                                          offset: const Offset(0, 0.5),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ],
                             ],
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 14),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 widget.studentName,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w800,
                                   fontSize: 15,
@@ -555,6 +733,8 @@ class _StudentIdCardState extends ConsumerState<StudentIdCard>
                               const SizedBox(height: 2),
                               Text(
                                 widget.groupCode,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w800,
                                   fontSize: 15,
@@ -564,6 +744,8 @@ class _StudentIdCardState extends ConsumerState<StudentIdCard>
                               const SizedBox(height: 6),
                               Text(
                                 widget.faculty,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 12,
@@ -573,6 +755,8 @@ class _StudentIdCardState extends ConsumerState<StudentIdCard>
                               const SizedBox(height: 2),
                               Text(
                                 '· ${widget.sabahGroup}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 12,
@@ -582,6 +766,8 @@ class _StudentIdCardState extends ConsumerState<StudentIdCard>
                               const SizedBox(height: 4),
                               Text(
                                 widget.years,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 8,
@@ -605,7 +791,7 @@ class _StudentIdCardState extends ConsumerState<StudentIdCard>
 
   Widget _buildBackCard() {
     return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 250),
+      constraints: const BoxConstraints(minHeight: 160),
       child: SizedBox(
         width: 300,
         child: ClipRRect(
@@ -646,478 +832,190 @@ class _StudentIdCardState extends ConsumerState<StudentIdCard>
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
+                  horizontal: 18,
+                  vertical: 14,
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Header with flip back button
+                    // Header with UNEC Digital Badge & Tap to Flip
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.auto_fix_high_rounded,
-                              size: 16,
-                              color: StudentIdCard.textColor,
+                        Flexible(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.18),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.25),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: const Icon(
+                                  Icons.verified_user_rounded,
+                                  size: 13,
+                                  color: Color(0xFFFFFFFF),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Flexible(
+                                child: Text(
+                                  'UNEC DIGITAL ID',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.redditSans(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 12,
+                                    letterSpacing: 0.6,
+                                    color: const Color(0xFFFFFFFF),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              width: 0.8,
                             ),
-                            const SizedBox(width: 6),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.flip_rounded,
+                                size: 10,
+                                color: Color(0xFFFFFFFF),
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Tap to flip',
+                                style: GoogleFonts.redditSans(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 8.5,
+                                  color: const Color(0xFFFFFFFF),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+
+                    // Chip & Contactless Emblems
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Smart Chip Mockup
+                        Container(
+                          width: 34,
+                          height: 25,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFFFFDF7A), Color(0xFFD4A017)],
+                            ),
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.4),
+                              width: 0.8,
+                            ),
+                          ),
+                          child: Center(
+                            child: Icon(
+                              Icons.memory_rounded,
+                              size: 16,
+                              color: Colors.brown.shade800,
+                            ),
+                          ),
+                        ),
+                        // NFC Contactless Symbol
+                        Icon(
+                          Icons.contactless_rounded,
+                          size: 20,
+                          color: Colors.white.withValues(alpha: 0.7),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Barcode & Student ID Number Footer
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        // Digital Barcode Mockup
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: List.generate(
+                                26,
+                                (index) => Container(
+                                  width: index % 3 == 0
+                                      ? 2.5
+                                      : (index % 2 == 0 ? 1.5 : 1.0),
+                                  height: 20,
+                                  margin: const EdgeInsets.only(right: 2),
+                                  color: Colors.white.withValues(
+                                    alpha: index % 5 == 0 ? 0.35 : 0.85,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 3),
                             Text(
-                              'Personalize Card',
+                              'ID: 230101042 · SABAH',
                               style: GoogleFonts.redditSans(
-                                fontWeight: FontWeight.w800,
-                                fontSize: 13,
-                                color: const Color(0xFFFFFFFF),
+                                fontWeight: FontWeight.w600,
+                                fontSize: 8,
+                                letterSpacing: 0.8,
+                                color: StudentIdCard.textColor.withValues(
+                                  alpha: 0.8,
+                                ),
                               ),
                             ),
                           ],
                         ),
-                        GestureDetector(
-                          onTap: _toggleCard,
-                          behavior: HitTestBehavior.opaque,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(14),
-                              border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.3),
-                                width: 1,
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'Done',
-                                  style: GoogleFonts.redditSans(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 11,
-                                    color: const Color(0xFFFFFFFF),
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                const Icon(
-                                  Icons.check_rounded,
-                                  size: 13,
-                                  color: Color(0xFFFFFFFF),
-                                ),
-                              ],
+                        // Official Stamp Icon
+                        Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.35),
+                              width: 1,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-
-                    // Avatar Selector: Initials + Upload + up to 3 saved recent slots (max 5 options)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'AVATAR (MAX 5 SLOTS)',
-                          style: GoogleFonts.redditSans(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 8.5,
-                            letterSpacing: 0.5,
-                            color: StudentIdCard.textColor,
-                          ),
-                        ),
-                        Text(
-                          '${1 + 1 + _recentUploadedImages.length}/5 options',
-                          style: GoogleFonts.redditSans(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 8,
-                            color: StudentIdCard.textColor.withValues(alpha: 0.7),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // Slot 1: Initials
-                        _buildInitialsSlot(),
-
-                        // Slot 2: Upload Action
-                        _buildUploadSlot(),
-
-                        // Slots 3, 4, 5: Up to 3 saved recent uploaded pictures
-                        ..._recentUploadedImages.map((savedPhoto) {
-                          final isSelected = _selectedAvatar == savedPhoto.image;
-                          return _buildPhotoSlot(
-                            image: savedPhoto.image,
-                            label: savedPhoto.label,
-                            isSelected: isSelected,
-                            onTap: () {
-                              setState(() {
-                                _selectedAvatar = savedPhoto.image;
-                              });
-                            },
-                          );
-                        }),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-
-                    // Card Background Color Theme Selector
-                    Text(
-                      'GRADIENT THEME',
-                      style: GoogleFonts.redditSans(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 8.5,
-                        letterSpacing: 0.5,
-                        color: StudentIdCard.textColor,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: StudentCardTheme.presets.map((themePreset) {
-                        final isSelected =
-                            _selectedTheme.name == themePreset.name;
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _selectedTheme = themePreset;
-                            });
-                          },
-                          behavior: HitTestBehavior.opaque,
-                          child: Container(
-                            width: 36,
-                            height: 36,
-                            decoration: BoxDecoration(
-                              gradient: themePreset.gradient,
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: isSelected
-                                    ? const Color(0xFFFFFFFF)
-                                    : Colors.white.withValues(alpha: 0.3),
-                                width: isSelected ? 2.5 : 1,
-                              ),
-                              boxShadow: isSelected
-                                  ? [
-                                      BoxShadow(
-                                        color: Colors.black.withValues(alpha: 0.3),
-                                        blurRadius: 4,
-                                        spreadRadius: 1,
-                                      ),
-                                    ]
-                                  : null,
-                            ),
-                            child: isSelected
-                                ? const Center(
-                                    child: Icon(
-                                      Icons.check_rounded,
-                                      size: 15,
-                                      color: Color(0xFFFFFFFF),
-                                    ),
-                                  )
-                                : null,
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: 8),
-
-                    // Quote Input Box & Presets
-                    Text(
-                      'CARD QUOTE',
-                      style: GoogleFonts.redditSans(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 8.5,
-                        letterSpacing: 0.5,
-                        color: StudentIdCard.textColor,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-
-                    // User Input Box
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.25),
-                          width: 1,
-                        ),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.format_quote_rounded,
+                          child: Icon(
+                            Icons.school_rounded,
                             size: 14,
-                            color: StudentIdCard.textColor,
+                            color: Colors.white.withValues(alpha: 0.7),
                           ),
-                          const SizedBox(width: 6),
-                          Expanded(
-                            child: TextField(
-                              controller: _quoteController,
-                              style: GoogleFonts.redditSans(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 10.5,
-                                color: const Color(0xFFFFFFFF),
-                              ),
-                              cursorColor: const Color(0xFFFFFFFF),
-                              maxLength: 45,
-                              decoration: InputDecoration(
-                                hintText: 'Enter your custom quote...',
-                                hintStyle: GoogleFonts.redditSans(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 10,
-                                  color: StudentIdCard.textColor.withValues(alpha: 0.6),
-                                ),
-                                border: InputBorder.none,
-                                isDense: true,
-                                counterText: '',
-                                contentPadding: const EdgeInsets.symmetric(vertical: 6),
-                              ),
-                            ),
-                          ),
-                          if (_quoteController.text.isNotEmpty)
-                            GestureDetector(
-                              onTap: () {
-                                _quoteController.clear();
-                              },
-                              behavior: HitTestBehavior.opaque,
-                              child: const Icon(
-                                Icons.cancel_rounded,
-                                size: 14,
-                                color: StudentIdCard.textColor,
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-
-                    // Quick Quote Suggestions
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      physics: const BouncingScrollPhysics(),
-                      child: Row(
-                        children: _quoteSuggestions.map((quoteOption) {
-                          final isSelected = _selectedQuote == quoteOption;
-                          final displayLabel = quoteOption ?? 'Clear quote';
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 5),
-                            child: GestureDetector(
-                              onTap: () {
-                                _quoteController.text = quoteOption ?? '';
-                              },
-                              behavior: HitTestBehavior.opaque,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 7,
-                                  vertical: 3,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: isSelected
-                                      ? Colors.white.withValues(alpha: 0.25)
-                                      : Colors.white.withValues(alpha: 0.08),
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                    color: isSelected
-                                        ? const Color(0xFFFFFFFF)
-                                        : Colors.transparent,
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Text(
-                                  displayLabel,
-                                  style: GoogleFonts.redditSans(
-                                    fontWeight: isSelected
-                                        ? FontWeight.w700
-                                        : FontWeight.w500,
-                                    fontSize: 8,
-                                    fontStyle: quoteOption != null
-                                        ? FontStyle.italic
-                                        : FontStyle.normal,
-                                    color: isSelected
-                                        ? const Color(0xFFFFFFFF)
-                                        : StudentIdCard.textColor,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInitialsSlot() {
-    final isSelected = _selectedAvatar == null;
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedAvatar = null;
-        });
-      },
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        width: 48,
-        padding: const EdgeInsets.symmetric(vertical: 3),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.white.withValues(alpha: 0.25)
-              : Colors.white.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(9),
-          border: Border.all(
-            color: isSelected ? const Color(0xFFFFFFFF) : Colors.transparent,
-            width: 1.5,
-          ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 26,
-              height: 26,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6),
-                color: _selectedTheme.bubbleColor,
-              ),
-              child: Center(
-                child: Text(
-                  'ZV',
-                  style: GoogleFonts.redditSans(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 10,
-                    color: const Color(0xFFFFFFFF),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              'Initials',
-              style: GoogleFonts.redditSans(
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                fontSize: 8,
-                color: isSelected
-                    ? const Color(0xFFFFFFFF)
-                    : StudentIdCard.textColor,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildUploadSlot() {
-    return GestureDetector(
-      onTap: _handleUploadNewPhoto,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        width: 48,
-        padding: const EdgeInsets.symmetric(vertical: 3),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(9),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.3),
-            width: 1,
-          ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 26,
-              height: 26,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6),
-                color: Colors.white.withValues(alpha: 0.15),
-              ),
-              child: const Center(
-                child: Icon(
-                  Icons.add_photo_alternate_rounded,
-                  size: 14,
-                  color: Color(0xFFFFFFFF),
-                ),
-              ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              'Upload',
-              style: GoogleFonts.redditSans(
-                fontWeight: FontWeight.w600,
-                fontSize: 8,
-                color: StudentIdCard.textColor,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPhotoSlot({
-    required ImageProvider image,
-    required String label,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        width: 48,
-        padding: const EdgeInsets.symmetric(vertical: 3),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.white.withValues(alpha: 0.25)
-              : Colors.white.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(9),
-          border: Border.all(
-            color: isSelected ? const Color(0xFFFFFFFF) : Colors.transparent,
-            width: 1.5,
-          ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(6),
-              child: Image(
-                image: image,
-                width: 26,
-                height: 26,
-                fit: BoxFit.cover,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.redditSans(
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                fontSize: 8,
-                color: isSelected
-                    ? const Color(0xFFFFFFFF)
-                    : StudentIdCard.textColor,
-              ),
-            ),
-          ],
         ),
       ),
     );

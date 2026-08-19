@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/user_security_provider.dart';
 import 'package:unec_assistant/presentation/components/lists/labels.dart';
@@ -255,11 +255,23 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                   ),
                   Divider(height: 1, color: appColors.divider),
                   _buildRequirementItem('8-32 characters long', appColors),
-                  _buildRequirementItem('One uppercase letter (A-Z)', appColors),
-                  _buildRequirementItem('One lowercase letter (a-z)', appColors),
+                  _buildRequirementItem(
+                    'One uppercase letter (A-Z)',
+                    appColors,
+                  ),
+                  _buildRequirementItem(
+                    'One lowercase letter (a-z)',
+                    appColors,
+                  ),
                   _buildRequirementItem('One number', appColors),
-                  _buildRequirementItem('One special character (!@#\$...)', appColors),
-                  _buildRequirementItem('Different from last 3 passwords', appColors),
+                  _buildRequirementItem(
+                    'One special character (!@#\$...)',
+                    appColors,
+                  ),
+                  _buildRequirementItem(
+                    'Different from last 3 passwords',
+                    appColors,
+                  ),
                 ],
               ),
             ),

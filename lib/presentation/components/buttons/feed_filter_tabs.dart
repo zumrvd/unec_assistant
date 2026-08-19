@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/post.dart';
 
@@ -21,7 +21,9 @@ class FeedFilterTabs extends ConsumerWidget {
     required AppColors appColors,
     bool showCheckbox = true,
   }) {
-    final isSelected = type == null ? selectedFilters.isEmpty : selectedFilters.contains(type);
+    final isSelected = type == null
+        ? selectedFilters.isEmpty
+        : selectedFilters.contains(type);
 
     return GestureDetector(
       onTap: () => onSelect(type),
@@ -51,7 +53,9 @@ class FeedFilterTabs extends ConsumerWidget {
             if (showCheckbox) ...[
               const SizedBox(width: 6),
               Icon(
-                isSelected ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded,
+                isSelected
+                    ? Icons.check_box_rounded
+                    : Icons.check_box_outline_blank_rounded,
                 size: 16,
                 color: isSelected ? Colors.white : appColors.textSecondary,
               ),
@@ -70,14 +74,34 @@ class FeedFilterTabs extends ConsumerWidget {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          _buildPill(label: 'Discover', type: null, appColors: appColors, showCheckbox: false),
-          _buildPill(label: 'Subscribed', type: PostFeedType.subscribed, appColors: appColors),
-          _buildPill(label: 'Official', type: PostFeedType.official, appColors: appColors),
-          _buildPill(label: 'Clubs', type: PostFeedType.clubs, appColors: appColors),
-          _buildPill(label: 'Dev Team', type: PostFeedType.devTeam, appColors: appColors),
+          _buildPill(
+            label: 'Discover',
+            type: null,
+            appColors: appColors,
+            showCheckbox: false,
+          ),
+          _buildPill(
+            label: 'Subscribed',
+            type: PostFeedType.subscribed,
+            appColors: appColors,
+          ),
+          _buildPill(
+            label: 'Official',
+            type: PostFeedType.official,
+            appColors: appColors,
+          ),
+          _buildPill(
+            label: 'Clubs',
+            type: PostFeedType.clubs,
+            appColors: appColors,
+          ),
+          _buildPill(
+            label: 'Dev Team',
+            type: PostFeedType.devTeam,
+            appColors: appColors,
+          ),
         ],
       ),
     );
   }
 }
-

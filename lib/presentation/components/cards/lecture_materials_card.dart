@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/lecture_material.dart';
 import '../../../providers/materials_provider.dart';
@@ -19,7 +19,8 @@ class LectureMaterialsCard extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<LectureMaterialsCard> createState() => _LectureMaterialsCardState();
+  ConsumerState<LectureMaterialsCard> createState() =>
+      _LectureMaterialsCardState();
 }
 
 class _LectureMaterialsCardState extends ConsumerState<LectureMaterialsCard> {
@@ -28,17 +29,15 @@ class _LectureMaterialsCardState extends ConsumerState<LectureMaterialsCard> {
   static const _gradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [
-      Color(0xFF0569FF),
-      Color(0xCC0569FF),
-      Color(0xFF035CE1),
-    ],
+    colors: [Color(0xFF0569FF), Color(0xCC0569FF), Color(0xFF035CE1)],
     stops: [0.0, 0.5, 1.0],
   );
 
   Widget _fileRow(LectureFile file, AppColors appColors) {
-    final IconData icon = kFileTypeIcons[file.fileType] ?? Icons.insert_drive_file_rounded;
-    final Color color = kFileTypeColors[file.fileType] ?? appColors.textSecondary;
+    final IconData icon =
+        kFileTypeIcons[file.fileType] ?? Icons.insert_drive_file_rounded;
+    final Color color =
+        kFileTypeColors[file.fileType] ?? appColors.textSecondary;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -93,7 +92,11 @@ class _LectureMaterialsCardState extends ConsumerState<LectureMaterialsCard> {
               color: appColors.iconBoxArrowBg,
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.file_download_outlined, size: 14, color: appColors.textSecondary),
+            child: Icon(
+              Icons.file_download_outlined,
+              size: 14,
+              color: appColors.textSecondary,
+            ),
           ),
         ),
       ],
@@ -109,10 +112,7 @@ class _LectureMaterialsCardState extends ConsumerState<LectureMaterialsCard> {
       decoration: BoxDecoration(
         color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: appColors.borderColor,
-          width: 1,
-        ),
+        border: Border.all(color: appColors.borderColor, width: 1),
       ),
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -230,7 +230,10 @@ class _LectureMaterialsCardState extends ConsumerState<LectureMaterialsCard> {
                             color: Colors.white.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -243,7 +246,11 @@ class _LectureMaterialsCardState extends ConsumerState<LectureMaterialsCard> {
                                 ),
                               ),
                               const SizedBox(width: 6),
-                              const Icon(Icons.download_rounded, size: 13, color: Color(0xFFF8F9FC)),
+                              const Icon(
+                                Icons.download_rounded,
+                                size: 13,
+                                color: Color(0xFFF8F9FC),
+                              ),
                             ],
                           ),
                         ),
@@ -265,12 +272,16 @@ class _LectureMaterialsCardState extends ConsumerState<LectureMaterialsCard> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: widget.data.files.length,
-                  separatorBuilder: (context, index) => const SizedBox(height: 8),
-                  itemBuilder: (context, index) => _fileRow(widget.data.files[index], appColors),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 8),
+                  itemBuilder: (context, index) =>
+                      _fileRow(widget.data.files[index], appColors),
                 ),
               ],
             ),
-            crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+            crossFadeState: _isExpanded
+                ? CrossFadeState.showSecond
+                : CrossFadeState.showFirst,
             duration: const Duration(milliseconds: 200),
             sizeCurve: Curves.easeInOut,
           ),
@@ -279,4 +290,3 @@ class _LectureMaterialsCardState extends ConsumerState<LectureMaterialsCard> {
     );
   }
 }
-

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../providers/about_app_provider.dart';
 import '../../presentation/components/cards/developer_id_card.dart';
 import '../../presentation/components/cards/about_us_card.dart';
@@ -38,4 +38,3 @@ class AboutAppScreen extends ConsumerWidget {
     );
   }
 }
-

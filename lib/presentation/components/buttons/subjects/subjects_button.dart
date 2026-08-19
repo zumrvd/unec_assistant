@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 
 class SubjectsButton extends ConsumerStatefulWidget {
   const SubjectsButton({
@@ -21,7 +21,8 @@ class SubjectsButton extends ConsumerStatefulWidget {
   ConsumerState<SubjectsButton> createState() => _SubjectsButtonState();
 }
 
-class _SubjectsButtonState extends ConsumerState<SubjectsButton> with SingleTickerProviderStateMixin {
+class _SubjectsButtonState extends ConsumerState<SubjectsButton>
+    with SingleTickerProviderStateMixin {
   bool _isExpanded = false;
   late AnimationController _expandController;
   late Animation<double> _expandAnimation;
@@ -72,10 +73,7 @@ class _SubjectsButtonState extends ConsumerState<SubjectsButton> with SingleTick
           decoration: BoxDecoration(
             color: appColors.cardBackground,
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(
-              color: appColors.borderColor,
-              width: 1,
-            ),
+            border: Border.all(color: appColors.borderColor, width: 1),
           ),
           padding: const EdgeInsets.all(16),
           child: Row(
@@ -162,7 +160,10 @@ class _SubjectsButtonState extends ConsumerState<SubjectsButton> with SingleTick
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: RotationTransition(
-                    turns: Tween<double>(begin: 0, end: 0.25).animate(_expandAnimation),
+                    turns: Tween<double>(
+                      begin: 0,
+                      end: 0.25,
+                    ).animate(_expandAnimation),
                     child: Icon(
                       Icons.arrow_right_rounded,
                       size: 30,
@@ -210,7 +211,9 @@ class _SubjectsButtonState extends ConsumerState<SubjectsButton> with SingleTick
                               width: 44,
                               height: 44,
                               decoration: BoxDecoration(
-                                color: _teachingIconColor.withValues(alpha: 0.15),
+                                color: _teachingIconColor.withValues(
+                                  alpha: 0.15,
+                                ),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: const Icon(
@@ -327,4 +330,3 @@ class _SubjectsButtonState extends ConsumerState<SubjectsButton> with SingleTick
     );
   }
 }
-

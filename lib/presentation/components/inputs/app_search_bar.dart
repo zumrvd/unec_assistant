@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 
 class AppSearchBar extends ConsumerWidget {
   final TextEditingController? controller;
@@ -30,11 +30,7 @@ class AppSearchBar extends ConsumerWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(
-            Icons.search_rounded,
-            size: 18,
-            color: appColors.textSecondary,
-          ),
+          Icon(Icons.search_rounded, size: 18, color: appColors.textSecondary),
           const SizedBox(width: 8),
           Expanded(
             child: TextField(
@@ -64,4 +60,3 @@ class AppSearchBar extends ConsumerWidget {
     );
   }
 }
-

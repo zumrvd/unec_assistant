@@ -10,7 +10,7 @@ import 'package:unec_assistant/presentation/components/cards/calendar_card.dart'
 import 'package:unec_assistant/screens/functions/functions_main_screen.dart';
 import 'package:unec_assistant/screens/home/home_screen.dart';
 import 'package:unec_assistant/screens/profile/change_pass_screen.dart';
-import 'package:unec_assistant/screens/profile/profile_info_screen.dart';
+import 'package:unec_assistant/screens/profile/student_card_screen.dart';
 import 'package:unec_assistant/screens/profile/profile_screen.dart';
 import 'package:unec_assistant/screens/profile/about_app_screen.dart';
 import 'package:unec_assistant/screens/functions/attendance/attendance_screen.dart';
@@ -23,7 +23,6 @@ import 'package:unec_assistant/screens/functions/subjects/grades/grade_calculato
 import 'package:unec_assistant/screens/functions/subjects/grades/subject_grades_screen.dart';
 import 'package:unec_assistant/providers/subject_detail_provider.dart';
 import 'package:unec_assistant/screens/functions/subjects/subject_detail_screen.dart';
-
 import 'package:unec_assistant/screens/functions/notes/note_files_screen.dart';
 import 'package:unec_assistant/screens/functions/notes/note_editor_screen.dart';
 import 'package:unec_assistant/screens/feed/post_detail_screen.dart';
@@ -96,27 +95,33 @@ final GoRouter appRouter = GoRouter(
                   routes: [
                     GoRoute(
                       path: '1',
-                      builder: (context, state) => const SubjectDetailScreen(data: kProgDetail),
+                      builder: (context, state) =>
+                          const SubjectDetailScreen(data: kProgDetail),
                     ),
                     GoRoute(
                       path: '2',
-                      builder: (context, state) => const SubjectDetailScreen(data: kFizikaDetail),
+                      builder: (context, state) =>
+                          const SubjectDetailScreen(data: kFizikaDetail),
                     ),
                     GoRoute(
                       path: '3',
-                      builder: (context, state) => const SubjectDetailScreen(data: kAzDetail),
+                      builder: (context, state) =>
+                          const SubjectDetailScreen(data: kAzDetail),
                     ),
                     GoRoute(
                       path: '4',
-                      builder: (context, state) => const SubjectDetailScreen(data: kXettiDetail),
+                      builder: (context, state) =>
+                          const SubjectDetailScreen(data: kXettiDetail),
                     ),
                     GoRoute(
                       path: '5',
-                      builder: (context, state) => const SubjectDetailScreen(data: kInfoDetail),
+                      builder: (context, state) =>
+                          const SubjectDetailScreen(data: kInfoDetail),
                     ),
                     GoRoute(
                       path: '6',
-                      builder: (context, state) => const SubjectDetailScreen(data: kXariciDetail),
+                      builder: (context, state) =>
+                          const SubjectDetailScreen(data: kXariciDetail),
                     ),
                   ],
                 ),
@@ -142,31 +147,38 @@ final GoRouter appRouter = GoRouter(
                   routes: [
                     GoRoute(
                       path: 'calculator',
-                      builder: (context, state) => const GradeCalculatorScreen(),
+                      builder: (context, state) =>
+                          const GradeCalculatorScreen(),
                     ),
                     GoRoute(
                       path: 'subject/1',
-                      builder: (context, state) => const SubjectGradesScreen(data: kProgDetail),
+                      builder: (context, state) =>
+                          const SubjectGradesScreen(data: kProgDetail),
                     ),
                     GoRoute(
                       path: 'subject/2',
-                      builder: (context, state) => const SubjectGradesScreen(data: kFizikaDetail),
+                      builder: (context, state) =>
+                          const SubjectGradesScreen(data: kFizikaDetail),
                     ),
                     GoRoute(
                       path: 'subject/3',
-                      builder: (context, state) => const SubjectGradesScreen(data: kAzDetail),
+                      builder: (context, state) =>
+                          const SubjectGradesScreen(data: kAzDetail),
                     ),
                     GoRoute(
                       path: 'subject/4',
-                      builder: (context, state) => const SubjectGradesScreen(data: kXettiDetail),
+                      builder: (context, state) =>
+                          const SubjectGradesScreen(data: kXettiDetail),
                     ),
                     GoRoute(
                       path: 'subject/5',
-                      builder: (context, state) => const SubjectGradesScreen(data: kInfoDetail),
+                      builder: (context, state) =>
+                          const SubjectGradesScreen(data: kInfoDetail),
                     ),
                     GoRoute(
                       path: 'subject/6',
-                      builder: (context, state) => const SubjectGradesScreen(data: kXariciDetail),
+                      builder: (context, state) =>
+                          const SubjectGradesScreen(data: kXariciDetail),
                     ),
                   ],
                 ),
@@ -184,9 +196,8 @@ final GoRouter appRouter = GoRouter(
                 ),
                 GoRoute(
                   path: 'editor/:noteId',
-                  builder: (context, state) => NoteEditorScreen(
-                    noteId: state.pathParameters['noteId']!,
-                  ),
+                  builder: (context, state) =>
+                      NoteEditorScreen(noteId: state.pathParameters['noteId']!),
                 ),
               ],
             ),
@@ -200,9 +211,8 @@ final GoRouter appRouter = GoRouter(
               routes: [
                 GoRoute(
                   path: 'post/:postId',
-                  builder: (context, state) => PostDetailScreen(
-                    postId: state.pathParameters['postId']!,
-                  ),
+                  builder: (context, state) =>
+                      PostDetailScreen(postId: state.pathParameters['postId']!),
                 ),
                 GoRoute(
                   path: 'manage-channels',
@@ -223,6 +233,27 @@ final GoRouter appRouter = GoRouter(
               builder: (context, state) => const ProfileScreen(),
               routes: [
                 GoRoute(
+                  path: 'student_card',
+                  pageBuilder: (context, state) => CustomTransitionPage(
+                    key: state.pageKey,
+                    child: const StudentCardScreen(),
+                    transitionDuration: const Duration(milliseconds: 1200),
+                    reverseTransitionDuration: const Duration(
+                      milliseconds: 1200,
+                    ),
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
+                          return FadeTransition(
+                            opacity: CurvedAnimation(
+                              parent: animation,
+                              curve: Curves.easeInOutCubic,
+                            ),
+                            child: child,
+                          );
+                        },
+                  ),
+                ),
+                GoRoute(
                   path: 'about',
                   builder: (context, state) => const AboutAppScreen(),
                 ),
@@ -233,17 +264,16 @@ final GoRouter appRouter = GoRouter(
                 GoRoute(
                   path: 'unec_cabinet',
                   redirect: (context, state) async {
-                    final Uri url = Uri.parse('http://kabinet.unec.edu.az/az/login');
+                    final Uri url = Uri.parse(
+                      'http://kabinet.unec.edu.az/az/login',
+                    );
                     if (await canLaunchUrl(url)) {
                       await launchUrl(url);
                     }
                     return null;
                   },
                 ),
-                GoRoute(
-                  path: 'profile_info',
-                  builder: (context, state) => const ProfileInfoScreen(),
-                ),
+
                 GoRoute(
                   path: 'academic_profile',
                   builder: (context, state) => const AcademicProfileScreen(),

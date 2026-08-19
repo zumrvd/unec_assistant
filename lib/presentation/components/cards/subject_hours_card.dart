@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/subject_detail.dart';
 
 class SubjectHoursCard extends ConsumerWidget {
   final SubjectDetail data;
 
-  const SubjectHoursCard({
-    required this.data,
-    super.key,
-  });
+  const SubjectHoursCard({required this.data, super.key});
 
   Widget _hoursRow(String label, String value, AppColors appColors) {
     return Row(
@@ -81,10 +78,7 @@ class SubjectHoursCard extends ConsumerWidget {
       decoration: BoxDecoration(
         color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: appColors.borderColor,
-          width: 1,
-        ),
+        border: Border.all(color: appColors.borderColor, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,12 +116,20 @@ class SubjectHoursCard extends ConsumerWidget {
           Divider(color: appColors.divider, thickness: 1, height: 1),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: _hoursRow("Total Hours", "${data.subjectTotalHours}hrs", appColors),
+            child: _hoursRow(
+              "Total Hours",
+              "${data.subjectTotalHours}hrs",
+              appColors,
+            ),
           ),
           Divider(color: appColors.divider, thickness: 1, height: 1),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: _hoursRow("Auditorium Hours", "${data.subjectAuditoriumHours}hrs", appColors),
+            child: _hoursRow(
+              "Auditorium Hours",
+              "${data.subjectAuditoriumHours}hrs",
+              appColors,
+            ),
           ),
           Container(
             width: double.infinity,
@@ -154,12 +156,26 @@ class SubjectHoursCard extends ConsumerWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 6),
-                  child: _breakdownRow("Lectures", "${data.subjectLectureHours}hrs", appColors),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                    vertical: 6,
+                  ),
+                  child: _breakdownRow(
+                    "Lectures",
+                    "${data.subjectLectureHours}hrs",
+                    appColors,
+                  ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 6),
-                  child: _breakdownRow("Seminars", "${data.subjectSeminarHours}hrs", appColors),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                    vertical: 6,
+                  ),
+                  child: _breakdownRow(
+                    "Seminars",
+                    "${data.subjectSeminarHours}hrs",
+                    appColors,
+                  ),
                 ),
               ],
             ),
@@ -169,4 +185,3 @@ class SubjectHoursCard extends ConsumerWidget {
     );
   }
 }
-

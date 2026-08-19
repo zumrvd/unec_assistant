@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../models/note_folder.dart';
 import '../../../presentation/components/lists/labels.dart';
 import '../../../presentation/components/inputs/app_search_bar.dart';
@@ -29,8 +29,12 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
   Widget build(BuildContext context) {
     final appColors = ref.watch(appColorsProvider);
     final folders = ref.watch(searchedFoldersProvider(_searchQuery));
-    final personalFolders = folders.where((f) => f.type == FolderType.personal).toList();
-    final subjectFolders = folders.where((f) => f.type == FolderType.subject).toList();
+    final personalFolders = folders
+        .where((f) => f.type == FolderType.personal)
+        .toList();
+    final subjectFolders = folders
+        .where((f) => f.type == FolderType.subject)
+        .toList();
 
     return Scaffold(
       backgroundColor: appColors.background,
@@ -46,32 +50,36 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
               onChanged: (q) => setState(() => _searchQuery = q),
             ),
             const SizedBox(height: 25),
-            
+
             if (personalFolders.isNotEmpty) ...[
               const SectionLabel('PERSONAL'),
               const SizedBox(height: 12),
-              ...personalFolders.map((f) => Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: NoteFolderTile(
-                  data: f,
-                  noteCount: ref.watch(noteCountProvider(f.folderId)),
-                  onTap: () => context.push('/notes/folder/${f.folderId}'),
+              ...personalFolders.map(
+                (f) => Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: NoteFolderTile(
+                    data: f,
+                    noteCount: ref.watch(noteCountProvider(f.folderId)),
+                    onTap: () => context.push('/notes/folder/${f.folderId}'),
+                  ),
                 ),
-              )),
+              ),
               const SizedBox(height: 15),
             ],
 
             if (subjectFolders.isNotEmpty) ...[
               const SectionLabel('CLASS FOLDERS'),
               const SizedBox(height: 12),
-              ...subjectFolders.map((f) => Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: NoteFolderTile(
-                  data: f,
-                  noteCount: ref.watch(noteCountProvider(f.folderId)),
-                  onTap: () => context.push('/notes/folder/${f.folderId}'),
+              ...subjectFolders.map(
+                (f) => Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: NoteFolderTile(
+                    data: f,
+                    noteCount: ref.watch(noteCountProvider(f.folderId)),
+                    onTap: () => context.push('/notes/folder/${f.folderId}'),
+                  ),
                 ),
-              )),
+              ),
             ],
           ],
         ),
@@ -79,4 +87,3 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
     );
   }
 }
-

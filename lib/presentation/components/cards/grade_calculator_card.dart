@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/subject_detail.dart';
 
@@ -16,7 +16,8 @@ class GradeCalculatorCard extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<GradeCalculatorCard> createState() => _GradeCalculatorCardState();
+  ConsumerState<GradeCalculatorCard> createState() =>
+      _GradeCalculatorCardState();
 }
 
 class _GradeCalculatorCardState extends ConsumerState<GradeCalculatorCard> {
@@ -26,10 +27,16 @@ class _GradeCalculatorCardState extends ConsumerState<GradeCalculatorCard> {
   bool _calculated = false;
 
   static const Map<String, String> _gradeRanges = {
-    'A': '91–100', 'B': '81–90', 'C': '71–80', 'D': '61–70',
+    'A': '91–100',
+    'B': '81–90',
+    'C': '71–80',
+    'D': '61–70',
   };
   static const Map<String, int> _gradeMinScore = {
-    'A': 91, 'B': 81, 'C': 71, 'D': 61,
+    'A': 91,
+    'B': 81,
+    'C': 71,
+    'D': 61,
   };
 
   @override
@@ -81,7 +88,10 @@ class _GradeCalculatorCardState extends ConsumerState<GradeCalculatorCard> {
                   ),
                 ),
                 isExpanded: true,
-                icon: Icon(Icons.keyboard_arrow_down_rounded, color: appColors.textSecondary),
+                icon: Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color: appColors.textSecondary,
+                ),
                 dropdownColor: appColors.cardBackground,
                 borderRadius: BorderRadius.circular(12),
                 onChanged: (val) => setState(() {
@@ -145,9 +155,7 @@ class _GradeCalculatorCardState extends ConsumerState<GradeCalculatorCard> {
                     }),
                     behavior: HitTestBehavior.opaque,
                     child: Container(
-                      margin: EdgeInsets.only(
-                        right: grade != 'D' ? 8 : 0,
-                      ),
+                      margin: EdgeInsets.only(right: grade != 'D' ? 8 : 0),
                       decoration: BoxDecoration(
                         color: bgColor,
                         border: Border.all(
@@ -229,7 +237,9 @@ class _GradeCalculatorCardState extends ConsumerState<GradeCalculatorCard> {
   }
 
   Widget _buildResultSection(AppColors appColors) {
-    final subject = widget.subjects.firstWhere((s) => s.subjectName == _selectedSubject);
+    final subject = widget.subjects.firstWhere(
+      (s) => s.subjectName == _selectedSubject,
+    );
     final targetMin = _gradeMinScore[_selectedGrade]!;
     final ptsNeeded = (targetMin - subject.currentScore).clamp(0, 100);
     final double haveProgress = subject.currentScore / 100;
@@ -399,4 +409,3 @@ class _GradeCalculatorCardState extends ConsumerState<GradeCalculatorCard> {
     );
   }
 }
-

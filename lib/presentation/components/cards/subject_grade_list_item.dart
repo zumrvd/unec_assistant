@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../models/subject_detail.dart';
 
 class SubjectGradeListItem extends ConsumerWidget {
@@ -26,10 +26,7 @@ class SubjectGradeListItem extends ConsumerWidget {
         decoration: BoxDecoration(
           color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: appColors.borderColor,
-            width: 1,
-          ),
+          border: Border.all(color: appColors.borderColor, width: 1),
         ),
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
         child: Row(
@@ -69,7 +66,10 @@ class SubjectGradeListItem extends ConsumerWidget {
                         ),
                         const SizedBox(height: 4),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
                           decoration: BoxDecoration(
                             color: appColors.primaryContainer,
                             borderRadius: BorderRadius.circular(20),
@@ -129,4 +129,3 @@ class SubjectGradeListItem extends ConsumerWidget {
     );
   }
 }
-

@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../models/about_app_info.dart';
 
-Future<void> showContactRedirectDialog(BuildContext context, ContactMethod data) async {
+Future<void> showContactRedirectDialog(
+  BuildContext context,
+  ContactMethod data,
+) async {
   return showDialog(
     context: context,
     builder: (context) {
@@ -140,4 +143,3 @@ class _ContactRedirectDialogContent extends ConsumerWidget {
     );
   }
 }
-

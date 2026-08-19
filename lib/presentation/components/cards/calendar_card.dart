@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/models/calendar_event.dart';
 import 'package:unec_assistant/presentation/components/calendar/event_details_popup.dart';
 import 'package:unec_assistant/presentation/components/calendar/event_editor_sheet.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/calendar_provider.dart';
 
@@ -62,15 +62,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     'December',
   ];
 
-  static const _weekdayAbbr = [
-    'Mon',
-    'Tue',
-    'Wed',
-    'Thu',
-    'Fri',
-    'Sat',
-    'Sun',
-  ];
+  static const _weekdayAbbr = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
   @override
   void initState() {
@@ -84,17 +76,15 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
       _selectedDate = widget.initialDate!;
     }
 
-    _nowTimer = Timer.periodic(
-      const Duration(minutes: 1),
-      (_) {
-        if (!mounted) return;
-        setState(() => _now = DateTime.now());
-      },
-    );
+    _nowTimer = Timer.periodic(const Duration(minutes: 1), (_) {
+      if (!mounted) return;
+      setState(() => _now = DateTime.now());
+    });
 
     double initialOffset = 8 * _hourHeight;
     if (widget.initialScrollTime != null) {
-      initialOffset = (widget.initialScrollTime!.hour +
+      initialOffset =
+          (widget.initialScrollTime!.hour +
               widget.initialScrollTime!.minute / 60.0) *
           _hourHeight;
     }
@@ -102,25 +92,29 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     _weekScrollController = ScrollController(
       initialScrollOffset: initialOffset,
     );
-    _dayScrollController = ScrollController(
-      initialScrollOffset: initialOffset,
-    );
+    _dayScrollController = ScrollController(initialScrollOffset: initialOffset);
 
     // Sync horizontal scrolls
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      
+
       _weekHorizontalController.addListener(() {
         if (_weekHeaderHorizontalController.hasClients &&
-            _weekHeaderHorizontalController.offset != _weekHorizontalController.offset) {
-          _weekHeaderHorizontalController.jumpTo(_weekHorizontalController.offset);
+            _weekHeaderHorizontalController.offset !=
+                _weekHorizontalController.offset) {
+          _weekHeaderHorizontalController.jumpTo(
+            _weekHorizontalController.offset,
+          );
         }
       });
 
       _weekHeaderHorizontalController.addListener(() {
         if (_weekHorizontalController.hasClients &&
-            _weekHorizontalController.offset != _weekHeaderHorizontalController.offset) {
-          _weekHorizontalController.jumpTo(_weekHeaderHorizontalController.offset);
+            _weekHorizontalController.offset !=
+                _weekHeaderHorizontalController.offset) {
+          _weekHorizontalController.jumpTo(
+            _weekHeaderHorizontalController.offset,
+          );
         }
       });
     });
@@ -179,7 +173,9 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
   (double top, double height) _segmentOnDay(CalendarEvent event, DateTime day) {
     final dayStart = normalizeDay(day);
     final dayEnd = dayStart.add(const Duration(days: 1));
-    final start = event.startTime.isBefore(dayStart) ? dayStart : event.startTime;
+    final start = event.startTime.isBefore(dayStart)
+        ? dayStart
+        : event.startTime;
     final end = event.endTime.isAfter(dayEnd) ? dayEnd : event.endTime;
     final top = _topForTime(start);
     final bottom = _topForTime(end);
@@ -248,8 +244,10 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
               onTap: () => setState(() => _view = options[i].$2),
               behavior: HitTestBehavior.opaque,
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: _view == options[i].$2
                       ? appColors.primary
@@ -356,7 +354,8 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
             crossAxisCount: 7,
             childAspectRatio: 7 / 10,
           ),
-          itemBuilder: (context, index) => _buildMonthCell(days[index], appColors),
+          itemBuilder: (context, index) =>
+              _buildMonthCell(days[index], appColors),
         ),
       ],
     );
@@ -420,7 +419,9 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                 '${date.day}',
                 style: GoogleFonts.redditSans(
                   fontSize: 10,
-                  color: isCurrentMonth ? appColors.textPrimary : appColors.textMuted,
+                  color: isCurrentMonth
+                      ? appColors.textPrimary
+                      : appColors.textMuted,
                 ),
               ),
             if (isHbd)
@@ -450,7 +451,9 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.redditSans(
                         fontSize: 8,
-                        color: isCurrentMonth ? appColors.textPrimary : appColors.textMuted,
+                        color: isCurrentMonth
+                            ? appColors.textPrimary
+                            : appColors.textMuted,
                       ),
                     ),
                   ),
@@ -502,10 +505,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
           ),
         ),
         const SizedBox(height: 8),
-        SizedBox(
-          height: 540,
-          child: _buildWeekPage(weekStart, appColors),
-        ),
+        SizedBox(height: 540, child: _buildWeekPage(weekStart, appColors)),
       ],
     );
   }
@@ -555,7 +555,9 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                                   style: GoogleFonts.redditSans(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12,
-                                    color: _isToday(day) ? appColors.primary : appColors.textSecondary,
+                                    color: _isToday(day)
+                                        ? appColors.primary
+                                        : appColors.textSecondary,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
@@ -665,7 +667,10 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                             for (final event in _eventsForDate(weekDays[i]))
                               Builder(
                                 builder: (context) {
-                                  final (top, height) = _segmentOnDay(event, weekDays[i]);
+                                  final (top, height) = _segmentOnDay(
+                                    event,
+                                    weekDays[i],
+                                  );
                                   return Positioned(
                                     top: top,
                                     left: i * _weekDayWidth + 2,
@@ -712,9 +717,13 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
       case EventType.classEvent:
         return isActive ? appColors.primary : appColors.primaryContainer;
       case EventType.personalEvent:
-        return isActive ? appColors.attendanceOrange : appColors.attendanceOrange.withValues(alpha: 0.15);
+        return isActive
+            ? appColors.attendanceOrange
+            : appColors.attendanceOrange.withValues(alpha: 0.15);
       case EventType.exam:
-        return isActive ? appColors.success : appColors.success.withValues(alpha: 0.15);
+        return isActive
+            ? appColors.success
+            : appColors.success.withValues(alpha: 0.15);
     }
   }
 
@@ -853,8 +862,9 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
               _navButton(
                 icon: Icons.chevron_left_rounded,
                 onTap: () => setState(() {
-                  _selectedDate =
-                      _selectedDate.subtract(const Duration(days: 1));
+                  _selectedDate = _selectedDate.subtract(
+                    const Duration(days: 1),
+                  );
                   _focusedDate = _selectedDate;
                 }),
                 appColors: appColors,
@@ -896,8 +906,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     final segments = events.map((e) {
       final (top, height) = _segmentOnDay(e, day);
       return (event: e, top: top, bottom: top + height);
-    }).toList()
-      ..sort((a, b) => a.top.compareTo(b.top));
+    }).toList()..sort((a, b) => a.top.compareTo(b.top));
 
     final columnEnds = <double>[];
     final temp = <(CalendarEvent, int)>[];
@@ -916,12 +925,14 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     }
 
     final maxCols = columnEnds.isEmpty ? 1 : columnEnds.length;
-    return [
-      for (final (event, col) in temp) (event, col, maxCols),
-    ];
+    return [for (final (event, col) in temp) (event, col, maxCols)];
   }
 
-  Widget _buildDayPage(DateTime day, List<CalendarEvent> events, AppColors appColors) {
+  Widget _buildDayPage(
+    DateTime day,
+    List<CalendarEvent> events,
+    AppColors appColors,
+  ) {
     final laidOut = _layoutOverlaps(events, day);
 
     return SingleChildScrollView(
@@ -1125,7 +1136,10 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     );
   }
 
-  Widget _buildNowIndicator({required double width, required AppColors appColors}) {
+  Widget _buildNowIndicator({
+    required double width,
+    required AppColors appColors,
+  }) {
     final nowColor = appColors.error;
     return SizedBox(
       width: width == double.infinity ? null : width,
@@ -1135,16 +1149,10 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
           Container(
             width: 8,
             height: 8,
-            decoration: BoxDecoration(
-              color: nowColor,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: nowColor, shape: BoxShape.circle),
           ),
           Expanded(
-            child: SizedBox(
-              height: 2,
-              child: ColoredBox(color: nowColor),
-            ),
+            child: SizedBox(height: 2, child: ColoredBox(color: nowColor)),
           ),
         ],
       ),
@@ -1167,14 +1175,22 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
         children: [
           _buildViewToggle(appColors),
           if (_view == CalendarView.month)
-            KeyedSubtree(key: const ValueKey('cal_view_month'), child: _buildMonthView(appColors)),
+            KeyedSubtree(
+              key: const ValueKey('cal_view_month'),
+              child: _buildMonthView(appColors),
+            ),
           if (_view == CalendarView.week)
-            KeyedSubtree(key: const ValueKey('cal_view_week'), child: _buildWeekView(appColors)),
+            KeyedSubtree(
+              key: const ValueKey('cal_view_week'),
+              child: _buildWeekView(appColors),
+            ),
           if (_view == CalendarView.day)
-            KeyedSubtree(key: const ValueKey('cal_view_day'), child: _buildDayView(appColors)),
+            KeyedSubtree(
+              key: const ValueKey('cal_view_day'),
+              child: _buildDayView(appColors),
+            ),
         ],
       ),
     );
   }
 }
-

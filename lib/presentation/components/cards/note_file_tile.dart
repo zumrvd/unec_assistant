@@ -4,7 +4,7 @@ import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/note.dart';
 
@@ -70,10 +70,7 @@ class NoteFileTile extends ConsumerWidget {
               left: 0,
               top: 0,
               bottom: 0,
-              child: Container(
-                width: 4,
-                color: skinColor,
-              ),
+              child: Container(width: 4, color: skinColor),
             ),
             Padding(
               padding: const EdgeInsets.all(14),
@@ -135,4 +132,3 @@ class NoteFileTile extends ConsumerWidget {
     );
   }
 }
-

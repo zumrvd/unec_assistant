@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../models/note_folder.dart';
 
 class NoteFolderTile extends ConsumerWidget {
@@ -30,10 +30,7 @@ class NoteFolderTile extends ConsumerWidget {
         decoration: BoxDecoration(
           color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: appColors.borderColor,
-            width: 1,
-          ),
+          border: Border.all(color: appColors.borderColor, width: 1),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,11 +44,7 @@ class NoteFolderTile extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
-                child: Icon(
-                  data.icon,
-                  size: 22,
-                  color: data.iconColor,
-                ),
+                child: Icon(data.icon, size: 22, color: data.iconColor),
               ),
             ),
             const SizedBox(width: 12),
@@ -104,4 +97,4 @@ class NoteFolderTile extends ConsumerWidget {
       ),
     );
   }
-}
+}

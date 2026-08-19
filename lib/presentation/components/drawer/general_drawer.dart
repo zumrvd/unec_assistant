@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 
 class GeneralDrawer extends ConsumerWidget {
@@ -156,7 +156,7 @@ class GeneralDrawer extends ConsumerWidget {
                   _MenuTile(
                     label: 'Profile Info',
                     icon: Icons.badge_rounded,
-                    route: '/profile/profile_info',
+                    route: '/profile/student_card',
                     appColors: appColors,
                   ),
                   _MenuTile(
@@ -210,11 +210,7 @@ class _SectionHeader extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
       child: Row(
         children: [
-          Icon(
-            icon,
-            size: 16,
-            color: appColors.primary.withValues(alpha: 0.8),
-          ),
+          Icon(icon, size: 16, color: appColors.primary.withValues(alpha: 0.8)),
           const SizedBox(width: 8),
           Text(
             label,
@@ -280,4 +276,3 @@ class _MenuTile extends StatelessWidget {
     );
   }
 }
-

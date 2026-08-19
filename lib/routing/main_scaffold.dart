@@ -11,7 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:unec_assistant/presentation/components/drawer/subscribed_channels_drawer.dart';
 import 'package:unec_assistant/presentation/components/drawer/general_drawer.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/providers/notification_provider.dart';
 import 'package:unec_assistant/presentation/components/dialogs/profile_pop_up.dart';
 
@@ -30,11 +30,7 @@ class GlobalAppBar extends ConsumerWidget {
     return Container(
       height: _contentHeight + statusBarHeight,
       color: appColors.background,
-      padding: EdgeInsets.only(
-        top: statusBarHeight,
-        left: 20.0,
-        right: 20.0,
-      ),
+      padding: EdgeInsets.only(top: statusBarHeight, left: 20.0, right: 20.0),
       child: Row(
         children: [
           Expanded(
@@ -43,7 +39,11 @@ class GlobalAppBar extends ConsumerWidget {
                 GestureDetector(
                   onTap: () => Scaffold.of(context).openDrawer(),
                   behavior: HitTestBehavior.opaque,
-                  child: Icon(Icons.menu, color: appColors.textPrimary, size: 30),
+                  child: Icon(
+                    Icons.menu,
+                    color: appColors.textPrimary,
+                    size: 30,
+                  ),
                 ),
                 const SizedBox(width: 4),
                 Flexible(
@@ -145,7 +145,11 @@ class GlobalAppBar extends ConsumerWidget {
               GestureDetector(
                 onTap: () => _showMorePopUp(context, ref),
                 behavior: HitTestBehavior.opaque,
-                child: Icon(Icons.more_horiz, color: appColors.textPrimary, size: 30),
+                child: Icon(
+                  Icons.more_horiz,
+                  color: appColors.textPrimary,
+                  size: 30,
+                ),
               ),
             ],
           ),
@@ -170,8 +174,10 @@ class GlobalAppBar extends ConsumerWidget {
     final RelativeRect position = RelativeRect.fromRect(
       Rect.fromPoints(
         button.localToGlobal(Offset(button.size.width, 80), ancestor: overlay),
-        button.localToGlobal(button.size.bottomRight(Offset.zero),
-            ancestor: overlay),
+        button.localToGlobal(
+          button.size.bottomRight(Offset.zero),
+          ancestor: overlay,
+        ),
       ),
       Offset.zero & overlay.size,
     );
@@ -190,8 +196,11 @@ class GlobalAppBar extends ConsumerWidget {
           onTap: () {},
           child: Row(
             children: [
-              Icon(Icons.help_outline_rounded,
-                  size: 20, color: appColors.textPrimary),
+              Icon(
+                Icons.help_outline_rounded,
+                size: 20,
+                color: appColors.textPrimary,
+              ),
               const SizedBox(width: 12),
               Text(
                 'Need help?',
@@ -208,8 +217,11 @@ class GlobalAppBar extends ConsumerWidget {
           onTap: () {},
           child: Row(
             children: [
-              Icon(Icons.bug_report_outlined,
-                  size: 20, color: appColors.textPrimary),
+              Icon(
+                Icons.bug_report_outlined,
+                size: 20,
+                color: appColors.textPrimary,
+              ),
               const SizedBox(width: 12),
               Text(
                 'Report a bug',
@@ -228,10 +240,7 @@ class GlobalAppBar extends ConsumerWidget {
 }
 
 class MainScaffold extends ConsumerWidget {
-  const MainScaffold({
-    required this.navigationShell,
-    super.key,
-  });
+  const MainScaffold({required this.navigationShell, super.key});
 
   final StatefulNavigationShell navigationShell;
 
@@ -357,13 +366,7 @@ class NavBarItem extends ConsumerWidget {
           curve: Curves.linear,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 30.0,
-                color: color,
-              ),
-            ],
+            children: [Icon(icon, size: 30.0, color: color)],
           ),
         ),
       ),

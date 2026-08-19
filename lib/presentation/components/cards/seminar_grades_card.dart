@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/subject_detail.dart';
 import '../../../models/seminar_entry.dart';
@@ -9,10 +9,7 @@ import '../../../models/seminar_entry.dart';
 class SeminarGradesCard extends ConsumerStatefulWidget {
   final SubjectDetail data;
 
-  const SeminarGradesCard({
-    required this.data,
-    super.key,
-  });
+  const SeminarGradesCard({required this.data, super.key});
 
   @override
   ConsumerState<SeminarGradesCard> createState() => _SeminarGradesCardState();
@@ -24,11 +21,7 @@ class _SeminarGradesCardState extends ConsumerState<SeminarGradesCard> {
   static const _buttonGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [
-      Color(0xFF0569FF),
-      Color(0xCC0569FF),
-      Color(0xFF035CE1),
-    ],
+    colors: [Color(0xFF0569FF), Color(0xCC0569FF), Color(0xFF035CE1)],
     stops: [0.0, 0.5, 1.0],
   );
 
@@ -163,7 +156,11 @@ class _SeminarGradesCardState extends ConsumerState<SeminarGradesCard> {
                       color: appColors.iconBoxArrowBg,
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: Icon(Icons.keyboard_arrow_down_rounded, size: 14, color: appColors.textSecondary),
+                    child: Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      size: 14,
+                      color: appColors.textSecondary,
+                    ),
                   ),
                 ),
               ),
@@ -174,10 +171,14 @@ class _SeminarGradesCardState extends ConsumerState<SeminarGradesCard> {
             secondChild: Padding(
               padding: const EdgeInsets.only(top: 12),
               child: Column(
-                children: widget.data.seminarEntries.map((e) => _seminarRow(e, appColors)).toList(),
+                children: widget.data.seminarEntries
+                    .map((e) => _seminarRow(e, appColors))
+                    .toList(),
               ),
             ),
-            crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+            crossFadeState: _isExpanded
+                ? CrossFadeState.showSecond
+                : CrossFadeState.showFirst,
             duration: const Duration(milliseconds: 300),
           ),
           const SizedBox(height: 12),
@@ -193,7 +194,11 @@ class _SeminarGradesCardState extends ConsumerState<SeminarGradesCard> {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.grid_view_rounded, size: 18, color: Color(0xFFF8F9FC)),
+                    const Icon(
+                      Icons.grid_view_rounded,
+                      size: 18,
+                      color: Color(0xFFF8F9FC),
+                    ),
                     const SizedBox(width: 8),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,7 +223,11 @@ class _SeminarGradesCardState extends ConsumerState<SeminarGradesCard> {
                     ),
                   ],
                 ),
-                const Icon(Icons.arrow_outward_rounded, size: 18, color: Color(0xFFF8F9FC)),
+                const Icon(
+                  Icons.arrow_outward_rounded,
+                  size: 18,
+                  color: Color(0xFFF8F9FC),
+                ),
               ],
             ),
           ),
@@ -227,4 +236,3 @@ class _SeminarGradesCardState extends ConsumerState<SeminarGradesCard> {
     );
   }
 }
-

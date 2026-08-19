@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../models/subject_detail.dart';
 
 class FinalGradeCard extends ConsumerWidget {
   final SubjectDetail data;
 
-  const FinalGradeCard({
-    required this.data,
-    super.key,
-  });
+  const FinalGradeCard({required this.data, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,7 +26,11 @@ class FinalGradeCard extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.star_rounded, size: 20, color: appColors.attendanceOrange),
+              Icon(
+                Icons.star_rounded,
+                size: 20,
+                color: appColors.attendanceOrange,
+              ),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -112,8 +113,11 @@ class FinalGradeCard extends ConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.grid_view_rounded,
-                          size: 18, color: Color(0xFFF8F9FC)),
+                      const Icon(
+                        Icons.grid_view_rounded,
+                        size: 18,
+                        color: Color(0xFFF8F9FC),
+                      ),
                       const SizedBox(width: 8),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,8 +142,11 @@ class FinalGradeCard extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const Icon(Icons.arrow_outward_rounded,
-                      size: 18, color: Color(0xFFF8F9FC)),
+                  const Icon(
+                    Icons.arrow_outward_rounded,
+                    size: 18,
+                    color: Color(0xFFF8F9FC),
+                  ),
                 ],
               ),
             ),
@@ -149,4 +156,3 @@ class FinalGradeCard extends ConsumerWidget {
     );
   }
 }
-

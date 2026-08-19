@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../../providers/smart_sync_provider.dart';
 import '../../../../presentation/components/cards/smart_sync_card.dart';
 import '../../../../presentation/components/buttons/materials/show_in_files_button.dart';
@@ -38,4 +38,3 @@ class _SmartSyncScreenState extends ConsumerState<SmartSyncScreen> {
     );
   }
 }
-

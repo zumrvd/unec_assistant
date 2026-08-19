@@ -5,7 +5,7 @@ import 'package:unec_assistant/models/calendar_event.dart';
 import 'package:unec_assistant/presentation/components/cards/current_class_detailed_card.dart';
 import 'package:unec_assistant/presentation/components/cards/subject_attendance_card.dart';
 import 'package:unec_assistant/presentation/components/cards/teaching_materials_card.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/providers/current_class_provider.dart';
 import '../../../presentation/components/lists/labels.dart';
 
@@ -194,4 +194,3 @@ class CurrentClassScreen extends ConsumerWidget {
     );
   }
 }
-

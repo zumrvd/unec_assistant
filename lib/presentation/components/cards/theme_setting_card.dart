@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 
 class ThemeSettingCard extends ConsumerWidget {
   const ThemeSettingCard({super.key});
@@ -22,10 +22,7 @@ class ThemeSettingCard extends ConsumerWidget {
       decoration: BoxDecoration(
         color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: appColors.borderColor,
-          width: 1,
-        ),
+        border: Border.all(color: appColors.borderColor, width: 1),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
       child: Row(

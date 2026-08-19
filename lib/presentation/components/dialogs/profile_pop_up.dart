@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 
 class ProfilePopUp extends ConsumerWidget {
@@ -54,8 +54,11 @@ class ProfilePopUp extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         alignment: Alignment.center,
-                        child: Icon(Icons.close,
-                            size: 18, color: appColors.textSecondary),
+                        child: Icon(
+                          Icons.close,
+                          size: 18,
+                          color: appColors.textSecondary,
+                        ),
                       ),
                     ),
                   ),
@@ -100,8 +103,10 @@ class ProfilePopUp extends ConsumerWidget {
               onTap: () {},
               behavior: HitTestBehavior.opaque,
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   border: Border.all(color: appColors.borderColor),
                   borderRadius: BorderRadius.circular(100),
@@ -152,9 +157,10 @@ class ProfilePopUp extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _FooterLink(label: 'Privacy Policy', appColors: appColors),
-                Text(' • ',
-                    style: GoogleFonts.redditSans(
-                        color: appColors.textSecondary)),
+                Text(
+                  ' • ',
+                  style: GoogleFonts.redditSans(color: appColors.textSecondary),
+                ),
                 _FooterLink(label: 'Terms of Service', appColors: appColors),
               ],
             ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../../models/subject_detail.dart';
 import '../../../../presentation/components/cards/subject_grade_header_card.dart';
 import '../../../../presentation/components/cards/midterm_grade_card.dart';
@@ -12,10 +12,7 @@ import '../../../../presentation/components/lists/labels.dart';
 class SubjectGradesScreen extends ConsumerWidget {
   final SubjectDetail data;
 
-  const SubjectGradesScreen({
-    required this.data,
-    super.key,
-  });
+  const SubjectGradesScreen({required this.data, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,4 +39,3 @@ class SubjectGradesScreen extends ConsumerWidget {
     );
   }
 }
-

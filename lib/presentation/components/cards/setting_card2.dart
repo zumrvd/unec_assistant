@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/notification_provider.dart';
 
 class SettingsCard2 extends ConsumerStatefulWidget {
-  const SettingsCard2({
-    required this.onAboutAppTap,
-    super.key,
-  });
+  const SettingsCard2({required this.onAboutAppTap, super.key});
 
   final VoidCallback onAboutAppTap;
 
@@ -28,7 +25,7 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
   static const _languageOptions = [
     'English',
     'Azərbaycan dili',
-    'Русский язык'
+    'Русский язык',
   ];
 
   Widget _iconBox(IconData icon, Color bgColor, Color iconColor) {
@@ -39,11 +36,7 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
         color: bgColor,
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Icon(
-        icon,
-        size: 22,
-        color: iconColor,
-      ),
+      child: Icon(icon, size: 22, color: iconColor),
     );
   }
 
@@ -55,7 +48,11 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
     );
   }
 
-  Widget _themeToggle(AppThemeMode mode, AppThemeMode currentMode, AppColors appColors) {
+  Widget _themeToggle(
+    AppThemeMode mode,
+    AppThemeMode currentMode,
+    AppColors appColors,
+  ) {
     final isSelected = currentMode == mode;
     return GestureDetector(
       onTap: () => ref.read(themeModeProvider.notifier).setMode(mode),
@@ -67,10 +64,7 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
               ? appColors.pillSelectedBg
               : appColors.pillUnselectedBg,
           borderRadius: BorderRadius.circular(6),
-          border: Border.all(
-            color: appColors.borderColor,
-            width: 1,
-          ),
+          border: Border.all(color: appColors.borderColor, width: 1),
         ),
         child: Text(
           mode.label,
@@ -145,10 +139,7 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
       decoration: BoxDecoration(
         color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: appColors.borderColor,
-          width: 1,
-        ),
+        border: Border.all(color: appColors.borderColor, width: 1),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
       child: Column(
@@ -169,7 +160,9 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
                       appColors.warningOnContainer,
                     ),
                     const SizedBox(width: 12),
-                    Expanded(child: Text('App Theme', style: _labelStyle(appColors))),
+                    Expanded(
+                      child: Text('App Theme', style: _labelStyle(appColors)),
+                    ),
                   ],
                 ),
               ),
@@ -186,11 +179,7 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
             ],
           ),
           const SizedBox(height: 15),
-          Divider(
-            color: appColors.divider,
-            thickness: 1,
-            height: 1,
-          ),
+          Divider(color: appColors.divider, thickness: 1, height: 1),
           const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -206,7 +195,12 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
                       appColors.notificationPurple,
                     ),
                     const SizedBox(width: 12),
-                    Expanded(child: Text('Notifications', style: _labelStyle(appColors))),
+                    Expanded(
+                      child: Text(
+                        'Notifications',
+                        style: _labelStyle(appColors),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -223,11 +217,7 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
             ],
           ),
           const SizedBox(height: 15),
-          Divider(
-            color: appColors.divider,
-            thickness: 1,
-            height: 1,
-          ),
+          Divider(color: appColors.divider, thickness: 1, height: 1),
           const SizedBox(height: 15),
           GestureDetector(
             onTap: widget.onAboutAppTap,
@@ -284,11 +274,7 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
             ),
           ),
           const SizedBox(height: 15),
-          Divider(
-            color: appColors.divider,
-            thickness: 1,
-            height: 1,
-          ),
+          Divider(color: appColors.divider, thickness: 1, height: 1),
           const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -304,7 +290,9 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
                       appColors.primaryOnContainer,
                     ),
                     const SizedBox(width: 12),
-                    Expanded(child: Text('Language', style: _labelStyle(appColors))),
+                    Expanded(
+                      child: Text('Language', style: _labelStyle(appColors)),
+                    ),
                   ],
                 ),
               ),

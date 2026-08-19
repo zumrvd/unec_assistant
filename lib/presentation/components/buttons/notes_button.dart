@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 
 class NotesButton extends ConsumerWidget {
-  const NotesButton({
-    required this.onTap,
-    super.key,
-  });
+  const NotesButton({required this.onTap, super.key});
 
   final VoidCallback onTap;
 
@@ -24,10 +21,7 @@ class NotesButton extends ConsumerWidget {
         decoration: BoxDecoration(
           color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: appColors.borderColor,
-            width: 1,
-          ),
+          border: Border.all(color: appColors.borderColor, width: 1),
         ),
         padding: const EdgeInsets.only(
           top: 18,
@@ -87,4 +81,3 @@ class NotesButton extends ConsumerWidget {
     );
   }
 }
-

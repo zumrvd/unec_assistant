@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../../providers/subject_detail_provider.dart';
 import '../../../../presentation/components/buttons/grade_calculator_button.dart';
 import '../../../../presentation/components/cards/grade_calculator_card.dart';
@@ -33,7 +33,14 @@ class GradeCalculatorScreen extends ConsumerWidget {
                 bottomLeft: Radius.circular(18),
                 bottomRight: Radius.circular(18),
               ),
-              subjects: [kProgDetail, kFizikaDetail, kAzDetail, kXettiDetail, kInfoDetail, kXariciDetail],
+              subjects: [
+                kProgDetail,
+                kFizikaDetail,
+                kAzDetail,
+                kXettiDetail,
+                kInfoDetail,
+                kXariciDetail,
+              ],
             ),
           ],
         ),
@@ -41,4 +48,3 @@ class GradeCalculatorScreen extends ConsumerWidget {
     );
   }
 }
-

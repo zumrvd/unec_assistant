@@ -9,7 +9,7 @@ import 'package:unec_assistant/presentation/components/cards/schedule_card.dart'
 import 'package:unec_assistant/presentation/components/cards/recent_note_card.dart';
 import 'package:unec_assistant/presentation/components/cards/recent_grade_card.dart';
 import 'package:unec_assistant/presentation/components/cards/post_card.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/providers/calendar_provider.dart';
 import 'package:unec_assistant/providers/current_class_provider.dart';
 import 'package:unec_assistant/providers/dashboard_provider.dart';
@@ -34,16 +34,22 @@ class HomeScreen extends ConsumerWidget {
     final currentClassState = ref.watch(currentClassProvider);
     final attentionSubjects = ref.watch(attentionSubjectsProvider);
     final calendarEvents = ref.watch(calendarEventsProvider);
-    final hasUpcomingSchedule = calendarEvents.any((e) =>
-        (e.type == EventType.personalEvent || e.type == EventType.exam) &&
-        e.endTime.isAfter(now));
+    final hasUpcomingSchedule = calendarEvents.any(
+      (e) =>
+          (e.type == EventType.personalEvent || e.type == EventType.exam) &&
+          e.endTime.isAfter(now),
+    );
     final isClassAttendanceVisible =
-        !currentClassState.isEmpty || attentionSubjects.isNotEmpty || hasUpcomingSchedule;
+        !currentClassState.isEmpty ||
+        attentionSubjects.isNotEmpty ||
+        hasUpcomingSchedule;
 
     // 2. Academic
     final subjects = ref.watch(allSubjectsProvider);
-    final hasRecentGrade = subjects.any((s) =>
-        s.seminarEntries.isNotEmpty || s.midtermScore > 0 || s.finalScore > 0);
+    final hasRecentGrade = subjects.any(
+      (s) =>
+          s.seminarEntries.isNotEmpty || s.midtermScore > 0 || s.finalScore > 0,
+    );
 
     // 3. News Feed
     final isNewsFeedVisible = posts.isNotEmpty;

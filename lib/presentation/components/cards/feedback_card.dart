@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -16,11 +16,7 @@ class _FeedbackCardState extends ConsumerState<FeedbackCard> {
   String _selectedTarget = 'To Faculty';
   final TextEditingController _feedbackController = TextEditingController();
 
-  static const _targetOptions = [
-    'To Faculty',
-    'To Developer Team',
-    'To Other',
-  ];
+  static const _targetOptions = ['To Faculty', 'To Developer Team', 'To Other'];
 
   @override
   void dispose() {
@@ -28,11 +24,16 @@ class _FeedbackCardState extends ConsumerState<FeedbackCard> {
     super.dispose();
   }
 
-  TextStyle _targetTextStyle({required bool isSelected, required AppColors appColors}) {
+  TextStyle _targetTextStyle({
+    required bool isSelected,
+    required AppColors appColors,
+  }) {
     return GoogleFonts.redditSans(
       fontWeight: FontWeight.w700,
       fontSize: 11,
-      color: isSelected ? appColors.pillSelectedText : appColors.pillUnselectedText,
+      color: isSelected
+          ? appColors.pillSelectedText
+          : appColors.pillUnselectedText,
     );
   }
 
@@ -46,12 +47,12 @@ class _FeedbackCardState extends ConsumerState<FeedbackCard> {
         decoration: BoxDecoration(
           color: isSelected ? appColors.primary : appColors.pillUnselectedBg,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: appColors.borderColor,
-            width: 1,
-          ),
+          border: Border.all(color: appColors.borderColor, width: 1),
         ),
-        child: Text(option, style: _targetTextStyle(isSelected: isSelected, appColors: appColors)),
+        child: Text(
+          option,
+          style: _targetTextStyle(isSelected: isSelected, appColors: appColors),
+        ),
       ),
     );
   }
@@ -70,10 +71,7 @@ class _FeedbackCardState extends ConsumerState<FeedbackCard> {
       decoration: BoxDecoration(
         color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: appColors.borderColor,
-          width: 1,
-        ),
+        border: Border.all(color: appColors.borderColor, width: 1),
       ),
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -97,10 +95,7 @@ class _FeedbackCardState extends ConsumerState<FeedbackCard> {
             decoration: BoxDecoration(
               color: appColors.inputBackground,
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: appColors.borderColor,
-                width: 0.5,
-              ),
+              border: Border.all(color: appColors.borderColor, width: 0.5),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             child: TextField(
@@ -197,8 +192,10 @@ class _FeedbackCardState extends ConsumerState<FeedbackCard> {
                 onTap: () {},
                 behavior: HitTestBehavior.opaque,
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     color: appColors.primary,
                     borderRadius: BorderRadius.circular(12),

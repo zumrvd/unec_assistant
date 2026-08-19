@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/models/lecture_material.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/materials_provider.dart';
 
@@ -51,11 +51,7 @@ class TeachingMaterialsCard extends ConsumerWidget {
                       color: iconBg,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Icon(
-                      fileIcon,
-                      size: 20,
-                      color: iconColor,
-                    ),
+                    child: Icon(fileIcon, size: 20, color: iconColor),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
@@ -110,11 +106,7 @@ class TeachingMaterialsCard extends ConsumerWidget {
         ),
         if (!isLast) ...[
           const SizedBox(height: 15),
-          Divider(
-            color: appColors.divider,
-            thickness: 1,
-            height: 1,
-          ),
+          Divider(color: appColors.divider, thickness: 1, height: 1),
           const SizedBox(height: 15),
         ],
       ],
@@ -147,10 +139,7 @@ class TeachingMaterialsCard extends ConsumerWidget {
       decoration: BoxDecoration(
         color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: appColors.borderColor,
-          width: 1,
-        ),
+        border: Border.all(color: appColors.borderColor, width: 1),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
       child: Column(
@@ -351,4 +340,3 @@ class TeachingMaterialsCard extends ConsumerWidget {
     );
   }
 }
-

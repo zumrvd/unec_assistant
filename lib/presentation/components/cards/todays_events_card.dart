@@ -3,16 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/models/calendar_event.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 
 class TodaysEventsCard extends ConsumerStatefulWidget {
   final List<CalendarEvent> events;
 
-  const TodaysEventsCard({
-    required this.events,
-    super.key,
-  });
+  const TodaysEventsCard({required this.events, super.key});
 
   @override
   ConsumerState<TodaysEventsCard> createState() => _TodaysEventsCardState();
@@ -43,36 +40,36 @@ class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
   Widget _buildEventTile(CalendarEvent e, AppColors appColors) {
     final bool isPersonal = e.type == EventType.personalEvent;
     final bool isExam = e.type == EventType.exam;
-    
-    final Color accentColor = isPersonal 
-        ? appColors.warning 
-        : isExam 
-            ? appColors.success 
-            : appColors.primary;
-            
-    final Color bgColor = isPersonal 
-        ? appColors.warning.withValues(alpha: 0.15) 
-        : isExam 
-            ? appColors.success.withValues(alpha: 0.15) 
-            : appColors.primaryContainer;
-            
-    final Color borderColor = isPersonal 
-        ? appColors.warning.withValues(alpha: 0.25) 
-        : isExam 
-            ? appColors.success.withValues(alpha: 0.25) 
-            : appColors.primary.withValues(alpha: 0.25);
-            
-    final Color subtitleColor = isPersonal 
-        ? appColors.warningOnContainer 
-        : isExam 
-            ? appColors.success 
-            : appColors.primary;
-            
-    final Color locationColor = isPersonal 
-        ? appColors.warningOnContainer 
-        : isExam 
-            ? appColors.success 
-            : appColors.primary;
+
+    final Color accentColor = isPersonal
+        ? appColors.warning
+        : isExam
+        ? appColors.success
+        : appColors.primary;
+
+    final Color bgColor = isPersonal
+        ? appColors.warning.withValues(alpha: 0.15)
+        : isExam
+        ? appColors.success.withValues(alpha: 0.15)
+        : appColors.primaryContainer;
+
+    final Color borderColor = isPersonal
+        ? appColors.warning.withValues(alpha: 0.25)
+        : isExam
+        ? appColors.success.withValues(alpha: 0.25)
+        : appColors.primary.withValues(alpha: 0.25);
+
+    final Color subtitleColor = isPersonal
+        ? appColors.warningOnContainer
+        : isExam
+        ? appColors.success
+        : appColors.primary;
+
+    final Color locationColor = isPersonal
+        ? appColors.warningOnContainer
+        : isExam
+        ? appColors.success
+        : appColors.primary;
 
     return Container(
       width: double.infinity,
@@ -145,36 +142,32 @@ class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
   @override
   Widget build(BuildContext context) {
     final appColors = ref.watch(appColorsProvider);
-    final int classCount =
-        widget.events.where((e) => e.type == EventType.classEvent).length;
-    final int personalCount =
-        widget.events.where((e) => e.type == EventType.personalEvent).length;
+    final int classCount = widget.events
+        .where((e) => e.type == EventType.classEvent)
+        .length;
+    final int personalCount = widget.events
+        .where((e) => e.type == EventType.personalEvent)
+        .length;
 
     final nowMin = _now.hour * 60 + _now.minute;
 
-    final Iterable<CalendarEvent?> nullableEvents =
-        widget.events.cast<CalendarEvent?>();
+    final Iterable<CalendarEvent?> nullableEvents = widget.events
+        .cast<CalendarEvent?>();
 
-    final CalendarEvent? activeEvent = nullableEvents.firstWhere(
-      (e) {
-        final start = e!.startTime.hour * 60 + e.startTime.minute;
-        final end = e.endTime.hour * 60 + e.endTime.minute;
-        return nowMin >= start && nowMin <= end;
-      },
-      orElse: () => null,
-    );
+    final CalendarEvent? activeEvent = nullableEvents.firstWhere((e) {
+      final start = e!.startTime.hour * 60 + e.startTime.minute;
+      final end = e.endTime.hour * 60 + e.endTime.minute;
+      return nowMin >= start && nowMin <= end;
+    }, orElse: () => null);
 
-    final CalendarEvent? upNextEvent = nullableEvents.firstWhere(
-      (e) {
-        final start = e!.startTime.hour * 60 + e.startTime.minute;
-        return start > nowMin;
-      },
-      orElse: () => null,
-    );
+    final CalendarEvent? upNextEvent = nullableEvents.firstWhere((e) {
+      final start = e!.startTime.hour * 60 + e.startTime.minute;
+      return start > nowMin;
+    }, orElse: () => null);
 
     int minutesUntilNext = upNextEvent != null
         ? (upNextEvent.startTime.hour * 60 + upNextEvent.startTime.minute) -
-            nowMin
+              nowMin
         : 0;
 
     final List<String> weekdays = [
@@ -184,7 +177,7 @@ class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
       'Thursday',
       'Friday',
       'Saturday',
-      'Sunday'
+      'Sunday',
     ];
     final List<String> months = [
       'January',
@@ -198,7 +191,7 @@ class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
       'September',
       'October',
       'November',
-      'December'
+      'December',
     ];
     final String todayLabel =
         "${weekdays[_now.weekday - 1]}, ${months[_now.month - 1]} ${_now.day}";
@@ -228,7 +221,10 @@ class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
                 decoration: BoxDecoration(
                   color: appColors.surface,
                   borderRadius: BorderRadius.circular(20),
@@ -267,7 +263,10 @@ class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
               ),
               const SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
                 decoration: BoxDecoration(
                   color: appColors.surface,
                   borderRadius: BorderRadius.circular(20),
@@ -332,8 +331,10 @@ class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
               ),
               if (upNextEvent != null)
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: appColors.primaryContainer,
                     borderRadius: BorderRadius.circular(20),
@@ -369,4 +370,3 @@ class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
     );
   }
 }
-

@@ -1,25 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../models/subject_detail.dart';
 
 class MidtermGradeCard extends ConsumerWidget {
   final SubjectDetail data;
 
-  const MidtermGradeCard({
-    required this.data,
-    super.key,
-  });
+  const MidtermGradeCard({required this.data, super.key});
 
   static const _buttonGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [
-      Color(0xFF0569FF),
-      Color(0xCC0569FF),
-      Color(0xFF035CE1),
-    ],
+    colors: [Color(0xFF0569FF), Color(0xCC0569FF), Color(0xFF035CE1)],
     stops: [0.0, 0.5, 1.0],
   );
 
@@ -40,7 +33,11 @@ class MidtermGradeCard extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.star_rounded, size: 20, color: appColors.attendanceOrange),
+              Icon(
+                Icons.star_rounded,
+                size: 20,
+                color: appColors.attendanceOrange,
+              ),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -138,8 +135,11 @@ class MidtermGradeCard extends ConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.grid_view_rounded,
-                          size: 18, color: Color(0xFFF8F9FC)),
+                      const Icon(
+                        Icons.grid_view_rounded,
+                        size: 18,
+                        color: Color(0xFFF8F9FC),
+                      ),
                       const SizedBox(width: 8),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,8 +164,11 @@ class MidtermGradeCard extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  const Icon(Icons.arrow_outward_rounded,
-                      size: 18, color: Color(0xFFF8F9FC)),
+                  const Icon(
+                    Icons.arrow_outward_rounded,
+                    size: 18,
+                    color: Color(0xFFF8F9FC),
+                  ),
                 ],
               ),
             ),
@@ -175,4 +178,3 @@ class MidtermGradeCard extends ConsumerWidget {
     );
   }
 }
-

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unec_assistant/presentation/components/lists/labels.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/student_profile_provider.dart';
 
@@ -301,7 +301,11 @@ class AcademicProfileScreen extends ConsumerWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.stars_rounded, size: 14, color: appColors.notificationPurple),
+          Icon(
+            Icons.stars_rounded,
+            size: 14,
+            color: appColors.notificationPurple,
+          ),
           const SizedBox(width: 6),
           Text(
             club,
@@ -380,4 +384,3 @@ class AcademicProfileScreen extends ConsumerWidget {
     );
   }
 }
-

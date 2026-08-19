@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../../models/subject_detail.dart';
 
 class SubjectButton extends ConsumerWidget {
   final SubjectDetail subject;
   final VoidCallback onTap;
 
-  const SubjectButton({
-    required this.subject,
-    required this.onTap,
-    super.key,
-  });
+  const SubjectButton({required this.subject, required this.onTap, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,10 +22,7 @@ class SubjectButton extends ConsumerWidget {
         decoration: BoxDecoration(
           color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: appColors.borderColor,
-            width: 1,
-          ),
+          border: Border.all(color: appColors.borderColor, width: 1),
         ),
         padding: const EdgeInsets.all(16),
         child: Row(
@@ -112,4 +105,3 @@ class SubjectButton extends ConsumerWidget {
     );
   }
 }
-

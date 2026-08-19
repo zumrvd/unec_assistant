@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../models/comment.dart';
 import '../../../models/user_account.dart';
 
@@ -11,8 +11,11 @@ class CommentTile extends ConsumerStatefulWidget {
   final UserAccount currentUser;
   final void Function(String commentId) onLikeTap;
   final void Function(
-          String replyText, String? parentCommentId, String? replyToUserId)
-      onReplySubmit;
+    String replyText,
+    String? parentCommentId,
+    String? replyToUserId,
+  )
+  onReplySubmit;
   final void Function(String commentId, String newText) onEditSubmit;
   final void Function(String commentId) onDeleteTap;
   final VoidCallback onLoadReplies;
@@ -69,10 +72,12 @@ class _CommentTileState extends ConsumerState<CommentTile> {
   Widget build(BuildContext context) {
     final appColors = ref.watch(appColorsProvider);
     final bool isReply = widget.data.parentCommentId != null;
-    final Color avatarBg =
-        isReply ? appColors.dangerContainer : appColors.primaryContainer;
-    final Color avatarText =
-        isReply ? appColors.dangerOnContainer : appColors.primaryOnContainer;
+    final Color avatarBg = isReply
+        ? appColors.dangerContainer
+        : appColors.primaryContainer;
+    final Color avatarText = isReply
+        ? appColors.dangerOnContainer
+        : appColors.primaryOnContainer;
 
     return Padding(
       padding: EdgeInsets.only(left: isReply ? 32.0 : 0.0, bottom: 20.0),
@@ -85,8 +90,10 @@ class _CommentTileState extends ConsumerState<CommentTile> {
               Container(
                 width: 36,
                 height: 36,
-                decoration:
-                    BoxDecoration(shape: BoxShape.circle, color: avatarBg),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: avatarBg,
+                ),
                 alignment: Alignment.center,
                 child: Text(
                   widget.author.initials,
@@ -134,8 +141,11 @@ class _CommentTileState extends ConsumerState<CommentTile> {
                     side: BorderSide(color: appColors.borderColor, width: 1),
                   ),
                   padding: EdgeInsets.zero,
-                  icon: Icon(Icons.more_vert_rounded,
-                      size: 18, color: appColors.textSecondary),
+                  icon: Icon(
+                    Icons.more_vert_rounded,
+                    size: 18,
+                    color: appColors.textSecondary,
+                  ),
                   onSelected: (value) {
                     if (value == 'edit') {
                       setState(() {
@@ -192,11 +202,13 @@ class _CommentTileState extends ConsumerState<CommentTile> {
                         decoration: InputDecoration(
                           isDense: true,
                           border: UnderlineInputBorder(
-                            borderSide:
-                                BorderSide(color: appColors.borderColor),
+                            borderSide: BorderSide(
+                              color: appColors.borderColor,
+                            ),
                           ),
-                          contentPadding:
-                              const EdgeInsets.symmetric(vertical: 4),
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 4,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -209,10 +221,13 @@ class _CommentTileState extends ConsumerState<CommentTile> {
                             behavior: HitTestBehavior.opaque,
                             child: Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 14, vertical: 7),
+                                horizontal: 14,
+                                vertical: 7,
+                              ),
                               decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: appColors.borderColor),
+                                border: Border.all(
+                                  color: appColors.borderColor,
+                                ),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
@@ -231,15 +246,19 @@ class _CommentTileState extends ConsumerState<CommentTile> {
                               if (_editController.text.isNotEmpty &&
                                   _editController.text !=
                                       widget.data.bodyText) {
-                                widget.onEditSubmit(widget.data.commentId,
-                                    _editController.text);
+                                widget.onEditSubmit(
+                                  widget.data.commentId,
+                                  _editController.text,
+                                );
                               }
                               setState(() => _editInputVisible = false);
                             },
                             behavior: HitTestBehavior.opaque,
                             child: Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 14, vertical: 7),
+                                horizontal: 14,
+                                vertical: 7,
+                              ),
                               decoration: BoxDecoration(
                                 color: appColors.primary,
                                 borderRadius: BorderRadius.circular(8),
@@ -302,7 +321,8 @@ class _CommentTileState extends ConsumerState<CommentTile> {
                     const SizedBox(width: 20),
                     GestureDetector(
                       onTap: () => setState(
-                          () => _replyInputVisible = !_replyInputVisible),
+                        () => _replyInputVisible = !_replyInputVisible,
+                      ),
                       behavior: HitTestBehavior.opaque,
                       child: Text(
                         'Reply',
@@ -338,12 +358,16 @@ class _CommentTileState extends ConsumerState<CommentTile> {
                         controller: _replyController,
                         autofocus: true,
                         style: GoogleFonts.redditSans(
-                            fontSize: 12, color: appColors.textPrimary),
+                          fontSize: 12,
+                          color: appColors.textPrimary,
+                        ),
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Write a reply...',
                           hintStyle: GoogleFonts.redditSans(
-                              color: appColors.textMuted, fontSize: 12),
+                            color: appColors.textMuted,
+                            fontSize: 12,
+                          ),
                           isDense: true,
                           contentPadding: EdgeInsets.zero,
                         ),
@@ -374,10 +398,15 @@ class _CommentTileState extends ConsumerState<CommentTile> {
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
-                          shape: BoxShape.circle, color: appColors.primary),
+                        shape: BoxShape.circle,
+                        color: appColors.primary,
+                      ),
                       alignment: Alignment.center,
-                      child: Icon(Icons.send_rounded,
-                          size: 16, color: appColors.pillSelectedText),
+                      child: Icon(
+                        Icons.send_rounded,
+                        size: 16,
+                        color: appColors.pillSelectedText,
+                      ),
                     ),
                   ),
                 ],
@@ -410,9 +439,13 @@ class _CommentTileState extends ConsumerState<CommentTile> {
             ),
             if (_repliesExpanded && widget.loadedReplies != null)
               ...widget.loadedReplies!.map((reply) {
-                final author = widget.users[reply.authorUserId] ??
+                final author =
+                    widget.users[reply.authorUserId] ??
                     const UserAccount(
-                        userId: '?', displayName: 'Unknown', initials: '??');
+                      userId: '?',
+                      displayName: 'Unknown',
+                      initials: '??',
+                    );
                 return CommentTile(
                   data: reply,
                   author: author,

@@ -6,7 +6,8 @@ import 'package:unec_assistant/presentation/components/cards/feedback_card.dart'
 import 'package:unec_assistant/presentation/components/cards/setting_card1.dart';
 import 'package:unec_assistant/presentation/components/cards/setting_card2.dart';
 import 'package:unec_assistant/presentation/components/cards/student_id_card.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/student_card_customization_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -22,6 +23,7 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final cardState = ref.watch(studentCardCustomizationProvider);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -31,12 +33,14 @@ class ProfileScreen extends ConsumerWidget {
           children: [
             Expanded(
               child: SingleChildScrollView(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 16,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Center(
+                    Center(
                       child: StudentIdCard(
                         studentName: 'Zümrüd Verdiyeva',
                         groupCode: '575-1',
@@ -44,9 +48,10 @@ class ProfileScreen extends ConsumerWidget {
                         sabahGroup: 'SABAH grupları',
                         years: '2025-2029',
                         yearBadge: '1-ci kurs',
-                        quote: '"too pretty to worry about midterms"',
-                        profileImage:
-                            AssetImage('assets/images/profile.jpg'),
+                        quote: cardState.selectedQuote,
+                        profileImage: cardState.selectedAvatar,
+                        theme: cardState.selectedTheme,
+                        onTap: () => context.push('/profile/student_card'),
                       ),
                     ),
 
@@ -108,9 +113,7 @@ class ProfileScreen extends ConsumerWidget {
                       ),
                     ),
 
-                    const Center(
-                      child: FeedbackCard(),
-                    ),
+                    const Center(child: FeedbackCard()),
                   ],
                 ),
               ),

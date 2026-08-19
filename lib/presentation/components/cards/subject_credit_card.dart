@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../models/subject_detail.dart';
 
 class SubjectCreditCard extends ConsumerWidget {
   final SubjectDetail data;
 
-  const SubjectCreditCard({
-    required this.data,
-    super.key,
-  });
+  const SubjectCreditCard({required this.data, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,10 +19,7 @@ class SubjectCreditCard extends ConsumerWidget {
       decoration: BoxDecoration(
         color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: appColors.borderColor,
-          width: 1,
-        ),
+        border: Border.all(color: appColors.borderColor, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -114,7 +108,10 @@ class SubjectCreditCard extends ConsumerWidget {
                         decoration: BoxDecoration(
                           color: appColors.surface,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: appColors.borderColor, width: 1),
+                          border: Border.all(
+                            color: appColors.borderColor,
+                            width: 1,
+                          ),
                         ),
                         child: RichText(
                           text: TextSpan(
@@ -136,7 +133,8 @@ class SubjectCreditCard extends ConsumerWidget {
                                 ),
                               ),
                               TextSpan(
-                                text: ". Subjects with more credits have a greater impact on your overall ",
+                                text:
+                                    ". Subjects with more credits have a greater impact on your overall ",
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 11,
@@ -166,4 +164,3 @@ class SubjectCreditCard extends ConsumerWidget {
     );
   }
 }
-

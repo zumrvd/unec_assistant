@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/models/calendar_event.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/utils/subject_event_link.dart';
 
@@ -25,10 +25,7 @@ Future<CalendarEvent?> showEventEditorSheet(
 }
 
 class _EventEditorSheet extends ConsumerStatefulWidget {
-  const _EventEditorSheet({
-    required this.initialDay,
-    this.existing,
-  });
+  const _EventEditorSheet({required this.initialDay, this.existing});
 
   final CalendarEvent? existing;
   final DateTime initialDay;
@@ -101,7 +98,13 @@ class _EventEditorSheetState extends ConsumerState<_EventEditorSheet> {
     final title = _titleCtrl.text.trim();
     if (title.isEmpty) return;
 
-    var start = DateTime(_day.year, _day.month, _day.day, _start.hour, _start.minute);
+    var start = DateTime(
+      _day.year,
+      _day.month,
+      _day.day,
+      _start.hour,
+      _start.minute,
+    );
     var end = DateTime(_day.year, _day.month, _day.day, _end.hour, _end.minute);
     if (!end.isAfter(start)) {
       end = end.add(const Duration(days: 1));
@@ -115,7 +118,8 @@ class _EventEditorSheetState extends ConsumerState<_EventEditorSheet> {
 
     final event = withResolvedSubjectId(
       CalendarEvent(
-        id: widget.existing?.id ??
+        id:
+            widget.existing?.id ??
             'evt-${DateTime.now().millisecondsSinceEpoch}',
         title: title,
         subtype: widget.existing?.subtype ?? subtype,
@@ -135,7 +139,10 @@ class _EventEditorSheetState extends ConsumerState<_EventEditorSheet> {
   InputDecoration _fieldDecoration(String hint, AppColors appColors) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: GoogleFonts.redditSans(color: appColors.textSecondary, fontSize: 14),
+      hintStyle: GoogleFonts.redditSans(
+        color: appColors.textSecondary,
+        fontSize: 14,
+      ),
       filled: true,
       fillColor: appColors.surface,
       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -274,13 +281,19 @@ class _EventEditorSheetState extends ConsumerState<_EventEditorSheet> {
               TextField(
                 controller: _descCtrl,
                 maxLines: 3,
-                style: GoogleFonts.redditSans(fontSize: 14, color: appColors.textPrimary),
+                style: GoogleFonts.redditSans(
+                  fontSize: 14,
+                  color: appColors.textPrimary,
+                ),
                 decoration: _fieldDecoration('Description', appColors),
               ),
               const SizedBox(height: 12),
               TextField(
                 controller: _locationCtrl,
-                style: GoogleFonts.redditSans(fontSize: 14, color: appColors.textPrimary),
+                style: GoogleFonts.redditSans(
+                  fontSize: 14,
+                  color: appColors.textPrimary,
+                ),
                 decoration: _fieldDecoration('Location', appColors),
               ),
               const SizedBox(height: 14),
@@ -356,4 +369,3 @@ class _EventEditorSheetState extends ConsumerState<_EventEditorSheet> {
     );
   }
 }
-

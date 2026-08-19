@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/subject_detail.dart';
 
 class ClassLoadCard extends ConsumerWidget {
   final SubjectDetail data;
 
-  const ClassLoadCard({
-    required this.data,
-    super.key,
-  });
+  const ClassLoadCard({required this.data, super.key});
 
   Widget _loadBox(String bigText, String smallText, AppColors appColors) {
     return Expanded(
@@ -19,10 +16,7 @@ class ClassLoadCard extends ConsumerWidget {
         decoration: BoxDecoration(
           color: appColors.surface,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: appColors.borderColor,
-            width: 1,
-          ),
+          border: Border.all(color: appColors.borderColor, width: 1),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         child: Column(
@@ -62,10 +56,7 @@ class ClassLoadCard extends ConsumerWidget {
       decoration: BoxDecoration(
         color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: appColors.borderColor,
-          width: 1,
-        ),
+        border: Border.all(color: appColors.borderColor, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -81,11 +72,7 @@ class ClassLoadCard extends ConsumerWidget {
                     color: iconColor.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Icon(
-                    Icons.pie_chart,
-                    size: 18,
-                    color: iconColor,
-                  ),
+                  child: Icon(Icons.pie_chart, size: 18, color: iconColor),
                 ),
                 const SizedBox(width: 10),
                 Text(
@@ -106,7 +93,11 @@ class ClassLoadCard extends ConsumerWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                _loadBox("${data.sessionsPerWeek}", "sessions/\nweek", appColors),
+                _loadBox(
+                  "${data.sessionsPerWeek}",
+                  "sessions/\nweek",
+                  appColors,
+                ),
                 const SizedBox(width: 10),
                 _loadBox("${data.hrsPerWeek}", "hrs/\nweek", appColors),
                 const SizedBox(width: 10),
@@ -119,4 +110,3 @@ class ClassLoadCard extends ConsumerWidget {
     );
   }
 }
-

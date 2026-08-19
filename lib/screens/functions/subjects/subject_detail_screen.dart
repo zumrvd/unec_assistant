@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../models/subject_detail.dart';
 import '../../../presentation/components/cards/subject_name_card.dart';
 import '../../../presentation/components/buttons/subjects/open_action_button.dart';
@@ -14,10 +14,7 @@ import '../../../presentation/components/lists/labels.dart';
 class SubjectDetailScreen extends ConsumerWidget {
   final SubjectDetail data;
 
-  const SubjectDetailScreen({
-    required this.data,
-    super.key,
-  });
+  const SubjectDetailScreen({required this.data, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,7 +38,9 @@ class SubjectDetailScreen extends ConsumerWidget {
                     label: 'Open Grades',
                     sublabel: 'For this subject',
                     icon: Icons.star_rounded,
-                    onTap: () => context.push('/functions/grades/subject/${data.subjectId}'),
+                    onTap: () => context.push(
+                      '/functions/grades/subject/${data.subjectId}',
+                    ),
                   ),
                 ),
                 Expanded(
@@ -49,7 +48,9 @@ class SubjectDetailScreen extends ConsumerWidget {
                     label: 'Open Materials',
                     sublabel: 'For this subject',
                     icon: Icons.article_rounded,
-                    onTap: () => context.push('/functions/teaching-materials/subject/${data.subjectId}'),
+                    onTap: () => context.push(
+                      '/functions/teaching-materials/subject/${data.subjectId}',
+                    ),
                   ),
                 ),
               ],
@@ -64,4 +65,3 @@ class SubjectDetailScreen extends ConsumerWidget {
     );
   }
 }
-

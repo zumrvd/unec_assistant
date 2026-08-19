@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../models/subject_detail.dart';
 import '../../../providers/subject_detail_provider.dart';
 
@@ -58,15 +58,17 @@ class RecentGradeCard extends ConsumerWidget {
       for (final e in s.seminarEntries) {
         final parsed = _parseDate(e.date);
         if (parsed != null) {
-          allEvents.add(GradeEvent(
-            title: e.title,
-            dateStr: e.date,
-            date: parsed,
-            score: e.score,
-            max: e.maxScore,
-            type: GradeType.seminar,
-            subject: s,
-          ));
+          allEvents.add(
+            GradeEvent(
+              title: e.title,
+              dateStr: e.date,
+              date: parsed,
+              score: e.score,
+              max: e.maxScore,
+              type: GradeType.seminar,
+              subject: s,
+            ),
+          );
         }
       }
 
@@ -74,15 +76,17 @@ class RecentGradeCard extends ConsumerWidget {
       if (s.midtermScore > 0) {
         final parsed = _parseDate(s.midtermDate);
         if (parsed != null) {
-          allEvents.add(GradeEvent(
-            title: 'Midterm Exam',
-            dateStr: s.midtermDate,
-            date: parsed,
-            score: s.midtermScore,
-            max: 30,
-            type: GradeType.midterm,
-            subject: s,
-          ));
+          allEvents.add(
+            GradeEvent(
+              title: 'Midterm Exam',
+              dateStr: s.midtermDate,
+              date: parsed,
+              score: s.midtermScore,
+              max: 30,
+              type: GradeType.midterm,
+              subject: s,
+            ),
+          );
         }
       }
 
@@ -90,15 +94,17 @@ class RecentGradeCard extends ConsumerWidget {
       if (s.finalScore > 0) {
         final parsed = _parseDate(s.finalExamDate);
         if (parsed != null) {
-          allEvents.add(GradeEvent(
-            title: 'Final Exam',
-            dateStr: s.finalExamDate,
-            date: parsed,
-            score: s.finalScore,
-            max: 50,
-            type: GradeType.finalGrade,
-            subject: s,
-          ));
+          allEvents.add(
+            GradeEvent(
+              title: 'Final Exam',
+              dateStr: s.finalExamDate,
+              date: parsed,
+              score: s.finalScore,
+              max: 50,
+              type: GradeType.finalGrade,
+              subject: s,
+            ),
+          );
         }
       }
     }
@@ -217,7 +223,10 @@ class RecentGradeCard extends ConsumerWidget {
                       decoration: BoxDecoration(
                         color: appColors.surface,
                         borderRadius: BorderRadius.circular(15),
-                        border: Border.all(color: appColors.borderColor, width: 1),
+                        border: Border.all(
+                          color: appColors.borderColor,
+                          width: 1,
+                        ),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -247,7 +256,11 @@ class RecentGradeCard extends ConsumerWidget {
                             ],
                           ),
                           const SizedBox(width: 15),
-                          Container(width: 1, height: 40, color: appColors.divider),
+                          Container(
+                            width: 1,
+                            height: 40,
+                            color: appColors.divider,
+                          ),
                           const SizedBox(width: 15),
                           Expanded(
                             child: Column(

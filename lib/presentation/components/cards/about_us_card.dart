@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 
 class AboutUsCard extends ConsumerWidget {
@@ -19,10 +19,7 @@ class AboutUsCard extends ConsumerWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              emoji,
-              style: const TextStyle(fontSize: 18),
-            ),
+            Text(emoji, style: const TextStyle(fontSize: 18)),
             const SizedBox(width: 8),
             Text(
               heading,
@@ -58,10 +55,7 @@ class AboutUsCard extends ConsumerWidget {
       decoration: BoxDecoration(
         color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: appColors.borderColor,
-          width: 1,
-        ),
+        border: Border.all(color: appColors.borderColor, width: 1),
       ),
       padding: const EdgeInsets.all(18),
       child: Column(
@@ -82,7 +76,8 @@ class AboutUsCard extends ConsumerWidget {
                   ),
                 ),
                 const TextSpan(
-                  text: ' with a passion for building software that solves real-world challenges.',
+                  text:
+                      ' with a passion for building software that solves real-world challenges.',
                 ),
               ],
             ),
@@ -95,7 +90,8 @@ class AboutUsCard extends ConsumerWidget {
             body: TextSpan(
               children: [
                 const TextSpan(
-                  text: 'My development journey began out of a simple desire to make everyday tasks — looking up classrooms, downloading lectures, tracking schedules, and digging around for student IDs — easier. These are the small, daily hassles we all deal with, but by simplifying them, our entire university experience becomes smoother. What started as an idea in front of a blank screen has evolved into the fully functional application you are using today. It was intentionally engineered to serve your core needs and bridge the gap between students and faculty administration. ',
+                  text:
+                      'My development journey began out of a simple desire to make everyday tasks — looking up classrooms, downloading lectures, tracking schedules, and digging around for student IDs — easier. These are the small, daily hassles we all deal with, but by simplifying them, our entire university experience becomes smoother. What started as an idea in front of a blank screen has evolved into the fully functional application you are using today. It was intentionally engineered to serve your core needs and bridge the gap between students and faculty administration. ',
                 ),
                 TextSpan(
                   text: "Let's redefine our university experience together.",
@@ -113,4 +109,3 @@ class AboutUsCard extends ConsumerWidget {
     );
   }
 }
-

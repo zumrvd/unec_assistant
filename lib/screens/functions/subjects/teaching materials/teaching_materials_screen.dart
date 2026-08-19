@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../../providers/subject_detail_provider.dart';
 import '../../../../presentation/components/lists/subject_materials_list.dart';
 import '../../../../presentation/components/buttons/materials/smart_sync_button.dart';
@@ -24,11 +24,15 @@ class TeachingMaterialsScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 10,
           children: [
-            SmartSyncButton(onTap: () => context.push('/functions/teaching-materials/smart-sync')),
+            SmartSyncButton(
+              onTap: () =>
+                  context.push('/functions/teaching-materials/smart-sync'),
+            ),
             SectionLabel('All subjects  ${allSubjects.length}'),
             SubjectMaterialsList(
               items: allSubjects,
-              onSubjectTap: (id) => context.push('/functions/teaching-materials/subject/$id'),
+              onSubjectTap: (id) =>
+                  context.push('/functions/teaching-materials/subject/$id'),
             ),
           ],
         ),
@@ -36,4 +40,3 @@ class TeachingMaterialsScreen extends ConsumerWidget {
     );
   }
 }
-

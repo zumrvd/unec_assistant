@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../providers/about_app_provider.dart';
 
 class SectionLabel extends ConsumerWidget {
@@ -58,9 +58,7 @@ class AboutAppFooter extends ConsumerWidget {
               const TextSpan(text: 'Bu tətbiq '),
               TextSpan(
                 text: 'UNEC tələbələri üçün',
-                style: GoogleFonts.redditSans(
-                  fontStyle: FontStyle.italic,
-                ),
+                style: GoogleFonts.redditSans(fontStyle: FontStyle.italic),
               ),
               const TextSpan(text: ' sevgi ilə hazırlanmışdır <3'),
             ],
@@ -105,7 +103,9 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           color: appColors.background,
-          border: Border(bottom: BorderSide(color: appColors.borderColor, width: 1)),
+          border: Border(
+            bottom: BorderSide(color: appColors.borderColor, width: 1),
+          ),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 35.0),
         child: Row(
@@ -116,23 +116,24 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  leading ?? GestureDetector(
-                    onTap: onBackTap ?? () => Navigator.of(context).pop(),
-                    behavior: HitTestBehavior.opaque,
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: appColors.iconBoxArrowBg,
-                        borderRadius: BorderRadius.circular(8),
+                  leading ??
+                      GestureDetector(
+                        onTap: onBackTap ?? () => Navigator.of(context).pop(),
+                        behavior: HitTestBehavior.opaque,
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: appColors.iconBoxArrowBg,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            Icons.arrow_back,
+                            size: 20,
+                            color: appColors.textSecondary,
+                          ),
+                        ),
                       ),
-                      child: Icon(
-                        Icons.arrow_back,
-                        size: 20,
-                        color: appColors.textSecondary,
-                      ),
-                    ),
-                  ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: Text(
@@ -140,17 +141,14 @@ class CustomAppBar extends ConsumerWidget implements PreferredSizeWidget {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 18,
-                        color: appColors.textPrimary,
+                        color: appColors.textMuted,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            if (trailing != null) ...[
-              const SizedBox(width: 12),
-              trailing!,
-            ],
+            if (trailing != null) ...[const SizedBox(width: 12), trailing!],
             const SizedBox(width: 8),
           ],
         ),

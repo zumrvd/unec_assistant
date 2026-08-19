@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../models/subject_detail.dart';
 
 class TeacherCard extends ConsumerWidget {
   final SubjectDetail data;
 
-  const TeacherCard({
-    required this.data,
-    super.key,
-  });
+  const TeacherCard({required this.data, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,10 +19,7 @@ class TeacherCard extends ConsumerWidget {
       decoration: BoxDecoration(
         color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: appColors.borderColor,
-          width: 1,
-        ),
+        border: Border.all(color: appColors.borderColor, width: 1),
       ),
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -39,11 +33,7 @@ class TeacherCard extends ConsumerWidget {
               color: appColors.primaryContainer,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
-              Icons.person_outlined,
-              size: 26,
-              color: iconColor,
-            ),
+            child: Icon(Icons.person_outlined, size: 26, color: iconColor),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -98,4 +88,3 @@ class TeacherCard extends ConsumerWidget {
     );
   }
 }
-

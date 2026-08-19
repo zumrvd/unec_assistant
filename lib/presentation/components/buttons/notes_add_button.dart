@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 
 class NotesAddButton extends ConsumerWidget {
   final VoidCallback onTap;
 
-  const NotesAddButton({
-    required this.onTap,
-    super.key,
-  });
+  const NotesAddButton({required this.onTap, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,4 +30,3 @@ class NotesAddButton extends ConsumerWidget {
     );
   }
 }
-

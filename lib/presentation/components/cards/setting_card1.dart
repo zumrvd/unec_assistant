@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 
 class SettingsCard1 extends ConsumerWidget {
@@ -24,11 +24,7 @@ class SettingsCard1 extends ConsumerWidget {
         color: bgColor,
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Icon(
-        icon,
-        size: 22,
-        color: iconColor,
-      ),
+      child: Icon(icon, size: 22, color: iconColor),
     );
   }
 
@@ -49,10 +45,7 @@ class SettingsCard1 extends ConsumerWidget {
       decoration: BoxDecoration(
         color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: appColors.borderColor,
-          width: 1,
-        ),
+        border: Border.all(color: appColors.borderColor, width: 1),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
       child: Column(
@@ -78,8 +71,10 @@ class SettingsCard1 extends ConsumerWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Profile Informations',
-                            style: _labelStyle(appColors)),
+                        Text(
+                          'Profile Informations',
+                          style: _labelStyle(appColors),
+                        ),
                         const SizedBox(height: 2),
                         Text(
                           'Your full transcript',
@@ -110,11 +105,7 @@ class SettingsCard1 extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 15),
-          Divider(
-            color: appColors.divider,
-            thickness: 1,
-            height: 1,
-          ),
+          Divider(color: appColors.divider, thickness: 1, height: 1),
           const SizedBox(height: 15),
           GestureDetector(
             onTap: onUnecCabinetTap,
@@ -166,11 +157,7 @@ class SettingsCard1 extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 15),
-          Divider(
-            color: appColors.divider,
-            thickness: 1,
-            height: 1,
-          ),
+          Divider(color: appColors.divider, thickness: 1, height: 1),
           const SizedBox(height: 15),
           GestureDetector(
             onTap: onChangePassTap,

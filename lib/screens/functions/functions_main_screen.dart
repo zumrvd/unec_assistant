@@ -6,7 +6,7 @@ import 'package:unec_assistant/presentation/components/buttons/schedule_button.d
 import 'package:unec_assistant/presentation/components/buttons/subjects/subjects_button.dart';
 import 'package:unec_assistant/presentation/components/buttons/attendance/attendance_button.dart';
 import 'package:unec_assistant/presentation/components/buttons/notes_button.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 
 import '../../presentation/components/lists/labels.dart';
 
@@ -64,9 +64,7 @@ class FunctionsMainScreen extends ConsumerWidget {
             const SectionLabel('Personal'),
             const SizedBox(height: 10),
 
-            NotesButton(
-              onTap: () => context.push('/notes'),
-            ),
+            NotesButton(onTap: () => context.push('/notes')),
           ],
         ),
       ),

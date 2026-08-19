@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:unec_assistant/presentation/components/calendar/event_editor_sheet.dart';
 import 'package:unec_assistant/presentation/components/cards/calendar_card.dart';
 import 'package:unec_assistant/presentation/components/cards/todays_events_card.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/providers/calendar_provider.dart';
 
 import 'package:unec_assistant/presentation/components/lists/labels.dart';
@@ -36,11 +36,14 @@ class ScheduleScreen extends ConsumerWidget {
     final allEvents = ref.watch(calendarEventsProvider);
     final appColors = ref.watch(appColorsProvider);
     final now = DateTime.now();
-    final todaysEvents = allEvents.where((e) =>
-      e.startTime.year == now.year &&
-      e.startTime.month == now.month &&
-      e.startTime.day == now.day
-    ).toList();
+    final todaysEvents = allEvents
+        .where(
+          (e) =>
+              e.startTime.year == now.year &&
+              e.startTime.month == now.month &&
+              e.startTime.day == now.day,
+        )
+        .toList();
 
     return Scaffold(
       backgroundColor: appColors.background,
@@ -98,4 +101,3 @@ class ScheduleScreen extends ConsumerWidget {
     );
   }
 }
-

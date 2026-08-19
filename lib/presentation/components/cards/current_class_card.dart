@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/current_class_provider.dart';
 
@@ -158,7 +158,12 @@ class CurrentClassCard extends ConsumerWidget {
     );
   }
 
-  Widget _infoRow(IconData icon, String label, String value, AppColors appColors) {
+  Widget _infoRow(
+    IconData icon,
+    String label,
+    String value,
+    AppColors appColors,
+  ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -196,4 +201,3 @@ class CurrentClassCard extends ConsumerWidget {
     );
   }
 }
-

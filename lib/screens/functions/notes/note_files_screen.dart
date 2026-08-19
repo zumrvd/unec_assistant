@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:uuid/uuid.dart';
 import '../../../presentation/components/lists/labels.dart';
 import '../../../presentation/components/inputs/app_search_bar.dart';
@@ -13,10 +13,7 @@ import '../../../models/note.dart';
 class NoteFilesScreen extends ConsumerStatefulWidget {
   final String folderId;
 
-  const NoteFilesScreen({
-    required this.folderId,
-    super.key,
-  });
+  const NoteFilesScreen({required this.folderId, super.key});
 
   @override
   ConsumerState<NoteFilesScreen> createState() => _NoteFilesScreenState();
@@ -42,7 +39,7 @@ class _NoteFilesScreenState extends ConsumerState<NoteFilesScreen> {
       paperSkin: PaperSkin.plain,
       updatedAt: DateTime.now(),
     );
-    
+
     ref.read(notesProvider.notifier).createNote(newNote);
     context.push('/notes/editor/$newId');
   }
@@ -54,13 +51,16 @@ class _NoteFilesScreenState extends ConsumerState<NoteFilesScreen> {
       builder: (context) {
         return AlertDialog(
           backgroundColor: appColors.cardBackground,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
           title: const SectionLabel('Delete Note?'),
           content: Text(
             'Are you sure you want to delete "${note.title.isEmpty ? 'Untitled' : note.title}"? This action cannot be undone.',
             style: GoogleFonts.redditSans(
-                fontSize: 14, color: appColors.textSecondary),
+              fontSize: 14,
+              color: appColors.textSecondary,
+            ),
           ),
           actions: [
             GestureDetector(
@@ -68,8 +68,10 @@ class _NoteFilesScreenState extends ConsumerState<NoteFilesScreen> {
               behavior: HitTestBehavior.opaque,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child:
-                    Text('Cancel', style: GoogleFonts.redditSans(color: appColors.textSecondary)),
+                child: Text(
+                  'Cancel',
+                  style: GoogleFonts.redditSans(color: appColors.textSecondary),
+                ),
               ),
             ),
             GestureDetector(
@@ -80,9 +82,13 @@ class _NoteFilesScreenState extends ConsumerState<NoteFilesScreen> {
               behavior: HitTestBehavior.opaque,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('Delete',
-                    style: GoogleFonts.redditSans(
-                        color: appColors.error, fontWeight: FontWeight.bold)),
+                child: Text(
+                  'Delete',
+                  style: GoogleFonts.redditSans(
+                    color: appColors.error,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ],
@@ -96,8 +102,9 @@ class _NoteFilesScreenState extends ConsumerState<NoteFilesScreen> {
     final appColors = ref.watch(appColorsProvider);
     final folders = ref.watch(foldersProvider);
     final folder = folders.firstWhere((f) => f.folderId == widget.folderId);
-    final notes = ref.watch(searchedNotesProvider(
-        (folderId: widget.folderId, query: _searchQuery)));
+    final notes = ref.watch(
+      searchedNotesProvider((folderId: widget.folderId, query: _searchQuery)),
+    );
 
     return Scaffold(
       backgroundColor: appColors.background,
@@ -149,4 +156,3 @@ class _NoteFilesScreenState extends ConsumerState<NoteFilesScreen> {
     );
   }
 }
-

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:unec_assistant/presentation/components/cards/theme_setting_card.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 
 void main() {
@@ -38,15 +38,12 @@ void main() {
       expect(container.read(appColorsProvider).isDark, isFalse);
     });
 
-    testWidgets('ThemeSettingCard renders and toggles theme via tap',
-        (WidgetTester tester) async {
+    testWidgets('ThemeSettingCard renders and toggles theme via tap', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         const ProviderScope(
-          child: MaterialApp(
-            home: Scaffold(
-              body: ThemeSettingCard(),
-            ),
-          ),
+          child: MaterialApp(home: Scaffold(body: ThemeSettingCard())),
         ),
       );
       await tester.pumpAndSettle();

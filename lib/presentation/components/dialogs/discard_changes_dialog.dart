@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 
 Future<bool?> showDiscardChangesDialog(BuildContext context) async {
   return showDialog<bool>(
@@ -124,4 +124,3 @@ class _DiscardChangesDialogContent extends ConsumerWidget {
     );
   }
 }
-

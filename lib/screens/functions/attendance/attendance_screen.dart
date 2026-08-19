@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unec_assistant/presentation/components/cards/subject_attendance_card.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/providers/subject_detail_provider.dart';
 import '../../../presentation/components/lists/labels.dart';
 
@@ -25,20 +25,23 @@ class AttendanceScreen extends ConsumerWidget {
           children: [
             if (attentionSubjects.isNotEmpty) ...[
               const SectionLabel('Needs attention'),
-              ...attentionSubjects.map((s) => Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: SubjectAttendanceCard(subject: s),
-              )),
+              ...attentionSubjects.map(
+                (s) => Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: SubjectAttendanceCard(subject: s),
+                ),
+              ),
             ],
             const SectionLabel('All subjects'),
-            ...allSubjects.map((s) => Padding(
-              padding: const EdgeInsets.only(bottom: 10.0),
-              child: SubjectAttendanceCard(subject: s),
-            )),
+            ...allSubjects.map(
+              (s) => Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: SubjectAttendanceCard(subject: s),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 }
-

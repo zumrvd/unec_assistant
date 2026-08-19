@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/models/calendar_event.dart';
 import 'package:unec_assistant/presentation/components/cards/calendar_card.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/providers/calendar_provider.dart';
 
 class ScheduleCard extends ConsumerWidget {
@@ -19,7 +19,7 @@ class ScheduleCard extends ConsumerWidget {
     // Filter for upcoming personal events and exams
     final upcomingEvents = events.where((e) {
       return (e.type == EventType.personalEvent || e.type == EventType.exam) &&
-             e.endTime.isAfter(now);
+          e.endTime.isAfter(now);
     }).toList();
 
     // Sort by start time
@@ -29,7 +29,8 @@ class ScheduleCard extends ConsumerWidget {
     final firstEvent = hasEvent ? upcomingEvents.first : null;
     final isExam = firstEvent?.type == EventType.exam;
     final accentColor = isExam ? appColors.success : appColors.warning;
-    final isActive = firstEvent != null &&
+    final isActive =
+        firstEvent != null &&
         now.isAfter(firstEvent.startTime) &&
         now.isBefore(firstEvent.endTime);
 
@@ -56,7 +57,9 @@ class ScheduleCard extends ConsumerWidget {
                       extra: {
                         'initialDate': firstEvent.startTime,
                         'initialView': CalendarView.day,
-                        'scrollToTime': TimeOfDay.fromDateTime(firstEvent.startTime),
+                        'scrollToTime': TimeOfDay.fromDateTime(
+                          firstEvent.startTime,
+                        ),
                       },
                     );
                   }
@@ -111,9 +114,14 @@ class ScheduleCard extends ConsumerWidget {
                             children: [
                               if (isActive) ...[
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: appColors.error.withValues(alpha: 0.15),
+                                    color: appColors.error.withValues(
+                                      alpha: 0.15,
+                                    ),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(
@@ -128,7 +136,10 @@ class ScheduleCard extends ConsumerWidget {
                                 const SizedBox(width: 8),
                               ],
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
                                 decoration: BoxDecoration(
                                   color: accentColor.withValues(alpha: 0.15),
                                   borderRadius: BorderRadius.circular(20),
@@ -160,11 +171,17 @@ class ScheduleCard extends ConsumerWidget {
                       // Info Card
                       Container(
                         width: double.infinity,
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 15,
+                        ),
                         decoration: BoxDecoration(
                           color: appColors.surface,
                           borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: appColors.borderColor, width: 1),
+                          border: Border.all(
+                            color: appColors.borderColor,
+                            width: 1,
+                          ),
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -173,7 +190,11 @@ class ScheduleCard extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(Icons.access_time_rounded, size: 28, color: accentColor),
+                                Icon(
+                                  Icons.access_time_rounded,
+                                  size: 28,
+                                  color: accentColor,
+                                ),
                                 const SizedBox(height: 4),
                                 Text(
                                   'Time',
@@ -187,7 +208,11 @@ class ScheduleCard extends ConsumerWidget {
                               ],
                             ),
                             const SizedBox(width: 15),
-                            Container(width: 1, height: 40, color: appColors.divider),
+                            Container(
+                              width: 1,
+                              height: 40,
+                              color: appColors.divider,
+                            ),
                             const SizedBox(width: 15),
                             Expanded(
                               child: Column(
@@ -201,11 +226,16 @@ class ScheduleCard extends ConsumerWidget {
                                       color: appColors.textPrimary,
                                     ),
                                   ),
-                                  if (firstEvent?.location.isNotEmpty ?? false) ...[
+                                  if (firstEvent?.location.isNotEmpty ??
+                                      false) ...[
                                     const SizedBox(height: 4),
                                     Row(
                                       children: [
-                                        Icon(Icons.location_on_outlined, size: 12, color: appColors.textSecondary),
+                                        Icon(
+                                          Icons.location_on_outlined,
+                                          size: 12,
+                                          color: appColors.textSecondary,
+                                        ),
                                         const SizedBox(width: 4),
                                         Expanded(
                                           child: Text(
@@ -241,19 +271,35 @@ class ScheduleCard extends ConsumerWidget {
 
   String _formatDate(DateTime date) {
     final now = DateTime.now();
-    if (date.year == now.year && date.month == now.month && date.day == now.day) {
+    if (date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day) {
       return 'Today';
     }
     final tomorrow = now.add(const Duration(days: 1));
-    if (date.year == tomorrow.year && date.month == tomorrow.month && date.day == tomorrow.day) {
+    if (date.year == tomorrow.year &&
+        date.month == tomorrow.month &&
+        date.day == tomorrow.day) {
       return 'Tomorrow';
     }
     return '${date.day} ${_getMonthName(date.month)}';
   }
 
   String _getMonthName(int month) {
-    const names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const names = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
     return names[month - 1];
   }
 }
-

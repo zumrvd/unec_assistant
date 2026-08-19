@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:unec_assistant/presentation/components/lists/labels.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/student_profile_provider.dart';
 import 'package:unec_assistant/utils/app_toast.dart';
@@ -140,7 +140,10 @@ class ShareProfileScreen extends ConsumerWidget {
   }
 
   Widget _buildGeneratedTextCard(
-      BuildContext context, String text, AppColors appColors) {
+    BuildContext context,
+    String text,
+    AppColors appColors,
+  ) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -206,7 +209,10 @@ class ShareProfileScreen extends ConsumerWidget {
   }
 
   Widget _buildShareActionsCard(
-      BuildContext context, String text, AppColors appColors) {
+    BuildContext context,
+    String text,
+    AppColors appColors,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20),
       decoration: BoxDecoration(
@@ -231,11 +237,7 @@ class ShareProfileScreen extends ConsumerWidget {
           _buildShareIcon(
             context,
             'Email',
-            Icon(
-              Icons.email_outlined,
-              color: appColors.primary,
-              size: 28,
-            ),
+            Icon(Icons.email_outlined, color: appColors.primary, size: 28),
             appColors.primaryContainer,
             appColors,
           ),
@@ -302,4 +304,3 @@ class ShareProfileScreen extends ConsumerWidget {
     );
   }
 }
-

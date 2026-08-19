@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../models/subject_detail.dart';
 
 class SubjectMaterialListItem extends ConsumerWidget {
   final SubjectDetail data;
   final VoidCallback? onTap;
 
-  const SubjectMaterialListItem({
-    required this.data,
-    this.onTap,
-    super.key,
-  });
+  const SubjectMaterialListItem({required this.data, this.onTap, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,10 +22,7 @@ class SubjectMaterialListItem extends ConsumerWidget {
         decoration: BoxDecoration(
           color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: appColors.borderColor,
-            width: 1,
-          ),
+          border: Border.all(color: appColors.borderColor, width: 1),
         ),
         padding: const EdgeInsets.all(14),
         child: Row(
@@ -43,11 +36,7 @@ class SubjectMaterialListItem extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
-                child: Icon(
-                  data.icon,
-                  size: 20,
-                  color: data.iconColor,
-                ),
+                child: Icon(data.icon, size: 20, color: data.iconColor),
               ),
             ),
             const SizedBox(width: 12),
@@ -89,4 +78,3 @@ class SubjectMaterialListItem extends ConsumerWidget {
     );
   }
 }
-

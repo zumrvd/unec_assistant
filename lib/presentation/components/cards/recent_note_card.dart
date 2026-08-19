@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/note.dart';
 import '../../../providers/notes_provider.dart';
@@ -126,7 +126,11 @@ class RecentNoteCard extends ConsumerWidget {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.edit_note_rounded, size: 18, color: accentColor),
+                            Icon(
+                              Icons.edit_note_rounded,
+                              size: 18,
+                              color: accentColor,
+                            ),
                             const SizedBox(width: 8),
                             Text(
                               'RECENT NOTE',
@@ -139,7 +143,10 @@ class RecentNoteCard extends ConsumerWidget {
                           ],
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: accentColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(20),
@@ -175,7 +182,9 @@ class RecentNoteCard extends ConsumerWidget {
                       decoration: BoxDecoration(
                         color: note.paperSkin == PaperSkin.plain
                             ? appColors.surface
-                            : (isDark ? Colors.black.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.5)),
+                            : (isDark
+                                  ? Colors.black.withValues(alpha: 0.3)
+                                  : Colors.white.withValues(alpha: 0.5)),
                         borderRadius: BorderRadius.circular(15),
                         border: Border.all(
                           color: appColors.borderColor.withValues(alpha: 0.5),
@@ -204,4 +213,3 @@ class RecentNoteCard extends ConsumerWidget {
     );
   }
 }
-

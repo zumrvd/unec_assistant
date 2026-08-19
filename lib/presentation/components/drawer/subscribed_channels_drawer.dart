@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../providers/subscriptions_provider.dart';
 
 class SubscribedChannelsDrawer extends ConsumerWidget {
@@ -44,7 +44,10 @@ class SubscribedChannelsDrawer extends ConsumerWidget {
                     },
                     behavior: HitTestBehavior.opaque,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 10,
+                      ),
                       child: Row(
                         children: [
                           Container(
@@ -58,8 +61,9 @@ class SubscribedChannelsDrawer extends ConsumerWidget {
                             child: Text(
                               channel.channelName.substring(0, 1).toUpperCase(),
                               style: GoogleFonts.redditSans(
-                                  fontWeight: FontWeight.bold,
-                                  color: appColors.primary),
+                                fontWeight: FontWeight.bold,
+                                color: appColors.primary,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -73,8 +77,11 @@ class SubscribedChannelsDrawer extends ConsumerWidget {
                               ),
                             ),
                           ),
-                          Icon(Icons.chevron_right_rounded,
-                              size: 18, color: appColors.textSecondary),
+                          Icon(
+                            Icons.chevron_right_rounded,
+                            size: 18,
+                            color: appColors.textSecondary,
+                          ),
                         ],
                       ),
                     ),
@@ -116,4 +123,3 @@ class SubscribedChannelsDrawer extends ConsumerWidget {
     );
   }
 }
-

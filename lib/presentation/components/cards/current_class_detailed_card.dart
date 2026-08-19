@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/models/calendar_event.dart';
 import 'package:unec_assistant/models/subject_detail.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 
 class CurrentClassDetailedCard extends ConsumerWidget {
@@ -27,7 +27,10 @@ class CurrentClassDetailedCard extends ConsumerWidget {
   static String _pad(int n) => n.toString().padLeft(2, '0');
 
   static String _roomNumber(String location) {
-    final match = RegExp(r'Room\s+(\S+)', caseSensitive: false).firstMatch(location);
+    final match = RegExp(
+      r'Room\s+(\S+)',
+      caseSensitive: false,
+    ).firstMatch(location);
     if (match != null) return match.group(1)!;
     return location;
   }
@@ -45,7 +48,12 @@ class CurrentClassDetailedCard extends ConsumerWidget {
     return 'on the $floor$suffix floor';
   }
 
-  Widget _infoRow(IconData icon, String label, String value, AppColors appColors) {
+  Widget _infoRow(
+    IconData icon,
+    String label,
+    String value,
+    AppColors appColors,
+  ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -56,11 +64,7 @@ class CurrentClassDetailedCard extends ConsumerWidget {
             color: appColors.primaryContainer,
             borderRadius: BorderRadius.circular(6),
           ),
-          child: Icon(
-            icon,
-            size: 16,
-            color: appColors.primary,
-          ),
+          child: Icon(icon, size: 16, color: appColors.primary),
         ),
         const SizedBox(width: 10),
         Text(
@@ -114,10 +118,7 @@ class CurrentClassDetailedCard extends ConsumerWidget {
       decoration: BoxDecoration(
         color: appColors.cardBackground,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color: appColors.borderColor,
-          width: 1,
-        ),
+        border: Border.all(color: appColors.borderColor, width: 1),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
       child: Column(
@@ -170,18 +171,29 @@ class CurrentClassDetailedCard extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 13),
-          _infoRow(Icons.book_outlined, 'Subject', subject.subjectName, appColors),
+          _infoRow(
+            Icons.book_outlined,
+            'Subject',
+            subject.subjectName,
+            appColors,
+          ),
           const SizedBox(height: 8),
-          _infoRow(Icons.compare_outlined, 'Type', '   ${event.subtype}', appColors),
+          _infoRow(
+            Icons.compare_outlined,
+            'Type',
+            '   ${event.subtype}',
+            appColors,
+          ),
           const SizedBox(height: 13),
-          _infoRow(Icons.badge_outlined, 'Teacher', subject.teacherName, appColors),
+          _infoRow(
+            Icons.badge_outlined,
+            'Teacher',
+            subject.teacherName,
+            appColors,
+          ),
           const SizedBox(height: 20),
 
-          Divider(
-            color: appColors.divider,
-            thickness: 1,
-            height: 1,
-          ),
+          Divider(color: appColors.divider, thickness: 1, height: 1),
 
           const SizedBox(height: 20),
 

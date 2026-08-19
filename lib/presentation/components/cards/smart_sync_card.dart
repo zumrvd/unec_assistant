@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/presentation/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../providers/smart_sync_provider.dart';
 
 class SmartSyncCard extends ConsumerStatefulWidget {
   final SmartSyncPreferences prefs;
 
-  const SmartSyncCard({
-    required this.prefs,
-    super.key,
-  });
+  const SmartSyncCard({required this.prefs, super.key});
 
   @override
   ConsumerState<SmartSyncCard> createState() => _SmartSyncCardState();
@@ -27,8 +24,12 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
     required ValueChanged<bool> onChanged,
     required AppColors appColors,
   }) {
-    final Color mainColor = enabled ? appColors.textPrimary : appColors.textMuted;
-    final Color subColor = enabled ? appColors.textSecondary : appColors.textMuted;
+    final Color mainColor = enabled
+        ? appColors.textPrimary
+        : appColors.textMuted;
+    final Color subColor = enabled
+        ? appColors.textSecondary
+        : appColors.textMuted;
 
     return GestureDetector(
       onTap: enabled ? () => onChanged(!checked) : null,
@@ -117,10 +118,7 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
           decoration: BoxDecoration(
             color: appColors.cardBackground,
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(
-              color: appColors.borderColor,
-              width: 1,
-            ),
+            border: Border.all(color: appColors.borderColor, width: 1),
           ),
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -171,7 +169,9 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 12,
-                  color: isEnabled ? appColors.textSecondary : appColors.textMuted,
+                  color: isEnabled
+                      ? appColors.textSecondary
+                      : appColors.textMuted,
                 ),
               ),
               const SizedBox(height: 8),
@@ -189,7 +189,9 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 15,
-                        color: isEnabled ? appColors.textPrimary : appColors.textMuted,
+                        color: isEnabled
+                            ? appColors.textPrimary
+                            : appColors.textMuted,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -201,7 +203,11 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                           width: 20,
                           height: 20,
                           decoration: BoxDecoration(
-                            color: isEnabled ? appColors.attendanceOrange.withValues(alpha: 0.15) : appColors.borderColor,
+                            color: isEnabled
+                                ? appColors.attendanceOrange.withValues(
+                                    alpha: 0.15,
+                                  )
+                                : appColors.borderColor,
                             shape: BoxShape.circle,
                           ),
                           child: Center(
@@ -210,7 +216,9 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 10,
-                                color: isEnabled ? appColors.attendanceOrange : appColors.textSecondary,
+                                color: isEnabled
+                                    ? appColors.attendanceOrange
+                                    : appColors.textSecondary,
                               ),
                             ),
                           ),
@@ -222,7 +230,9 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w600,
                               fontSize: 13,
-                              color: isEnabled ? appColors.attendanceOrange : appColors.textMuted,
+                              color: isEnabled
+                                  ? appColors.attendanceOrange
+                                  : appColors.textMuted,
                             ),
                           ),
                         ),
@@ -236,7 +246,8 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                       enabled: isEnabled,
                       title: "Current Class",
                       badge: "(Highly Recommended)",
-                      description: "Always be prepared for class. Downloads essential files 30 minutes before lesson.",
+                      description:
+                          "Always be prepared for class. Downloads essential files 30 minutes before lesson.",
                       onChanged: (v) => prefs.updateCurrentClass(v),
                       appColors: appColors,
                     ),
@@ -245,7 +256,8 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                       checked: prefs.downloadUpcomingClass,
                       enabled: isEnabled,
                       title: "Upcoming Class",
-                      description: "Get a head start on next class's materials.",
+                      description:
+                          "Get a head start on next class's materials.",
                       onChanged: (v) => prefs.updateUpcomingClass(v),
                       appColors: appColors,
                     ),
@@ -270,7 +282,9 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                           width: 20,
                           height: 20,
                           decoration: BoxDecoration(
-                            color: isEnabled ? appColors.infoPink.withValues(alpha: 0.15) : appColors.borderColor,
+                            color: isEnabled
+                                ? appColors.infoPink.withValues(alpha: 0.15)
+                                : appColors.borderColor,
                             shape: BoxShape.circle,
                           ),
                           child: Center(
@@ -279,7 +293,9 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 10,
-                                color: isEnabled ? appColors.infoPink : appColors.textSecondary,
+                                color: isEnabled
+                                    ? appColors.infoPink
+                                    : appColors.textSecondary,
                               ),
                             ),
                           ),
@@ -291,7 +307,9 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w600,
                               fontSize: 13,
-                              color: isEnabled ? appColors.infoPink : appColors.textMuted,
+                              color: isEnabled
+                                  ? appColors.infoPink
+                                  : appColors.textMuted,
                             ),
                           ),
                         ),
@@ -338,4 +356,4 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
       },
     );
   }
-}
+}
