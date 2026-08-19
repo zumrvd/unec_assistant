@@ -97,20 +97,20 @@ final foldersProvider = Provider<List<NoteFolder>>((ref) {
   // 1. Fixed Personal Folder
   folders.add(const NoteFolder(
     folderId: 'personal',
-    folderName: 'Personal Notes',
+    folderName: 'Personal',
     type: FolderType.personal,
-    icon: Icons.person_rounded,
-    iconColor: Color(0xFF0569FF),
-    iconBg: Color(0x260569FF),
+    icon: Icons.snippet_folder_outlined,
+    iconColor: Color(0xFFDA4979),
+    iconBg: Color(0x26DA4979),
   ));
   
   // 2. Deterministic palette from design system
   final palette = [
     {'color': const Color(0xFF0569FF), 'bg': const Color(0x260569FF)},
     {'color': const Color(0xFF0F6E11), 'bg': const Color(0x260F6E11)},
-    {'color': const Color(0xFFE3993C), 'bg': const Color(0x26E3993C)},
+    {'color': const Color(0xFF854F0B), 'bg': const Color(0x26E3993C)},
+    {'color': const Color(0xFF993C1D), 'bg': const Color(0x26993C1D)},
     {'color': const Color(0xFFDA4979), 'bg': const Color(0x26DA4979)},
-    {'color': const Color(0xFFD54829), 'bg': const Color(0x26D54829)},
     {'color': const Color(0xFF534AB7), 'bg': const Color(0x26534AB7)},
   ];
 
@@ -124,7 +124,7 @@ final foldersProvider = Provider<List<NoteFolder>>((ref) {
       folderName: subject.subjectName,
       type: FolderType.subject,
       subjectId: subject.subjectId,
-      icon: Icons.menu_book_rounded,
+      icon: Icons.folder_outlined,
       iconColor: theme['color']!,
       iconBg: theme['bg']!,
     ));

@@ -11,7 +11,6 @@ class NotesButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
-    final pinkColor = const Color(0xFFDA4979);
 
     return GestureDetector(
       onTap: onTap,
@@ -40,13 +39,13 @@ class NotesButton extends ConsumerWidget {
                   width: 54,
                   height: 54,
                   decoration: BoxDecoration(
-                    color: pinkColor.withValues(alpha: 0.15),
+                    color: appColors.pink15,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     Icons.edit_note_rounded,
                     size: 35,
-                    color: pinkColor,
+                    color: appColors.pink,
                   ),
                 ),
                 const SizedBox(width: 15),

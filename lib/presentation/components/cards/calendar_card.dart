@@ -366,7 +366,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
       case EventType.classEvent:
         return appColors.primary;
       case EventType.personalEvent:
-        return appColors.attendanceOrange;
+        return appColors.yellowDark;
       case EventType.exam:
         return appColors.success;
     }
@@ -718,12 +718,12 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
         return isActive ? appColors.primary : appColors.primaryContainer;
       case EventType.personalEvent:
         return isActive
-            ? appColors.attendanceOrange
-            : appColors.attendanceOrange.withValues(alpha: 0.15);
+            ? appColors.yellow
+            : appColors.yellow15;
       case EventType.exam:
         return isActive
             ? appColors.success
-            : appColors.success.withValues(alpha: 0.15);
+            : appColors.successContainer;
     }
   }
 
@@ -732,7 +732,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
       case EventType.classEvent:
         return isActive ? const Color(0xFF0052CE) : appColors.primary;
       case EventType.personalEvent:
-        return isActive ? const Color(0xFFC27719) : appColors.attendanceOrange;
+        return isActive ? appColors.yellowDark : appColors.yellow;
       case EventType.exam:
         return isActive ? const Color(0xFF0A5442) : appColors.success;
     }
@@ -749,7 +749,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
       case EventType.classEvent:
         return appColors.primary.withValues(alpha: 0.8);
       case EventType.personalEvent:
-        return appColors.attendanceOrange.withValues(alpha: 0.8);
+        return appColors.yellowText;
       case EventType.exam:
         return appColors.success.withValues(alpha: 0.8);
     }

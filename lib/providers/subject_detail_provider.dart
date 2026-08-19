@@ -157,7 +157,7 @@ const SubjectDetail kAzDetail = SubjectDetail(
   absenceLimit: 7,
   fileCount: 0,
   icon: Icons.menu_book_rounded,
-  iconColor: Color(0xFFE3993C),
+  iconColor: Color(0xFF854F0B),
   iconBg: Color(0x26E3993C),
 );
 
@@ -206,8 +206,8 @@ const SubjectDetail kXettiDetail = SubjectDetail(
   absenceLimit: 7,
   fileCount: 0,
   icon: Icons.menu_book_rounded,
-  iconColor: Color(0xFFD54829),
-  iconBg: Color(0x26D54829),
+  iconColor: Color(0xFF993C1D),
+  iconBg: Color(0x26993C1D),
 );
 
 const SubjectDetail kInfoDetail = SubjectDetail(

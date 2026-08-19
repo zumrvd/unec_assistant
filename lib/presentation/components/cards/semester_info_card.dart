@@ -142,7 +142,7 @@ class SemesterInfoCard extends ConsumerWidget {
                 const SizedBox(height: 15),
                 _infoRow(
                   Icons.stop_circle_rounded,
-                  const Color(0xFFDA4979),
+                  appColors.pink,
                   "Ending in",
                   data.endDate,
                   appColors,
@@ -174,7 +174,7 @@ class SemesterInfoCard extends ConsumerWidget {
                 const SizedBox(height: 15),
                 _infoRow(
                   Icons.access_time_filled_rounded,
-                  const Color(0xFF993C1D),
+                  appColors.red,
                   "Auditorium Hours",
                   "${data.auditoriumHours}",
                   appColors,

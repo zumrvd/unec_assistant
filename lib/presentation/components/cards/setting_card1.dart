@@ -52,6 +52,7 @@ class SettingsCard1 extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
+          // 1. Profile Informations (Green)
           GestureDetector(
             onTap: onProfileInfoTap,
             behavior: HitTestBehavior.opaque,
@@ -64,8 +65,8 @@ class SettingsCard1 extends ConsumerWidget {
                   children: [
                     _iconBox(
                       Icons.badge_outlined,
-                      appColors.primaryContainer,
-                      appColors.primaryOnContainer,
+                      appColors.green15,
+                      appColors.green,
                     ),
                     const SizedBox(width: 12),
                     Column(
@@ -107,6 +108,8 @@ class SettingsCard1 extends ConsumerWidget {
           const SizedBox(height: 15),
           Divider(color: appColors.divider, thickness: 1, height: 1),
           const SizedBox(height: 15),
+
+          // 2. Unec Cabinet (Blue)
           GestureDetector(
             onTap: onUnecCabinetTap,
             behavior: HitTestBehavior.opaque,
@@ -118,9 +121,9 @@ class SettingsCard1 extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     _iconBox(
-                      Icons.add_box,
-                      appColors.primaryContainer,
-                      appColors.primaryOnContainer,
+                      Icons.grid_view_rounded,
+                      appColors.blue15,
+                      appColors.blue,
                     ),
                     const SizedBox(width: 12),
                     Column(
@@ -159,6 +162,8 @@ class SettingsCard1 extends ConsumerWidget {
           const SizedBox(height: 15),
           Divider(color: appColors.divider, thickness: 1, height: 1),
           const SizedBox(height: 15),
+
+          // 3. Change Password (Red)
           GestureDetector(
             onTap: onChangePassTap,
             behavior: HitTestBehavior.opaque,
@@ -170,9 +175,9 @@ class SettingsCard1 extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     _iconBox(
-                      Icons.password_rounded,
-                      appColors.warningContainer,
-                      appColors.warningOnContainer,
+                      Icons.manage_accounts_rounded,
+                      appColors.red15,
+                      appColors.red,
                     ),
                     const SizedBox(width: 12),
                     Column(

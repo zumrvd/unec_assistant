@@ -42,7 +42,7 @@ class NoteFileTile extends ConsumerWidget {
       case PaperSkin.dotted:
         return appColors.attendanceOrange;
       case PaperSkin.cream:
-        return const Color(0xFFDA4979);
+        return appColors.pink;
       case PaperSkin.blue:
         return appColors.notificationPurple;
     }

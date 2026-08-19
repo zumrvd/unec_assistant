@@ -36,13 +36,13 @@ class AttendanceButton extends ConsumerWidget {
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: appColors.attendanceOrange.withValues(alpha: 0.15),
+                color: appColors.red15,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
                 Icons.front_hand_outlined,
                 size: 25,
-                color: appColors.attendanceOrange,
+                color: appColors.red,
               ),
             ),
             const SizedBox(width: 10),

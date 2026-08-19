@@ -61,7 +61,7 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
         padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),
         decoration: BoxDecoration(
           color: isSelected
-              ? appColors.pillSelectedBg
+              ? appColors.navy
               : appColors.pillUnselectedBg,
           borderRadius: BorderRadius.circular(6),
           border: Border.all(color: appColors.borderColor, width: 1),
@@ -72,7 +72,7 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
             fontWeight: FontWeight.w700,
             fontSize: 10,
             color: isSelected
-                ? appColors.pillSelectedText
+                ? appColors.white
                 : appColors.pillUnselectedText,
           ),
         ),
@@ -84,12 +84,12 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
     final textStyle = GoogleFonts.redditSans(
       fontWeight: FontWeight.w700,
       fontSize: 11,
-      color: appColors.pillSelectedText,
+      color: appColors.white,
     );
 
     return Container(
       decoration: BoxDecoration(
-        color: appColors.dropdownBg,
+        color: appColors.blue,
         borderRadius: BorderRadius.circular(10),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -98,11 +98,11 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
         child: DropdownButton<String>(
           value: _selectedLanguage,
           onChanged: (val) => setState(() => _selectedLanguage = val!),
-          dropdownColor: appColors.dropdownBg,
+          dropdownColor: appColors.blue,
           borderRadius: BorderRadius.circular(12),
           icon: Icon(
             Icons.arrow_drop_down_rounded,
-            color: appColors.pillSelectedText,
+            color: appColors.white,
             size: 25,
           ),
           style: textStyle,
@@ -146,6 +146,7 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
+          // 1. App Theme (Yellow Dark / Yellow 15%)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -156,8 +157,8 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
                   children: [
                     _iconBox(
                       Icons.palette_rounded,
-                      appColors.warningContainer,
-                      appColors.warningOnContainer,
+                      appColors.yellow15,
+                      appColors.yellowDark,
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -181,6 +182,8 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
           const SizedBox(height: 15),
           Divider(color: appColors.divider, thickness: 1, height: 1),
           const SizedBox(height: 15),
+
+          // 2. Notifications (Purple / Purple 15%)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -191,8 +194,8 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
                   children: [
                     _iconBox(
                       Icons.notifications_rounded,
-                      appColors.notificationPurpleContainer,
-                      appColors.notificationPurple,
+                      appColors.purple15,
+                      appColors.purple,
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -209,9 +212,9 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
                 value: ref.watch(notificationsEnabledProvider),
                 onChanged: (val) =>
                     ref.read(notificationsEnabledProvider.notifier).toggle(val),
-                activeThumbColor: appColors.pillSelectedText,
-                activeTrackColor: appColors.primary,
-                inactiveThumbColor: appColors.pillSelectedText,
+                activeThumbColor: appColors.white,
+                activeTrackColor: appColors.blue,
+                inactiveThumbColor: appColors.white,
                 inactiveTrackColor: appColors.textMuted,
               ),
             ],
@@ -219,6 +222,8 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
           const SizedBox(height: 15),
           Divider(color: appColors.divider, thickness: 1, height: 1),
           const SizedBox(height: 15),
+
+          // 3. About App (Pink / Pink 15%)
           GestureDetector(
             onTap: widget.onAboutAppTap,
             behavior: HitTestBehavior.opaque,
@@ -232,8 +237,8 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
                     children: [
                       _iconBox(
                         Icons.info_rounded,
-                        appColors.infoPinkContainer,
-                        appColors.infoPink,
+                        appColors.pink15,
+                        appColors.pink,
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -276,6 +281,8 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
           const SizedBox(height: 15),
           Divider(color: appColors.divider, thickness: 1, height: 1),
           const SizedBox(height: 15),
+
+          // 4. Language (Blue / Blue 15%)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -286,8 +293,8 @@ class _SettingsCardState extends ConsumerState<SettingsCard2> {
                   children: [
                     _iconBox(
                       Icons.language_rounded,
-                      appColors.primaryContainer,
-                      appColors.primaryOnContainer,
+                      appColors.blue15,
+                      appColors.blue,
                     ),
                     const SizedBox(width: 12),
                     Expanded(

@@ -48,7 +48,7 @@ class _EventDetailsCard extends ConsumerWidget {
       case EventType.classEvent:
         return appColors.primary;
       case EventType.personalEvent:
-        return appColors.attendanceOrange;
+        return appColors.yellowDark;
       case EventType.exam:
         return appColors.success;
     }

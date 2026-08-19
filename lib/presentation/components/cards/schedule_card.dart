@@ -28,7 +28,8 @@ class ScheduleCard extends ConsumerWidget {
     final bool hasEvent = upcomingEvents.isNotEmpty;
     final firstEvent = hasEvent ? upcomingEvents.first : null;
     final isExam = firstEvent?.type == EventType.exam;
-    final accentColor = isExam ? appColors.success : appColors.warning;
+    final accentColor = isExam ? appColors.success : appColors.yellowDark;
+    final accentBgColor = isExam ? appColors.green15 : appColors.yellow15;
     final isActive =
         firstEvent != null &&
         now.isAfter(firstEvent.startTime) &&
@@ -141,7 +142,7 @@ class ScheduleCard extends ConsumerWidget {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: accentColor.withValues(alpha: 0.15),
+                                  color: accentBgColor,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Text(

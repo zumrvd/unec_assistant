@@ -37,13 +37,13 @@ class ThemeSettingCard extends ConsumerWidget {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: appColors.warningContainer,
+                    color: appColors.yellow15,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
                     Icons.palette_rounded,
                     size: 22,
-                    color: appColors.warningOnContainer,
+                    color: appColors.yellowDark,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -77,7 +77,7 @@ class ThemeSettingCard extends ConsumerWidget {
                     ),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? appColors.pillSelectedBg
+                          ? appColors.navy
                           : appColors.pillUnselectedBg,
                       borderRadius: BorderRadius.circular(6),
                       border: Border.all(
@@ -91,7 +91,7 @@ class ThemeSettingCard extends ConsumerWidget {
                         fontWeight: FontWeight.w700,
                         fontSize: 10,
                         color: isSelected
-                            ? appColors.pillSelectedText
+                            ? appColors.white
                             : appColors.pillUnselectedText,
                       ),
                     ),
