@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/post.dart';
 
@@ -69,34 +70,35 @@ class FeedFilterTabs extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
           _buildPill(
-            label: 'Discover',
+            label: tr.feedFilterDiscover,
             type: null,
             appColors: appColors,
             showCheckbox: false,
           ),
           _buildPill(
-            label: 'Subscribed',
+            label: tr.feedFilterSubscribed,
             type: PostFeedType.subscribed,
             appColors: appColors,
           ),
           _buildPill(
-            label: 'Official',
+            label: tr.feedFilterOfficial,
             type: PostFeedType.official,
             appColors: appColors,
           ),
           _buildPill(
-            label: 'Clubs',
+            label: tr.feedFilterClubs,
             type: PostFeedType.clubs,
             appColors: appColors,
           ),
           _buildPill(
-            label: 'Dev Team',
+            label: tr.feedFilterDevTeam,
             type: PostFeedType.devTeam,
             appColors: appColors,
           ),

@@ -5,6 +5,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/note.dart';
 import '../../../providers/notes_provider.dart';
@@ -186,10 +187,10 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                             color: appColors.iconBoxArrowBg,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.arrow_back,
                             size: 20,
-                            color: appColors.textSecondary,
+                            color: Colors.grey,
                           ),
                         ),
                       ),
@@ -205,7 +206,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                           ),
                           decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'Note Title',
+                            hintText: ref.watch(strProvider).noteEditorTitleHint,
                             hintStyle: TextStyle(color: appColors.textMuted),
                           ),
                         ),
@@ -221,7 +222,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
                   },
                   behavior: HitTestBehavior.opaque,
                   child: Text(
-                    'Done',
+                    ref.watch(strProvider).noteEditorDone,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 15,
@@ -237,35 +238,48 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
       ),
       body: Column(
         children: [
-          // Toolbar
-          QuillSimpleToolbar(
-            controller: _quillController,
-            config: const QuillSimpleToolbarConfig(
-              multiRowsDisplay: false,
-              showFontFamily: false,
-              showFontSize: false,
-              showBoldButton: true,
-              showItalicButton: true,
-              showUnderLineButton: true,
-              showStrikeThrough: false,
-              showColorButton: false,
-              showBackgroundColorButton: false,
-              showClearFormat: false,
-              showAlignmentButtons: true,
-              showLeftAlignment: true,
-              showCenterAlignment: true,
-              showRightAlignment: true,
-              showJustifyAlignment: true,
-              showListNumbers: true,
-              showListBullets: true,
-              showListCheck: true,
-              showCodeBlock: false,
-              showQuote: false,
-              showIndent: false,
-              showLink: false,
-              showSearchButton: false,
-              showSubscript: false,
-              showSuperscript: false,
+          // Wrap Quill parts in Localizations.override to fallback to 'en' 
+          // for unsupported locales like 'az'
+          Localizations.override(
+            context: context,
+            locale: const Locale('en'),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TooltipVisibility(
+                  visible: false,
+                  child: QuillSimpleToolbar(
+                    controller: _quillController,
+                    config: const QuillSimpleToolbarConfig(
+                      multiRowsDisplay: false,
+                    showFontFamily: false,
+                    showFontSize: false,
+                    showBoldButton: true,
+                    showItalicButton: true,
+                    showUnderLineButton: true,
+                    showStrikeThrough: false,
+                    showColorButton: false,
+                    showBackgroundColorButton: false,
+                    showClearFormat: false,
+                    showAlignmentButtons: true,
+                    showLeftAlignment: true,
+                    showCenterAlignment: true,
+                    showRightAlignment: true,
+                    showJustifyAlignment: true,
+                    showListNumbers: true,
+                    showListBullets: true,
+                    showListCheck: true,
+                    showCodeBlock: false,
+                    showQuote: false,
+                    showIndent: false,
+                    showLink: false,
+                    showSearchButton: false,
+                    showSubscript: false,
+                    showSuperscript: false,
+                  ),
+                ),
+              ),
+              ],
             ),
           ),
 
@@ -273,11 +287,15 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(35),
-              child: QuillEditor.basic(
-                controller: _quillController,
-                config: const QuillEditorConfig(
-                  placeholder: 'Start typing...',
-                  expands: true,
+              child: Localizations.override(
+                context: context,
+                locale: const Locale('en'),
+                child: QuillEditor.basic(
+                  controller: _quillController,
+                  config: QuillEditorConfig(
+                    placeholder: ref.watch(strProvider).noteEditorStartTyping,
+                    expands: true,
+                  ),
                 ),
               ),
             ),
@@ -289,7 +307,7 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
             child: Row(
               children: [
                 Text(
-                  'Paper',
+                  ref.watch(strProvider).noteEditorPaper,
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 12,

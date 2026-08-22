@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 
-class DownloadCurriculumButton extends StatelessWidget {
+class DownloadCurriculumButton extends ConsumerWidget {
   final VoidCallback? onTap;
 
   const DownloadCurriculumButton({
@@ -21,7 +23,8 @@ class DownloadCurriculumButton extends StatelessWidget {
   );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tr = ref.watch(strProvider);
     return GestureDetector(
       onTap: onTap ?? () {},
       child: Container(
@@ -40,7 +43,7 @@ class DownloadCurriculumButton extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    "Dowload & See Curriculum Plan",
+                    tr.subjectsDownloadCurriculumTitle,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
@@ -50,7 +53,7 @@ class DownloadCurriculumButton extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    "4 year - full curriculum plan of your major",
+                    tr.subjectsDownloadCurriculumDesc,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,

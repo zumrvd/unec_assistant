@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import '../../../models/note_folder.dart';
 
 class NoteFolderTile extends ConsumerWidget {
@@ -19,7 +20,7 @@ class NoteFolderTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
-    final String noteText = noteCount == 1 ? '1 note' : '$noteCount notes';
+    final String noteText = noteCount == 1 ? ref.watch(strProvider).noteFolderOneNote : ref.watch(strProvider).noteFolderNotes(noteCount);
 
     return GestureDetector(
       onTap: onTap ?? () {},

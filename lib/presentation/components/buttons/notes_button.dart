@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 
 class NotesButton extends ConsumerWidget {
   const NotesButton({required this.onTap, super.key});
@@ -11,6 +12,7 @@ class NotesButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return GestureDetector(
       onTap: onTap,
@@ -54,7 +56,7 @@ class NotesButton extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Notes',
+                      tr.btnNotesTitle,
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
@@ -63,7 +65,7 @@ class NotesButton extends ConsumerWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      "To-do lists & quick notes",
+                      tr.btnNotesSub,
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 8,

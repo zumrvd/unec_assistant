@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import '../../../models/note_folder.dart';
 import '../../../presentation/components/lists/labels.dart';
 import '../../../presentation/components/inputs/app_search_bar.dart';
@@ -38,7 +39,7 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
 
     return Scaffold(
       backgroundColor: appColors.background,
-      appBar: const CustomAppBar(title: 'Notes'),
+      appBar: CustomAppBar(title: ref.watch(strProvider).notesTitle),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
         child: Column(
@@ -46,13 +47,13 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
           children: [
             AppSearchBar(
               controller: _searchController,
-              hintText: 'Search notes...',
+              hintText: ref.watch(strProvider).notesSearchHint,
               onChanged: (q) => setState(() => _searchQuery = q),
             ),
             const SizedBox(height: 25),
 
             if (personalFolders.isNotEmpty) ...[
-              const SectionLabel('PERSONAL'),
+              SectionLabel(ref.watch(strProvider).notesSectionPersonal),
               const SizedBox(height: 12),
               ...personalFolders.map(
                 (f) => Padding(
@@ -68,7 +69,7 @@ class _NotesScreenState extends ConsumerState<NotesScreen> {
             ],
 
             if (subjectFolders.isNotEmpty) ...[
-              const SectionLabel('CLASS FOLDERS'),
+              SectionLabel(ref.watch(strProvider).notesSectionClass),
               const SizedBox(height: 12),
               ...subjectFolders.map(
                 (f) => Padding(

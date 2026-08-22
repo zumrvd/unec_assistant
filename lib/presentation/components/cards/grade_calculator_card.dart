@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import '../../../models/subject_detail.dart';
 
 class GradeCalculatorCard extends ConsumerStatefulWidget {
@@ -42,6 +43,7 @@ class _GradeCalculatorCardState extends ConsumerState<GradeCalculatorCard> {
   @override
   Widget build(BuildContext context) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
     final Map<String, Color> gradeColors = {
       'A': appColors.success,
       'B': appColors.primary,
@@ -61,7 +63,7 @@ class _GradeCalculatorCardState extends ConsumerState<GradeCalculatorCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "CALCULATE FOR",
+            tr.gradeCalcFor,
             style: GoogleFonts.redditSans(
               fontWeight: FontWeight.w700,
               fontSize: 12,
@@ -80,7 +82,7 @@ class _GradeCalculatorCardState extends ConsumerState<GradeCalculatorCard> {
               child: DropdownButton<String>(
                 value: _selectedSubject,
                 hint: Text(
-                  "Choose a Subject you want to calculate...",
+                  tr.gradeCalcChooseSubject,
                   style: GoogleFonts.redditSans(
                     fontSize: 14,
                     color: appColors.textMuted,
@@ -117,7 +119,7 @@ class _GradeCalculatorCardState extends ConsumerState<GradeCalculatorCard> {
           ),
           const SizedBox(height: 18),
           Text(
-            "I want to achieve",
+            tr.gradeCalcWantToAchieve,
             style: GoogleFonts.redditSans(
               fontWeight: FontWeight.w700,
               fontSize: 14,
@@ -219,7 +221,7 @@ class _GradeCalculatorCardState extends ConsumerState<GradeCalculatorCard> {
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: Center(
                   child: Text(
-                    "CALCULATE",
+                    tr.gradeCalcBtn,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w800,
                       fontSize: 15,
@@ -237,6 +239,7 @@ class _GradeCalculatorCardState extends ConsumerState<GradeCalculatorCard> {
   }
 
   Widget _buildResultSection(AppColors appColors) {
+    final tr = ref.watch(strProvider);
     final subject = widget.subjects.firstWhere(
       (s) => s.subjectName == _selectedSubject,
     );
@@ -260,7 +263,7 @@ class _GradeCalculatorCardState extends ConsumerState<GradeCalculatorCard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Current\nScore",
+                tr.gradeCalcCurrentScore,
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
@@ -288,7 +291,7 @@ class _GradeCalculatorCardState extends ConsumerState<GradeCalculatorCard> {
                       ),
                     ),
                     TextSpan(
-                      text: " pts so far",
+                      text: tr.gradeCalcPtsSoFar,
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 14,
@@ -341,7 +344,7 @@ class _GradeCalculatorCardState extends ConsumerState<GradeCalculatorCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Have: ${subject.currentScore}",
+                    "${tr.gradeCalcHave}${subject.currentScore}",
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w800,
                       fontSize: 14,
@@ -356,7 +359,7 @@ class _GradeCalculatorCardState extends ConsumerState<GradeCalculatorCard> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    "Need: $ptsNeeded",
+                    "${tr.gradeCalcNeed}$ptsNeeded",
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w800,
                       fontSize: 14,
@@ -396,7 +399,7 @@ class _GradeCalculatorCardState extends ConsumerState<GradeCalculatorCard> {
           Align(
             alignment: Alignment.centerRight,
             child: Text(
-              "pts needed to reach $targetMin",
+              tr.gradeCalcPtsNeededToReach(targetMin),
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w700,
                 fontSize: 11,

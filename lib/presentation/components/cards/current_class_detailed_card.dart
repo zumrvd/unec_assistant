@@ -5,6 +5,8 @@ import 'package:unec_assistant/models/calendar_event.dart';
 import 'package:unec_assistant/models/subject_detail.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
+import 'package:unec_assistant/l10n/translations.dart';
 
 class CurrentClassDetailedCard extends ConsumerWidget {
   const CurrentClassDetailedCard({
@@ -35,7 +37,7 @@ class CurrentClassDetailedCard extends ConsumerWidget {
     return location;
   }
 
-  static String? _floorHint(String roomNumber) {
+  static String? _floorHint(String roomNumber, AppStrings tr) {
     final n = int.tryParse(roomNumber);
     if (n == null || n < 100) return null;
     final floor = n ~/ 100;
@@ -45,7 +47,7 @@ class CurrentClassDetailedCard extends ConsumerWidget {
       3 => 'rd',
       _ => 'th',
     };
-    return 'on the $floor$suffix floor';
+    return tr.currentClassFloor(floor, suffix);
   }
 
   Widget _infoRow(
@@ -94,6 +96,7 @@ class CurrentClassDetailedCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
     final clock = now ?? DateTime.now();
     final startMin = event.startTime.hour * 60 + event.startTime.minute;
     final endMin = event.endTime.hour * 60 + event.endTime.minute;
@@ -107,7 +110,7 @@ class CurrentClassDetailedCard extends ConsumerWidget {
     final timeLeftRatio = remaining / duration;
 
     final roomNumber = _roomNumber(event.location);
-    final floorHint = _floorHint(roomNumber);
+    final floorHint = _floorHint(roomNumber, tr);
     final startLabel =
         '${_pad(event.startTime.hour)}:${_pad(event.startTime.minute)}';
     final endLabel =
@@ -125,7 +128,7 @@ class CurrentClassDetailedCard extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'CURRENT CLASS',
+            tr.currentClassLabel,
             style: GoogleFonts.redditSans(
               fontWeight: FontWeight.w700,
               fontSize: 16,
@@ -138,7 +141,7 @@ class CurrentClassDetailedCard extends ConsumerWidget {
             textBaseline: TextBaseline.alphabetic,
             children: [
               Text(
-                'Room',
+                tr.currentClassRoom,
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 10,
@@ -173,21 +176,21 @@ class CurrentClassDetailedCard extends ConsumerWidget {
           const SizedBox(height: 13),
           _infoRow(
             Icons.book_outlined,
-            'Subject',
+            tr.currentClassSubject,
             subject.subjectName,
             appColors,
           ),
           const SizedBox(height: 8),
           _infoRow(
             Icons.compare_outlined,
-            'Type',
+            tr.currentClassType,
             '   ${event.subtype}',
             appColors,
           ),
           const SizedBox(height: 13),
           _infoRow(
             Icons.badge_outlined,
-            'Teacher',
+            tr.currentClassTeacher,
             subject.teacherName,
             appColors,
           ),
@@ -202,7 +205,7 @@ class CurrentClassDetailedCard extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'Progress Line',
+                tr.currentClassProgressLine,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w800,
@@ -220,7 +223,7 @@ class CurrentClassDetailedCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'starts',
+                    tr.currentClassStarts,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 12,
@@ -300,7 +303,7 @@ class CurrentClassDetailedCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'ends',
+                    tr.currentClassEnds,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 12,
@@ -334,7 +337,7 @@ class CurrentClassDetailedCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Time left',
+                    tr.currentClassTimeLeft,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 10,
@@ -378,7 +381,7 @@ class CurrentClassDetailedCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Completed',
+                    tr.currentClassCompleted,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 10,

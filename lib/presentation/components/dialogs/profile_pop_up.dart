@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 
 class ProfilePopUp extends ConsumerWidget {
@@ -10,6 +11,7 @@ class ProfilePopUp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return Dialog(
       alignment: Alignment.topRight,
@@ -112,7 +114,7 @@ class ProfilePopUp extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(100),
                 ),
                 child: Text(
-                  'Manage your Account',
+                  tr.popupManageAccount,
                   style: GoogleFonts.redditSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -136,14 +138,14 @@ class ProfilePopUp extends ConsumerWidget {
                   children: [
                     _ActionTile(
                       icon: Icons.person_add_alt_1_outlined,
-                      label: 'Add another account',
+                      label: tr.popupAddAccount,
                       onTap: () {},
                       appColors: appColors,
                     ),
                     Divider(height: 1, indent: 56, color: appColors.divider),
                     _ActionTile(
                       icon: Icons.logout_rounded,
-                      label: 'Sign out',
+                      label: tr.popupSignOut,
                       onTap: () {},
                       appColors: appColors,
                     ),
@@ -156,12 +158,12 @@ class ProfilePopUp extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _FooterLink(label: 'Privacy Policy', appColors: appColors),
+                _FooterLink(label: tr.popupPrivacyPolicy, appColors: appColors),
                 Text(
                   ' • ',
                   style: GoogleFonts.redditSans(color: appColors.textSecondary),
                 ),
-                _FooterLink(label: 'Terms of Service', appColors: appColors),
+                _FooterLink(label: tr.popupTermsOfService, appColors: appColors),
               ],
             ),
           ],

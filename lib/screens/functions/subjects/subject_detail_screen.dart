@@ -10,6 +10,7 @@ import '../../../presentation/components/cards/subject_hours_card.dart';
 import '../../../presentation/components/cards/class_load_card.dart';
 import '../../../presentation/components/cards/subject_credit_card.dart';
 import '../../../presentation/components/lists/labels.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 
 class SubjectDetailScreen extends ConsumerWidget {
   final SubjectDetail data;
@@ -19,6 +20,7 @@ class SubjectDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return Scaffold(
       backgroundColor: appColors.background,
@@ -35,8 +37,8 @@ class SubjectDetailScreen extends ConsumerWidget {
               children: [
                 Expanded(
                   child: OpenActionButton(
-                    label: 'Open Grades',
-                    sublabel: 'For this subject',
+                    label: tr.subjectDetailOpenGrades,
+                    sublabel: tr.subjectDetailForThisSubject,
                     icon: Icons.star_rounded,
                     onTap: () => context.push(
                       '/functions/grades/subject/${data.subjectId}',
@@ -45,8 +47,8 @@ class SubjectDetailScreen extends ConsumerWidget {
                 ),
                 Expanded(
                   child: OpenActionButton(
-                    label: 'Open Materials',
-                    sublabel: 'For this subject',
+                    label: tr.subjectDetailOpenMaterials,
+                    sublabel: tr.subjectDetailForThisSubject,
                     icon: Icons.article_rounded,
                     onTap: () => context.push(
                       '/functions/teaching-materials/subject/${data.subjectId}',

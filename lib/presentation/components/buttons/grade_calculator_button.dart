@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 
-class GradeCalculatorButton extends StatelessWidget {
+class GradeCalculatorButton extends ConsumerWidget {
   final VoidCallback onTap;
   final String? subtitle;
   final BorderRadius? borderRadius;
@@ -25,7 +27,9 @@ class GradeCalculatorButton extends StatelessWidget {
   );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tr = ref.watch(strProvider);
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -49,7 +53,7 @@ class GradeCalculatorButton extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Grade Goal Calculator",
+                    tr.gradeCalcTitle,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,

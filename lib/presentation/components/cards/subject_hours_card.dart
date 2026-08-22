@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import '../../../models/subject_detail.dart';
 
 class SubjectHoursCard extends ConsumerWidget {
@@ -68,9 +69,9 @@ class SubjectHoursCard extends ConsumerWidget {
     );
   }
 
-  @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
     final iconColor = appColors.notificationPurple;
 
     return Container(
@@ -102,7 +103,7 @@ class SubjectHoursCard extends ConsumerWidget {
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  "HOURS",
+                  tr.subjectHoursTitle,
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 16,
@@ -117,7 +118,7 @@ class SubjectHoursCard extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: _hoursRow(
-              "Total Hours",
+              tr.subjectsTotalHours,
               "${data.subjectTotalHours}hrs",
               appColors,
             ),
@@ -126,7 +127,7 @@ class SubjectHoursCard extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: _hoursRow(
-              "Auditorium Hours",
+              tr.subjectsAuditoriumHours,
               "${data.subjectAuditoriumHours}hrs",
               appColors,
             ),
@@ -147,7 +148,7 @@ class SubjectHoursCard extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 30, top: 16, right: 30),
                   child: Text(
-                    "BREAKDOWN",
+                    tr.subjectHoursBreakdown,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 13,
@@ -161,7 +162,7 @@ class SubjectHoursCard extends ConsumerWidget {
                     vertical: 6,
                   ),
                   child: _breakdownRow(
-                    "Lectures",
+                    tr.subjectsLectures,
                     "${data.subjectLectureHours}hrs",
                     appColors,
                   ),
@@ -172,7 +173,7 @@ class SubjectHoursCard extends ConsumerWidget {
                     vertical: 6,
                   ),
                   child: _breakdownRow(
-                    "Seminars",
+                    tr.subjectsSeminars,
                     "${data.subjectSeminarHours}hrs",
                     appColors,
                   ),

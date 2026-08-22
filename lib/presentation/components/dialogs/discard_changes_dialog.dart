@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 
 Future<bool?> showDiscardChangesDialog(BuildContext context) async {
   return showDialog<bool>(
@@ -18,6 +19,7 @@ class _DiscardChangesDialogContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return Dialog(
       backgroundColor: appColors.cardBackground,
@@ -48,7 +50,7 @@ class _DiscardChangesDialogContent extends ConsumerWidget {
             ),
             const SizedBox(height: 14),
             Text(
-              "Discard changes?",
+              tr.dialogDiscardTitle,
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w700,
                 fontSize: 15,
@@ -57,7 +59,7 @@ class _DiscardChangesDialogContent extends ConsumerWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              "If you go back now, your post draft will be lost.",
+              tr.dialogDiscardBody,
               textAlign: TextAlign.center,
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w500,
@@ -81,7 +83,7 @@ class _DiscardChangesDialogContent extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       child: Center(
                         child: Text(
-                          "Cancel",
+                          tr.dialogCancel,
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w700,
                             fontSize: 12,
@@ -105,7 +107,7 @@ class _DiscardChangesDialogContent extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       child: Center(
                         child: Text(
-                          "Discard",
+                          tr.dialogDiscard,
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w700,
                             fontSize: 12,

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:unec_assistant/presentation/components/cards/subject_attendance_card.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/providers/subject_detail_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import '../../../presentation/components/lists/labels.dart';
 
 class AttendanceScreen extends ConsumerWidget {
@@ -13,10 +14,11 @@ class AttendanceScreen extends ConsumerWidget {
     final allSubjects = ref.watch(allSubjectsProvider);
     final attentionSubjects = ref.watch(attentionSubjectsProvider);
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return Scaffold(
       backgroundColor: appColors.background,
-      appBar: const CustomAppBar(title: 'Attendance'),
+      appBar: CustomAppBar(title: tr.attendanceScreenTitle),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
         child: Column(
@@ -24,7 +26,7 @@ class AttendanceScreen extends ConsumerWidget {
           spacing: 10,
           children: [
             if (attentionSubjects.isNotEmpty) ...[
-              const SectionLabel('Needs attention'),
+              SectionLabel(tr.attendanceNeedsAttention),
               ...attentionSubjects.map(
                 (s) => Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
@@ -32,7 +34,7 @@ class AttendanceScreen extends ConsumerWidget {
                 ),
               ),
             ],
-            const SectionLabel('All subjects'),
+            SectionLabel(tr.attendanceAllSubjects),
             ...allSubjects.map(
               (s) => Padding(
                 padding: const EdgeInsets.only(bottom: 10.0),

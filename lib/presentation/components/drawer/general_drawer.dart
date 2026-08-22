@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 
 class GeneralDrawer extends ConsumerWidget {
@@ -11,6 +12,7 @@ class GeneralDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return Drawer(
       width: MediaQuery.of(context).size.width * 0.85,
@@ -25,7 +27,7 @@ class GeneralDrawer extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'App Directory',
+                    tr.drawerTitle,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w800,
                       fontSize: 24,
@@ -34,7 +36,7 @@ class GeneralDrawer extends ConsumerWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Quick access to all features',
+                    tr.drawerSubtitle,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
@@ -53,132 +55,132 @@ class GeneralDrawer extends ConsumerWidget {
                 ),
                 children: [
                   _SectionHeader(
-                    label: 'NEWS & SOCIAL',
+                    label: tr.drawerSectionNewsSocial,
                     icon: Icons.campaign_rounded,
                     appColors: appColors,
                   ),
                   _MenuTile(
-                    label: 'News Feed',
+                    label: tr.drawerNewsFeed,
                     icon: Icons.newspaper_rounded,
                     route: '/feed',
                     appColors: appColors,
                   ),
                   _MenuTile(
-                    label: 'Create Post',
+                    label: tr.drawerCreatePost,
                     icon: Icons.add_box_outlined,
                     route: '/feed/create-post',
                     appColors: appColors,
                   ),
                   _MenuTile(
-                    label: 'Manage Channels',
+                    label: tr.drawerManageChannels,
                     icon: Icons.settings_input_component_rounded,
                     route: '/feed/manage-channels',
                     appColors: appColors,
                   ),
                   const SizedBox(height: 20),
                   _SectionHeader(
-                    label: 'ACADEMIC',
+                    label: tr.drawerSectionAcademic,
                     icon: Icons.school_rounded,
                     appColors: appColors,
                   ),
                   _MenuTile(
-                    label: 'Attendance',
+                    label: tr.drawerAttendance,
                     icon: Icons.rule_rounded,
                     route: '/functions/attendance_function',
                     appColors: appColors,
                   ),
                   _MenuTile(
-                    label: 'Weekly Schedule',
+                    label: tr.drawerWeeklySchedule,
                     icon: Icons.calendar_today_rounded,
                     route: '/functions/schedule_function',
                     appColors: appColors,
                   ),
                   _MenuTile(
-                    label: 'Current Class',
+                    label: tr.drawerCurrentClass,
                     icon: Icons.class_rounded,
                     route: '/functions/current_class_function',
                     appColors: appColors,
                   ),
                   _MenuTile(
-                    label: 'All Grades',
+                    label: tr.drawerAllGrades,
                     icon: Icons.grade_rounded,
                     route: '/functions/grades',
                     appColors: appColors,
                   ),
                   _MenuTile(
-                    label: 'Grade Calculator',
+                    label: tr.drawerGradeCalculator,
                     icon: Icons.calculate_rounded,
                     route: '/functions/grades/calculator',
                     appColors: appColors,
                   ),
                   const SizedBox(height: 20),
                   _SectionHeader(
-                    label: 'MATERIALS & NOTES',
+                    label: tr.drawerSectionMaterials,
                     icon: Icons.menu_book_rounded,
                     appColors: appColors,
                   ),
                   _MenuTile(
-                    label: 'Subjects',
+                    label: tr.drawerSubjects,
                     icon: Icons.subject_rounded,
                     route: '/functions/subjects',
                     appColors: appColors,
                   ),
                   _MenuTile(
-                    label: 'Teaching Materials',
+                    label: tr.drawerTeachingMaterials,
                     icon: Icons.folder_shared_rounded,
                     route: '/functions/teaching-materials',
                     appColors: appColors,
                   ),
                   _MenuTile(
-                    label: 'Smart Sync',
+                    label: tr.drawerSmartSync,
                     icon: Icons.sync_rounded,
                     route: '/functions/teaching-materials/smart-sync',
                     appColors: appColors,
                   ),
                   _MenuTile(
-                    label: 'Notes',
+                    label: tr.drawerNotes,
                     icon: Icons.note_alt_rounded,
                     route: '/notes',
                     appColors: appColors,
                   ),
                   const SizedBox(height: 20),
                   _SectionHeader(
-                    label: 'ACCOUNT',
+                    label: tr.drawerSectionAccount,
                     icon: Icons.person_rounded,
                     appColors: appColors,
                   ),
                   _MenuTile(
-                    label: 'My Profile',
+                    label: tr.drawerMyProfile,
                     icon: Icons.account_circle_rounded,
                     route: '/profile',
                     appColors: appColors,
                   ),
                   _MenuTile(
-                    label: 'Profile Info',
+                    label: tr.drawerStudentIdCard,
                     icon: Icons.badge_rounded,
                     route: '/profile/student_card',
                     appColors: appColors,
                   ),
                   _MenuTile(
-                    label: 'Academic Profile',
+                    label: tr.drawerAcademicProfile,
                     icon: Icons.history_edu_rounded,
                     route: '/profile/academic_profile',
                     appColors: appColors,
                   ),
                   _MenuTile(
-                    label: 'Security & Password',
+                    label: tr.drawerSecurityPassword,
                     icon: Icons.lock_person_rounded,
                     route: '/profile/change_pass',
                     appColors: appColors,
                   ),
                   _MenuTile(
-                    label: 'Share Profile',
+                    label: tr.drawerShareProfile,
                     icon: Icons.share_rounded,
                     route: '/profile/share_profile',
                     appColors: appColors,
                   ),
                   _MenuTile(
-                    label: 'About App',
+                    label: tr.drawerAboutApp,
                     icon: Icons.info_outline_rounded,
                     route: '/profile/about',
                     appColors: appColors,

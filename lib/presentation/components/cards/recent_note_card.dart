@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/note.dart';
 import '../../../providers/notes_provider.dart';
@@ -80,6 +81,7 @@ class RecentNoteCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final notes = ref.watch(notesProvider);
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
     final isDark = ref.watch(isDarkModeProvider);
 
     if (notes.isEmpty) {
@@ -96,7 +98,7 @@ class RecentNoteCard extends ConsumerWidget {
     final plainText = _getPlainText(note.content);
 
     final String semanticLabel =
-        "Recent Note: ${note.title.isEmpty ? 'Untitled' : note.title}, Last edited ${DateFormat('MMM d').format(note.updatedAt)}";
+        "Recent Note: ${note.title.isEmpty ? tr.noteUntitled : note.title}, Last edited ${DateFormat('MMM d').format(note.updatedAt)}";
 
     return Column(
       children: [
@@ -109,7 +111,7 @@ class RecentNoteCard extends ConsumerWidget {
             onTap: () => context.go('/notes/editor/${note.noteId}'),
             behavior: HitTestBehavior.opaque,
             child: Container(
-              width: 330,
+              width: double.infinity,
               decoration: BoxDecoration(
                 color: bgColor,
                 borderRadius: BorderRadius.circular(18),
@@ -133,7 +135,7 @@ class RecentNoteCard extends ConsumerWidget {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              'RECENT NOTE',
+                              tr.noteRecentLabel,
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 14,
@@ -165,7 +167,7 @@ class RecentNoteCard extends ConsumerWidget {
                     const SizedBox(height: 15),
                     // Title
                     Text(
-                      note.title.isEmpty ? 'Untitled' : note.title,
+                      note.title.isEmpty ? tr.noteUntitled : note.title,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.redditSans(
@@ -192,7 +194,7 @@ class RecentNoteCard extends ConsumerWidget {
                         ),
                       ),
                       child: Text(
-                        plainText.isEmpty ? 'No additional content' : plainText,
+                        plainText.isEmpty ? tr.noteNoContent : plainText,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.redditSans(

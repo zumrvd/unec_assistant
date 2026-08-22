@@ -5,6 +5,7 @@ import 'package:unec_assistant/models/calendar_event.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/utils/subject_event_link.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 
 Future<CalendarEvent?> showEventEditorSheet(
   BuildContext context, {
@@ -110,10 +111,11 @@ class _EventEditorSheetState extends ConsumerState<_EventEditorSheet> {
       end = end.add(const Duration(days: 1));
     }
 
+    final tr = ref.read(strProvider);
     final subtype = switch (_type) {
-      EventType.classEvent => 'Mühazirə',
-      EventType.personalEvent => 'Personal',
-      EventType.exam => 'Exam',
+      EventType.classEvent => tr.eventSubtypeLecture,
+      EventType.personalEvent => tr.eventCatPersonal,
+      EventType.exam => tr.eventCatExam,
     };
 
     final event = withResolvedSubjectId(
@@ -232,6 +234,7 @@ class _EventEditorSheetState extends ConsumerState<_EventEditorSheet> {
   @override
   Widget build(BuildContext context) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
     final bottom = MediaQuery.viewInsetsOf(context).bottom;
     final isEdit = widget.existing != null;
 
@@ -260,7 +263,7 @@ class _EventEditorSheetState extends ConsumerState<_EventEditorSheet> {
               ),
               const SizedBox(height: 16),
               Text(
-                isEdit ? 'Edit event' : 'New event',
+                isEdit ? tr.eventEditTitle : tr.eventNewTitle,
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
@@ -275,7 +278,7 @@ class _EventEditorSheetState extends ConsumerState<_EventEditorSheet> {
                   fontSize: 14,
                   color: appColors.textPrimary,
                 ),
-                decoration: _fieldDecoration('Title', appColors),
+                decoration: _fieldDecoration(tr.eventFieldTitle, appColors),
               ),
               const SizedBox(height: 12),
               TextField(
@@ -285,7 +288,7 @@ class _EventEditorSheetState extends ConsumerState<_EventEditorSheet> {
                   fontSize: 14,
                   color: appColors.textPrimary,
                 ),
-                decoration: _fieldDecoration('Description', appColors),
+                decoration: _fieldDecoration(tr.eventFieldDescription, appColors),
               ),
               const SizedBox(height: 12),
               TextField(
@@ -294,27 +297,27 @@ class _EventEditorSheetState extends ConsumerState<_EventEditorSheet> {
                   fontSize: 14,
                   color: appColors.textPrimary,
                 ),
-                decoration: _fieldDecoration('Location', appColors),
+                decoration: _fieldDecoration(tr.eventFieldLocation, appColors),
               ),
               const SizedBox(height: 14),
               Row(
                 children: [
                   _pickerTile(
-                    label: 'Date',
+                    label: tr.eventFieldDate,
                     value: '${_day.day}/${_day.month}/${_day.year}',
                     onTap: _pickDate,
                     appColors: appColors,
                   ),
                   const SizedBox(width: 10),
                   _pickerTile(
-                    label: 'Start',
+                    label: tr.eventFieldStart,
                     value: _formatTime(_start),
                     onTap: () => _pickTime(isStart: true),
                     appColors: appColors,
                   ),
                   const SizedBox(width: 10),
                   _pickerTile(
-                    label: 'End',
+                    label: tr.eventFieldEnd,
                     value: _formatTime(_end),
                     onTap: () => _pickTime(isStart: false),
                     appColors: appColors,
@@ -323,7 +326,7 @@ class _EventEditorSheetState extends ConsumerState<_EventEditorSheet> {
               ),
               const SizedBox(height: 14),
               Text(
-                'Category',
+                tr.eventCategory,
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 13,
@@ -333,11 +336,11 @@ class _EventEditorSheetState extends ConsumerState<_EventEditorSheet> {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  _chip('Class', EventType.classEvent, appColors),
+                  _chip(tr.eventCatClass, EventType.classEvent, appColors),
                   const SizedBox(width: 8),
-                  _chip('Personal', EventType.personalEvent, appColors),
+                  _chip(tr.eventCatPersonal, EventType.personalEvent, appColors),
                   const SizedBox(width: 8),
-                  _chip('Exam', EventType.exam, appColors),
+                  _chip(tr.eventCatExam, EventType.exam, appColors),
                 ],
               ),
               const SizedBox(height: 20),
@@ -353,7 +356,7 @@ class _EventEditorSheetState extends ConsumerState<_EventEditorSheet> {
                   ),
                   alignment: Alignment.center,
                   child: Text(
-                    isEdit ? 'Save changes' : 'Create event',
+                    isEdit ? tr.eventBtnSave : tr.eventBtnCreate,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 15,

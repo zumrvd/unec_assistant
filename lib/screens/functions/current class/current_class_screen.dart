@@ -8,35 +8,13 @@ import 'package:unec_assistant/presentation/components/cards/teaching_materials_
 import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/providers/current_class_provider.dart';
 import '../../../presentation/components/lists/labels.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
+import 'package:unec_assistant/l10n/translations.dart';
 
 class CurrentClassScreen extends ConsumerWidget {
   const CurrentClassScreen({super.key});
 
-  static const _weekdays = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
-  ];
-  static const _months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-
-  Widget _activeBadge() {
+  Widget _activeBadge(AppStrings tr) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
@@ -48,7 +26,7 @@ class CurrentClassScreen extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            'Active',
+            tr.currentClassActive,
             style: GoogleFonts.redditSans(
               color: const Color(0xFFFF4D4D),
               fontWeight: FontWeight.w600,
@@ -76,23 +54,24 @@ class CurrentClassScreen extends ConsumerWidget {
     );
   }
 
-  String _dateLabel(DateTime d) =>
-      '${_weekdays[d.weekday - 1]}, ${_months[d.month - 1]} ${d.day}';
+  String _dateLabel(DateTime d, AppStrings tr) =>
+      '${tr.weekdays[d.weekday - 1]}, ${tr.monthsFull[d.month - 1]} ${d.day}';
 
-  String _nextWhenMessage(NextClassWhen when, CalendarEvent event) {
+  String _nextWhenMessage(NextClassWhen when, CalendarEvent event, AppStrings tr) {
     switch (when) {
       case NextClassWhen.today:
-        return 'Later today';
+        return tr.currentClassLaterToday;
       case NextClassWhen.tomorrow:
-        return 'This class takes place tomorrow';
+        return tr.currentClassTakesPlaceTomorrow;
       case NextClassWhen.later:
-        return 'Next class · ${_dateLabel(event.startTime)}';
+        return '${tr.currentClassNext} · ${_dateLabel(event.startTime, tr)}';
     }
   }
 
   Widget _classSections({
     required TrackedClass tracked,
     required bool forceZeroProgress,
+    required AppStrings tr,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,11 +82,11 @@ class CurrentClassScreen extends ConsumerWidget {
           forceZeroProgress: forceZeroProgress,
         ),
         const SizedBox(height: 10),
-        const SectionLabel('Class & Attendance'),
+        SectionLabel(tr.sectionClassAttendance),
         const SizedBox(height: 10),
         SubjectAttendanceCard(subject: tracked.subject),
         const SizedBox(height: 10),
-        const SectionLabel('Academic'),
+        SectionLabel(tr.sectionAcademic),
         const SizedBox(height: 10),
         TeachingMaterialsCard(
           subjectId: tracked.subject.subjectId,
@@ -122,12 +101,13 @@ class CurrentClassScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(currentClassProvider);
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return Scaffold(
       backgroundColor: appColors.background,
       appBar: CustomAppBar(
-        title: 'Current Class',
-        trailing: state.hasActive ? _activeBadge() : null,
+        title: tr.drawerCurrentClass,
+        trailing: state.hasActive ? _activeBadge(tr) : null,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 35.0),
@@ -139,10 +119,11 @@ class CurrentClassScreen extends ConsumerWidget {
               _classSections(
                 tracked: state.activeClass!,
                 forceZeroProgress: false,
+                tr: tr,
               ),
             ] else if (state.hasNext) ...[
               Text(
-                'No class is currently active',
+                tr.currentClassNoActive,
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w600,
                   fontSize: 14,
@@ -151,7 +132,7 @@ class CurrentClassScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                _nextWhenMessage(state.nextWhen, state.nextClass!.event),
+                _nextWhenMessage(state.nextWhen, state.nextClass!.event, tr),
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w600,
                   fontSize: 13,
@@ -160,7 +141,7 @@ class CurrentClassScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                state.nextWhen == NextClassWhen.today ? 'Up next' : 'Coming up',
+                state.nextWhen == NextClassWhen.today ? tr.currentClassUpNext : tr.currentClassComingUp,
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 16,
@@ -171,13 +152,14 @@ class CurrentClassScreen extends ConsumerWidget {
               _classSections(
                 tracked: state.nextClass!,
                 forceZeroProgress: true,
+                tr: tr,
               ),
             ] else ...[
               Padding(
                 padding: const EdgeInsets.only(top: 40),
                 child: Center(
                   child: Text(
-                    'No upcoming classes in your schedule',
+                    tr.currentClassNoUpcoming,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w600,

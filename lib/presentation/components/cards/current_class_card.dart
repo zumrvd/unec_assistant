@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
+import 'package:unec_assistant/l10n/translations.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/current_class_provider.dart';
 
@@ -19,14 +21,14 @@ class CurrentClassCard extends ConsumerWidget {
     return location;
   }
 
-  String _nextWhenMessage(NextClassWhen when) {
+  String _nextWhenMessage(NextClassWhen when, AppStrings tr) {
     switch (when) {
       case NextClassWhen.today:
-        return 'Later today';
+        return tr.currentClassLaterToday;
       case NextClassWhen.tomorrow:
-        return 'Tomorrow';
+        return tr.currentClassTomorrow;
       case NextClassWhen.later:
-        return 'Upcoming';
+        return tr.currentClassUpcoming;
     }
   }
 
@@ -34,6 +36,7 @@ class CurrentClassCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(currentClassProvider);
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     if (state.isEmpty) {
       return const SizedBox.shrink();
@@ -46,7 +49,7 @@ class CurrentClassCard extends ConsumerWidget {
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: Container(
-        width: 330,
+        width: double.infinity,
         decoration: BoxDecoration(
           color: appColors.cardBackground,
           borderRadius: BorderRadius.circular(18),
@@ -64,7 +67,7 @@ class CurrentClassCard extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      isUpcoming ? 'UP NEXT' : 'CURRENT CLASS',
+                      isUpcoming ? tr.currentClassUpNext : tr.currentClassLabel,
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
@@ -74,7 +77,7 @@ class CurrentClassCard extends ConsumerWidget {
                     if (isUpcoming) ...[
                       const SizedBox(height: 4),
                       Text(
-                        'No class is currently active',
+                        tr.currentClassNoActive,
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w600,
                           fontSize: 12,
@@ -104,7 +107,7 @@ class CurrentClassCard extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      _nextWhenMessage(state.nextWhen),
+                      _nextWhenMessage(state.nextWhen, tr),
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 10,
@@ -120,7 +123,7 @@ class CurrentClassCard extends ConsumerWidget {
               textBaseline: TextBaseline.alphabetic,
               children: [
                 Text(
-                  'Room',
+                  tr.currentClassRoom,
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 10,
@@ -141,14 +144,14 @@ class CurrentClassCard extends ConsumerWidget {
             const SizedBox(height: 12),
             _infoRow(
               Icons.book_outlined,
-              'Subject',
+              tr.currentClassSubject,
               tracked.subject.subjectName,
               appColors,
             ),
             const SizedBox(height: 12),
             _infoRow(
               Icons.compare_outlined,
-              'Type',
+              tr.currentClassType,
               tracked.event.subtype,
               appColors,
             ),

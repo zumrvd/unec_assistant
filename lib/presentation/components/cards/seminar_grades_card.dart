@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
+import 'package:unec_assistant/l10n/translations.dart';
 import '../../../models/subject_detail.dart';
 import '../../../models/seminar_entry.dart';
 
@@ -25,7 +27,7 @@ class _SeminarGradesCardState extends ConsumerState<SeminarGradesCard> {
     stops: [0.0, 0.5, 1.0],
   );
 
-  Widget _seminarRow(SeminarEntry e, AppColors appColors) {
+  Widget _seminarRow(SeminarEntry e, AppColors appColors, AppStrings tr) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Column(
@@ -47,7 +49,7 @@ class _SeminarGradesCardState extends ConsumerState<SeminarGradesCard> {
                       ),
                     ),
                     Text(
-                      e.date,
+                      tr.localizeDateString(e.date),
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 10,
@@ -74,9 +76,9 @@ class _SeminarGradesCardState extends ConsumerState<SeminarGradesCard> {
     );
   }
 
-  @override
   Widget build(BuildContext context) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return Container(
       width: double.infinity,
@@ -95,7 +97,7 @@ class _SeminarGradesCardState extends ConsumerState<SeminarGradesCard> {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  "Seminars",
+                  tr.subjectSeminarTitle,
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 15,
@@ -132,8 +134,8 @@ class _SeminarGradesCardState extends ConsumerState<SeminarGradesCard> {
             children: [
               Text(
                 widget.data.seminarsGraded == 0
-                    ? "no seminars graded"
-                    : "${widget.data.seminarsGraded}/${widget.data.seminarsTotal} seminars graded",
+                    ? tr.subjectSeminarNoneGraded
+                    : "${widget.data.seminarsGraded}/${widget.data.seminarsTotal} ${tr.subjectSeminarGradedSuffix}",
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 13,
@@ -172,7 +174,7 @@ class _SeminarGradesCardState extends ConsumerState<SeminarGradesCard> {
               padding: const EdgeInsets.only(top: 12),
               child: Column(
                 children: widget.data.seminarEntries
-                    .map((e) => _seminarRow(e, appColors))
+                    .map((e) => _seminarRow(e, appColors, tr))
                     .toList(),
               ),
             ),
@@ -204,7 +206,7 @@ class _SeminarGradesCardState extends ConsumerState<SeminarGradesCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Open in Unec Cabinet",
+                          tr.subjectMidtermOpen,
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w700,
                             fontSize: 13,
@@ -212,7 +214,7 @@ class _SeminarGradesCardState extends ConsumerState<SeminarGradesCard> {
                           ),
                         ),
                         Text(
-                          "See your results in Unec Cabinet",
+                          tr.subjectMidtermOpenDesc,
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w700,
                             fontSize: 9,

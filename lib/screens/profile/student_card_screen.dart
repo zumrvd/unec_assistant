@@ -7,6 +7,7 @@ import 'package:unec_assistant/presentation/components/lists/labels.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/student_card_customization_provider.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 
 class StudentCardScreen extends ConsumerStatefulWidget {
   const StudentCardScreen({super.key});
@@ -35,27 +36,30 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
     '"powered by iced matcha & dreams"',
     '"in my academic comeback era"',
     '"99% loaded, 1% awake"',
-    '"Future Software Engineer 💻"',
-    '"Coffee, Code & Dreams ☕"',
-    '"dean\'s list or bust ☕"',
+    '"future Software Engineer "',
+    '"coffee, Code & Dreams "',
+    '"git it girl "',
     '"silent grind, loud success"',
     null,
   ];
 
-  static const List<({String label, ImageProvider image})> _presetAvatars = [
-    (
-      label: 'Student Photo',
-      image: AssetImage('assets/images/profile.jpg'),
-    ),
-    (
-      label: 'UNEC Mascot',
-      image: AssetImage('assets/images/robot_mascot.PNG'),
-    ),
-    (
-      label: 'UNEC Profile',
-      image: AssetImage('assets/images/unec_profile_picture.png'),
-    ),
-  ];
+  List<({String label, ImageProvider image})> get _presetAvatars {
+    final str = ref.read(strProvider);
+    return [
+      (
+        label: str.studentCardPhotoLabel,
+        image: const AssetImage('assets/images/profile.jpg'),
+      ),
+      (
+        label: str.studentCardMascotLabel,
+        image: const AssetImage('assets/images/robot_mascot.PNG'),
+      ),
+      (
+        label: str.studentCardUnecProfileLabel,
+        image: const AssetImage('assets/images/unec_profile_picture.png'),
+      ),
+    ];
+  }
 
   @override
   void initState() {
@@ -117,6 +121,7 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
 
   Future<void> _showDiscardWarningDialog() async {
     final appColors = ref.read(appColorsProvider);
+    final str = ref.read(strProvider);
     final choice = await showDialog<String>(
       context: context,
       builder: (ctx) => Dialog(
@@ -148,7 +153,7 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      'Unsaved Changes',
+                      str.studentCardUnsavedTitle,
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 17,
@@ -160,7 +165,7 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
               ),
               const SizedBox(height: 14),
               Text(
-                'You have unsaved changes to your student card. If you leave now, your customizations will be discarded.',
+                str.studentCardUnsavedDesc,
                 style: GoogleFonts.redditSans(
                   fontSize: 13.5,
                   height: 1.45,
@@ -188,7 +193,7 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
                       const Icon(Icons.check_circle_rounded, size: 18),
                       const SizedBox(width: 8),
                       Text(
-                        'Save & Return',
+                        str.studentCardSaveBtn,
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w700,
                           fontSize: 14,
@@ -218,7 +223,7 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
                           ),
                         ),
                         child: Text(
-                          'Discard',
+                          str.studentCardDiscardBtn,
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w700,
                             fontSize: 13,
@@ -245,7 +250,7 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
                           ),
                         ),
                         child: Text(
-                          'Keep Editing',
+                          str.studentCardKeepEditingBtn,
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w600,
                             fontSize: 13,
@@ -283,6 +288,7 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
 
   void _showImagePickerSheet() {
     final appColors = ref.read(appColorsProvider);
+    final str = ref.read(strProvider);
     showModalBottomSheet(
       context: context,
       backgroundColor: appColors.surface,
@@ -301,7 +307,7 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Choose Avatar',
+                      str.studentCardChooseAvatar,
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
@@ -372,6 +378,7 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
   @override
   Widget build(BuildContext context) {
     final appColors = ref.watch(appColorsProvider);
+    final str = ref.watch(strProvider);
 
     return PopScope(
       canPop: !_hasUnsavedChanges,
@@ -382,12 +389,12 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
       child: Scaffold(
         backgroundColor: appColors.background,
         appBar: CustomAppBar(
-          title: 'Student ID Card',
+          title: str.studentCardTitle,
           onBackTap: _handleBackNavigation,
         ),
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 14),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -412,26 +419,37 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
               // Flip Card Micro Hint & Random Vibe Action
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.touch_app_rounded,
-                        size: 13,
-                        color: appColors.textSecondary,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        'Tap card to flip front/back',
-                        style: GoogleFonts.redditSans(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
-                          color: appColors.textSecondary,
+                  Expanded(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 1),
+                          child: Icon(
+                            Icons.touch_app_rounded,
+                            size: 13,
+                            color: appColors.textSecondary,
+                          ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            str.studentCardTapToFlip,
+                            softWrap: true,
+                            style: GoogleFonts.redditSans(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                              color: appColors.textSecondary,
+                              height: 1.2,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+                  const SizedBox(width: 12),
                   GestureDetector(
                     onTap: () {
                       final randomTheme =
@@ -472,7 +490,7 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            'Surprise Vibe',
+                            str.studentCardSurpriseVibe,
                             style: GoogleFonts.redditSans(
                               fontSize: 11,
                               fontWeight: FontWeight.w700,
@@ -491,8 +509,8 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
               _buildCustomizationCard(
                 appColors: appColors,
                 icon: Icons.palette_rounded,
-                title: 'Card Theme',
-                subtitle: 'Select your signature campus color vibe',
+                title: str.studentCardThemeTitle,
+                subtitle: str.studentCardThemeSubtitle,
                 child: SizedBox(
                   height: 46,
                   child: ListView.separated(
@@ -563,14 +581,14 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
               _buildCustomizationCard(
                 appColors: appColors,
                 icon: Icons.face_retouching_natural_rounded,
-                title: 'Avatar & Photo',
-                subtitle: 'Choose your card photo or clean initials',
+                title: str.studentCardAvatarTitle,
+                subtitle: str.studentCardAvatarSubtitle,
                 child: Row(
                   children: [
                     // Option 1: Initials
                     _buildAvatarOption(
                       appColors: appColors,
-                      label: 'Initials',
+                      label: str.studentCardInitials,
                       isSelected: _draftAvatar == null,
                       avatarWidget: Container(
                         width: 44,
@@ -593,7 +611,7 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
                       onTap: () {
                         setState(() {
                           _draftAvatar = null;
-                          _draftAvatarLabel = 'Initials';
+                          _draftAvatarLabel = str.studentCardInitials;
                         });
                         _onSettingInteracted();
                       },
@@ -603,7 +621,7 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
                     // Option 2: Student Photo
                     _buildAvatarOption(
                       appColors: appColors,
-                      label: 'Photo',
+                      label: str.studentCardPhoto,
                       isSelected: _draftAvatar ==
                           const AssetImage('assets/images/profile.jpg'),
                       avatarWidget: ClipRRect(
@@ -619,7 +637,7 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
                         setState(() {
                           _draftAvatar =
                               const AssetImage('assets/images/profile.jpg');
-                          _draftAvatarLabel = 'Photo';
+                          _draftAvatarLabel = str.studentCardPhoto;
                         });
                         _onSettingInteracted();
                       },
@@ -629,7 +647,7 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
                     // Option 3: Mascot
                     _buildAvatarOption(
                       appColors: appColors,
-                      label: 'Mascot',
+                      label: str.studentCardMascot,
                       isSelected: _draftAvatar ==
                           const AssetImage('assets/images/robot_mascot.PNG'),
                       avatarWidget: ClipRRect(
@@ -645,7 +663,7 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
                         setState(() {
                           _draftAvatar =
                               const AssetImage('assets/images/robot_mascot.PNG');
-                          _draftAvatarLabel = 'Mascot';
+                          _draftAvatarLabel = str.studentCardMascot;
                         });
                         _onSettingInteracted();
                       },
@@ -655,7 +673,7 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
                     // Option 4: Custom / Picker
                     _buildAvatarOption(
                       appColors: appColors,
-                      label: 'More',
+                      label: str.studentCardMore,
                       isSelected: false,
                       avatarWidget: Container(
                         width: 44,
@@ -688,8 +706,8 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
               _buildCustomizationCard(
                 appColors: appColors,
                 icon: Icons.format_quote_rounded,
-                title: 'Campus Motto',
-                subtitle: 'A custom quote displayed right on your card',
+                title: str.studentCardMottoTitle,
+                subtitle: str.studentCardMottoSubtitle,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -730,7 +748,7 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
                               cursorColor: appColors.primary,
                               maxLength: 45,
                               decoration: InputDecoration(
-                                hintText: 'Type your campus motto...',
+                                hintText: str.studentCardMottoHint,
                                 hintStyle: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 12,
@@ -771,7 +789,7 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
 
                     // Quick Inspiration Quotes
                     Text(
-                      'QUICK VIBES',
+                      str.studentCardQuickVibes,
                       style: GoogleFonts.redditSans(
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
@@ -792,7 +810,7 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
                           final quoteOption = _quoteSuggestions[index];
                           final isSelected = formatStudentQuote(_draftQuote) ==
                               formatStudentQuote(quoteOption);
-                          final displayLabel = quoteOption ?? '✨ Clear quote';
+                          final displayLabel = quoteOption ?? str.studentCardClearQuote;
 
                           return GestureDetector(
                             onTap: () {
@@ -877,7 +895,7 @@ class _StudentCardScreenState extends ConsumerState<StudentCardScreen> {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        'Save & Return',
+                        str.studentCardSaveBtn,
                         style: GoogleFonts.redditSans(
                           fontSize: 14,
                           fontWeight: FontWeight.w700,

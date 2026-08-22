@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import '../../../models/subject_detail.dart';
 
 class FinalGradeCard extends ConsumerWidget {
@@ -9,9 +10,9 @@ class FinalGradeCard extends ConsumerWidget {
 
   const FinalGradeCard({required this.data, super.key});
 
-  @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return Container(
       width: double.infinity,
@@ -34,7 +35,7 @@ class FinalGradeCard extends ConsumerWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  "Final exam",
+                  tr.subjectFinalTitle,
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 14,
@@ -43,7 +44,7 @@ class FinalGradeCard extends ConsumerWidget {
                 ),
               ),
               Text(
-                data.finalScheduled ? "score" : "Not Yet",
+                data.finalScheduled ? tr.subjectFinalScore : tr.subjectMidtermNotYet,
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 16,
@@ -82,7 +83,7 @@ class FinalGradeCard extends ConsumerWidget {
           if (!data.finalScheduled) ...[
             const SizedBox(height: 8),
             Text(
-              data.finalNote,
+              tr.gradeFinalNotScheduled,
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w700,
                 fontSize: 10,
@@ -123,7 +124,7 @@ class FinalGradeCard extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Open in Unec Cabinet",
+                            tr.subjectMidtermOpen,
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w700,
                               fontSize: 13,
@@ -131,7 +132,7 @@ class FinalGradeCard extends ConsumerWidget {
                             ),
                           ),
                           Text(
-                            "See your results in Unec Cabinet",
+                            tr.subjectMidtermOpenDesc,
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w700,
                               fontSize: 9,

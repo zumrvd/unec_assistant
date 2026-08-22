@@ -7,11 +7,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/routing/app_router.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 
 void main() => runApp(
   DevicePreview(
-    enabled: kIsWeb,
+    enabled: !kReleaseMode,
     builder: (context) => const ProviderScope(child: UnecAssistantApp()),
   ),
 );
@@ -22,6 +23,7 @@ class UnecAssistantApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appThemeMode = ref.watch(themeModeProvider);
+    final flutterLocale = ref.watch(flutterLocaleProvider);
 
     final ThemeMode themeMode = switch (appThemeMode) {
       AppThemeMode.light => ThemeMode.light,
@@ -34,8 +36,8 @@ class UnecAssistantApp extends ConsumerWidget {
 
     return MaterialApp.router(
       scrollBehavior: const AppScrollBehavior(),
-      locale: kIsWeb ? DevicePreview.locale(context) : null,
-      builder: kIsWeb ? DevicePreview.appBuilder : null,
+      locale: flutterLocale,
+      builder: DevicePreview.appBuilder,
       title: 'UNEC Assistant',
       debugShowCheckedModeBanner: false,
       themeMode: themeMode,
@@ -84,7 +86,11 @@ class UnecAssistantApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
         FlutterQuillLocalizations.delegate,
       ],
-      supportedLocales: const [Locale('en', 'US'), Locale('az', 'AZ')],
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('az', 'AZ'),
+        Locale('ru', 'RU'),
+      ],
     );
   }
 }

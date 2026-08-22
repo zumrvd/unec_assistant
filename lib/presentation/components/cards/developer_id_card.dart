@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../providers/about_app_provider.dart';
 
-class DeveloperIdCard extends StatelessWidget {
+class DeveloperIdCard extends ConsumerWidget {
   const DeveloperIdCard({super.key});
 
   static const _cardGradient = LinearGradient(
@@ -17,7 +19,8 @@ class DeveloperIdCard extends StatelessWidget {
   );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tr = ref.watch(strProvider);
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -45,7 +48,7 @@ class DeveloperIdCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  kDeveloperGreeting,
+                  tr.developerGreeting,
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w600,
                     fontSize: 11,
@@ -68,7 +71,7 @@ class DeveloperIdCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  kDeveloperSubtitle,
+                  tr.developerSubtitle,
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w600,
                     fontSize: 11,
@@ -77,7 +80,7 @@ class DeveloperIdCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  kDeveloperRoleTags,
+                  tr.developerRoleTags,
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 
 class CurrentClassButton extends ConsumerWidget {
   const CurrentClassButton({required this.onTap, super.key});
@@ -11,6 +12,7 @@ class CurrentClassButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return GestureDetector(
       onTap: onTap,
@@ -56,7 +58,7 @@ class CurrentClassButton extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Current class',
+                          tr.currentClassBtnTitle,
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w800,
                             fontSize: 16,
@@ -65,7 +67,7 @@ class CurrentClassButton extends ConsumerWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          "Ongoing class, it's materials and info",
+                          tr.currentClassBtnSub,
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w700,
                             fontSize: 10,

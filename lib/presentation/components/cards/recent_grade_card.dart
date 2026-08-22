@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import '../../../models/subject_detail.dart';
 import '../../../providers/subject_detail_provider.dart';
 
@@ -50,6 +51,7 @@ class RecentGradeCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final subjects = ref.watch(allSubjectsProvider);
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     final List<GradeEvent> allEvents = [];
 
@@ -78,7 +80,7 @@ class RecentGradeCard extends ConsumerWidget {
         if (parsed != null) {
           allEvents.add(
             GradeEvent(
-              title: 'Midterm Exam',
+              title: tr.gradeMidtermExam,
               dateStr: s.midtermDate,
               date: parsed,
               score: s.midtermScore,
@@ -96,7 +98,7 @@ class RecentGradeCard extends ConsumerWidget {
         if (parsed != null) {
           allEvents.add(
             GradeEvent(
-              title: 'Final Exam',
+              title: tr.gradeFinalExam,
               dateStr: s.finalExamDate,
               date: parsed,
               score: s.finalScore,
@@ -122,13 +124,13 @@ class RecentGradeCard extends ConsumerWidget {
     String typeLabel;
     switch (latest.type) {
       case GradeType.seminar:
-        typeLabel = 'SEMINAR GRADE';
+        typeLabel = tr.gradeSeminarLabel;
         break;
       case GradeType.midterm:
-        typeLabel = 'MIDTERM GRADE';
+        typeLabel = tr.gradeMidtermLabel;
         break;
       case GradeType.finalGrade:
-        typeLabel = 'FINAL EXAM GRADE';
+        typeLabel = tr.gradeFinalLabel;
         break;
     }
 
@@ -147,7 +149,7 @@ class RecentGradeCard extends ConsumerWidget {
                 context.go('/functions/grades/subject/${subject.subjectId}'),
             behavior: HitTestBehavior.opaque,
             child: Container(
-              width: 330,
+              width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: appColors.cardBackground,
@@ -267,7 +269,7 @@ class RecentGradeCard extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Date received',
+                                  tr.gradeDateReceived,
                                   style: GoogleFonts.redditSans(
                                     fontWeight: FontWeight.w600,
                                     fontSize: 11,
@@ -276,7 +278,7 @@ class RecentGradeCard extends ConsumerWidget {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  latest.dateStr,
+                                  tr.localizeDateString(latest.dateStr),
                                   style: GoogleFonts.redditSans(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 14,

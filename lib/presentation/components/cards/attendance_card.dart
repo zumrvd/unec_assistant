@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import '../../../providers/subject_detail_provider.dart';
 
 class AttendanceCard extends ConsumerWidget {
@@ -12,6 +13,7 @@ class AttendanceCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final attentionSubjects = ref.watch(attentionSubjectsProvider);
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     if (attentionSubjects.isEmpty) {
       return const SizedBox.shrink();
@@ -63,11 +65,11 @@ class AttendanceCard extends ConsumerWidget {
         ? appColors.warning
         : appColors.success;
 
-    final String pillLabel = '$absencesLeft Left';
+    final String pillLabel = tr.attendanceLeftPill(absencesLeft);
 
     final String absencesLeftLabel = isDanger
-        ? 'no absence left'
-        : '$absencesLeft absences left';
+        ? tr.attendanceNoLeft
+        : tr.attendanceAbsencesLeft(absencesLeft);
 
     return Column(
       children: [
@@ -76,7 +78,7 @@ class AttendanceCard extends ConsumerWidget {
           onTap: () => context.go('/functions/attendance_function'),
           behavior: HitTestBehavior.opaque,
           child: Container(
-            width: 330,
+            width: double.infinity,
             decoration: BoxDecoration(
               color: appColors.cardBackground,
               borderRadius: BorderRadius.circular(18),
@@ -170,7 +172,7 @@ class AttendanceCard extends ConsumerWidget {
                             ),
                           ),
                           Text(
-                            'used',
+                            tr.attendanceUsed,
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w700,
                               fontSize: 13,
@@ -188,7 +190,7 @@ class AttendanceCard extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              'Limit : ${subject.absenceLimit}',
+                              tr.attendanceLimit(subject.absenceLimit),
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 12,

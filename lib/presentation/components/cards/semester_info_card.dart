@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import '../../../models/subject_detail.dart';
 
 class SemesterInfoCard extends ConsumerWidget {
@@ -98,6 +99,7 @@ class SemesterInfoCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return Container(
       width: double.infinity,
@@ -115,7 +117,7 @@ class SemesterInfoCard extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  data.semesterLabel,
+                  tr.subjectsInThisSemester,
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
@@ -124,7 +126,7 @@ class SemesterInfoCard extends ConsumerWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  data.semesterType,
+                  data.semesterLabel,
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 20,
@@ -135,7 +137,7 @@ class SemesterInfoCard extends ConsumerWidget {
                 _infoRow(
                   Icons.play_circle_rounded,
                   appColors.success,
-                  "Starting in",
+                  tr.subjectsStartingIn,
                   data.startDate,
                   appColors,
                 ),
@@ -143,7 +145,7 @@ class SemesterInfoCard extends ConsumerWidget {
                 _infoRow(
                   Icons.stop_circle_rounded,
                   appColors.pink,
-                  "Ending in",
+                  tr.subjectsEndingIn,
                   data.endDate,
                   appColors,
                 ),
@@ -151,7 +153,7 @@ class SemesterInfoCard extends ConsumerWidget {
                 _infoRow(
                   Icons.diamond_rounded,
                   appColors.attendanceOrange,
-                  "Total Credits",
+                  tr.subjectsTotalCredits,
                   "${data.totalCredits}",
                   appColors,
                 ),
@@ -159,7 +161,7 @@ class SemesterInfoCard extends ConsumerWidget {
                 _infoRow(
                   Icons.book_rounded,
                   appColors.primary,
-                  "Total Subjects",
+                  tr.subjectsTotalSubjects,
                   "${data.totalSubjects}",
                   appColors,
                 ),
@@ -167,7 +169,7 @@ class SemesterInfoCard extends ConsumerWidget {
                 _infoRow(
                   Icons.timelapse_rounded,
                   appColors.notificationPurple,
-                  "Total Hours",
+                  tr.subjectsTotalHours,
                   "${data.totalHours}",
                   appColors,
                 ),
@@ -175,7 +177,7 @@ class SemesterInfoCard extends ConsumerWidget {
                 _infoRow(
                   Icons.access_time_filled_rounded,
                   appColors.red,
-                  "Auditorium Hours",
+                  tr.subjectsAuditoriumHours,
                   "${data.auditoriumHours}",
                   appColors,
                 ),
@@ -200,11 +202,11 @@ class SemesterInfoCard extends ConsumerWidget {
             ),
             child: Column(
               children: [
-                _breakdownRow("Lectures", "${data.lectureHours}", appColors),
+                _breakdownRow(tr.subjectsLectures, "${data.lectureHours}", appColors),
                 const SizedBox(height: 8),
-                _breakdownRow("Seminars", "${data.seminarHours}", appColors),
+                _breakdownRow(tr.subjectsSeminars, "${data.seminarHours}", appColors),
                 const SizedBox(height: 8),
-                _breakdownRow("Laboratories", "${data.labHours}", appColors),
+                _breakdownRow(tr.subjectsLaboratories, "${data.labHours}", appColors),
               ],
             ),
           ),

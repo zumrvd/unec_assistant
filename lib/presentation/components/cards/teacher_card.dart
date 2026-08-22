@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
+import 'package:unec_assistant/l10n/translations.dart';
 import '../../../models/subject_detail.dart';
 
 class TeacherCard extends ConsumerWidget {
@@ -12,6 +14,7 @@ class TeacherCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
     final iconColor = appColors.primary;
 
     return Container(
@@ -41,7 +44,7 @@ class TeacherCard extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "TEACHER",
+                  tr.subjectTeacherTitle,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
@@ -62,7 +65,7 @@ class TeacherCard extends ConsumerWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  data.teacherRank,
+                  _localizeRank(data.teacherRank, tr),
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
@@ -86,5 +89,22 @@ class TeacherCard extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  String _localizeRank(String rank, AppStrings tr) {
+    String localized = rank;
+    if (rank.contains('Associate Professor')) {
+      localized = localized.replaceFirst('Associate Professor', tr.rankAssociateProfessor);
+    }
+    if (rank.contains('Head of Dept.')) {
+      localized = localized.replaceFirst('Head of Dept.', tr.rankHeadOfDept);
+    }
+    if (rank.contains('CS Dept.')) {
+      localized = localized.replaceFirst('CS Dept.', tr.deptCS);
+    }
+    if (rank.contains('Physics Dept.')) {
+      localized = localized.replaceFirst('Physics Dept.', tr.deptPhysics);
+    }
+    return localized;
   }
 }

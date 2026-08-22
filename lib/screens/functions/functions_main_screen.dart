@@ -9,6 +9,7 @@ import 'package:unec_assistant/presentation/components/buttons/notes_button.dart
 import 'package:unec_assistant/providers/theme_provider.dart';
 
 import '../../presentation/components/lists/labels.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 
 class FunctionsMainScreen extends ConsumerWidget {
   const FunctionsMainScreen({super.key});
@@ -16,6 +17,7 @@ class FunctionsMainScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return Scaffold(
       backgroundColor: appColors.background,
@@ -24,7 +26,7 @@ class FunctionsMainScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SectionLabel('Class & Attendance'),
+            SectionLabel(tr.sectionClassAttendance),
             const SizedBox(height: 10),
 
             CurrentClassButton(
@@ -49,7 +51,7 @@ class FunctionsMainScreen extends ConsumerWidget {
             ),
 
             const SizedBox(height: 10),
-            const SectionLabel('Academic'),
+            SectionLabel(tr.sectionAcademic),
             const SizedBox(height: 10),
 
             SubjectsButton(
@@ -61,7 +63,7 @@ class FunctionsMainScreen extends ConsumerWidget {
             ),
 
             const SizedBox(height: 10),
-            const SectionLabel('Personal'),
+            SectionLabel(tr.sectionPersonal),
             const SizedBox(height: 10),
 
             NotesButton(onTap: () => context.push('/notes')),

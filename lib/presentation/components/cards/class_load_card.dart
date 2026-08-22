@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import '../../../models/subject_detail.dart';
 
 class ClassLoadCard extends ConsumerWidget {
@@ -46,9 +47,9 @@ class ClassLoadCard extends ConsumerWidget {
     );
   }
 
-  @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
     final iconColor = const Color(0xFFDA4979);
 
     return Container(
@@ -76,7 +77,7 @@ class ClassLoadCard extends ConsumerWidget {
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  "CLASS LOAD",
+                  tr.subjectClassLoadTitle,
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w800,
                     fontSize: 16,
@@ -95,13 +96,17 @@ class ClassLoadCard extends ConsumerWidget {
               children: [
                 _loadBox(
                   "${data.sessionsPerWeek}",
-                  "sessions/\nweek",
+                  tr.subjectClassLoadSessions,
                   appColors,
                 ),
                 const SizedBox(width: 10),
-                _loadBox("${data.hrsPerWeek}", "hrs/\nweek", appColors),
+                _loadBox("${data.hrsPerWeek}", tr.subjectClassLoadHrs, appColors),
                 const SizedBox(width: 10),
-                _loadBox(data.classDays, "class\ndays", appColors),
+                _loadBox(
+                  tr.localizeClassDays(data.classDays),
+                  tr.subjectClassLoadDays,
+                  appColors,
+                ),
               ],
             ),
           ),

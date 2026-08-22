@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
+import 'package:unec_assistant/l10n/translations.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../models/app_notification.dart';
 import '../../providers/notification_provider.dart';
@@ -16,11 +18,12 @@ class NotificationsScreen extends ConsumerWidget {
     final notifications = ref.watch(notificationListProvider);
     final isEnabled = ref.watch(notificationsEnabledProvider);
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     // Grouping logic
     final Map<String, List<AppNotification>> grouped = {};
     for (var n in notifications) {
-      String groupKey = _getGroupKey(n.timestamp);
+      String groupKey = _getGroupKey(n.timestamp, tr);
       grouped.putIfAbsent(groupKey, () => []).add(n);
     }
 
@@ -29,27 +32,33 @@ class NotificationsScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: appColors.background,
       appBar: CustomAppBar(
-        title: 'Notifications',
+        title: tr.notifTitle,
         trailing: notifications.any((n) => !n.isRead)
             ? GestureDetector(
                 onTap: () =>
                     ref.read(notificationListProvider.notifier).markAllAsRead(),
                 behavior: HitTestBehavior.opaque,
-                child: Text(
-                  'Mark all as read',
-                  style: GoogleFonts.redditSans(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
-                    color: appColors.primary,
+                child: SizedBox(
+                  width: 75,
+                  child: Text(
+                    tr.notifMarkAllRead,
+                    textAlign: TextAlign.end,
+                    maxLines: 2,
+                    style: GoogleFonts.redditSans(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 11,
+                      color: appColors.primary,
+                      height: 1.1,
+                    ),
                   ),
                 ),
               )
             : null,
       ),
       body: !isEnabled
-          ? _buildDisabledState(appColors)
+          ? _buildDisabledState(appColors, tr)
           : notifications.isEmpty
-          ? _buildEmptyState(appColors)
+          ? _buildEmptyState(appColors, tr)
           : ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               itemCount: sortedKeys.length,
@@ -85,18 +94,18 @@ class NotificationsScreen extends ConsumerWidget {
     );
   }
 
-  String _getGroupKey(DateTime date) {
+  String _getGroupKey(DateTime date, AppStrings tr) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
     final notificationDate = DateTime(date.year, date.month, date.day);
 
-    if (notificationDate == today) return 'Today';
-    if (notificationDate == yesterday) return 'Yesterday';
-    return DateFormat('MMMM dd').format(date);
+    if (notificationDate == today) return tr.notifGroupToday;
+    if (notificationDate == yesterday) return tr.notifGroupYesterday;
+    return tr.localizeDateString(DateFormat('MMM dd').format(date));
   }
 
-  Widget _buildEmptyState(AppColors appColors) {
+  Widget _buildEmptyState(AppColors appColors, AppStrings tr) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -108,7 +117,7 @@ class NotificationsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'No notifications yet',
+            tr.notifNoneYet,
             style: GoogleFonts.redditSans(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -120,7 +129,7 @@ class NotificationsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildDisabledState(AppColors appColors) {
+  Widget _buildDisabledState(AppColors appColors, AppStrings tr) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(40.0),
@@ -134,7 +143,7 @@ class NotificationsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Notifications are turned off',
+              tr.notifDisabledTitle,
               textAlign: TextAlign.center,
               style: GoogleFonts.redditSans(
                 fontSize: 16,
@@ -144,7 +153,7 @@ class NotificationsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'You can enable them in Settings to stay updated.',
+              tr.notifDisabledSub,
               textAlign: TextAlign.center,
               style: GoogleFonts.redditSans(
                 fontSize: 13,
@@ -167,6 +176,30 @@ class _NotificationTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
+
+    String displayTitle = notification.title;
+    String displayMessage = notification.message;
+
+    // Content mapping for mock keys
+    switch (notification.title) {
+      case 'ACADEMIC_MIDTERM_SCHEDULE':
+        displayTitle = tr.notifAcademicTitle;
+        displayMessage = tr.notifAcademicBody;
+        break;
+      case 'FEED_NEW_POST_RECTORATE':
+        displayTitle = tr.notifFeedTitle;
+        displayMessage = tr.notifFeedBody;
+        break;
+      case 'ALERT_ATTENDANCE_WARNING':
+        displayTitle = tr.notifAttendanceTitle;
+        displayMessage = tr.notifAttendanceBody(2, "Programming I");
+        break;
+      case 'INFO_APP_UPDATE':
+        displayTitle = tr.notifUpdateTitle;
+        displayMessage = tr.notifUpdateBody("1.1.2");
+        break;
+    }
 
     return Dismissible(
       key: Key(notification.id),
@@ -215,7 +248,7 @@ class _NotificationTile extends ConsumerWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            notification.title,
+                            displayTitle,
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w700,
                               fontSize: 14,
@@ -236,7 +269,7 @@ class _NotificationTile extends ConsumerWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      notification.message,
+                      displayMessage,
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w400,
                         fontSize: 13,

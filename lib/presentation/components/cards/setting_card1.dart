@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 
 class SettingsCard1 extends ConsumerWidget {
@@ -39,6 +40,7 @@ class SettingsCard1 extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return Container(
       width: double.infinity,
@@ -73,12 +75,12 @@ class SettingsCard1 extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Profile Informations',
+                          tr.settingsAcademicProfile,
                           style: _labelStyle(appColors),
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          'Your full transcript',
+                          tr.settingsAcademicProfileSub,
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w400,
                             fontSize: 11,
@@ -129,10 +131,10 @@ class SettingsCard1 extends ConsumerWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Unec Cabinet', style: _labelStyle(appColors)),
+                        Text(tr.settingsUnecCabinet, style: _labelStyle(appColors)),
                         const SizedBox(height: 2),
                         Text(
-                          'Direct link to your cabinet',
+                          tr.settingsUnecCabinetSub,
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w400,
                             fontSize: 11,
@@ -183,10 +185,10 @@ class SettingsCard1 extends ConsumerWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Change Password', style: _labelStyle(appColors)),
+                        Text(tr.settingsChangePassword, style: _labelStyle(appColors)),
                         const SizedBox(height: 2),
                         Text(
-                          'Resets your password',
+                          tr.settingsChangePasswordSub,
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w400,
                             fontSize: 11,

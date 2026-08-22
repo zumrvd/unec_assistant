@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 
-class ShowInFilesButton extends StatelessWidget {
+class ShowInFilesButton extends ConsumerWidget {
   final VoidCallback? onTap;
 
   const ShowInFilesButton({
@@ -21,7 +23,9 @@ class ShowInFilesButton extends StatelessWidget {
   );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tr = ref.watch(strProvider);
+
     return GestureDetector(
       onTap: onTap ?? () {},
       child: Container(
@@ -48,7 +52,7 @@ class ShowInFilesButton extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Show in File Manager",
+                      tr.showInFilesBtnTitle,
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 15,
@@ -56,7 +60,7 @@ class ShowInFilesButton extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "See & manage downloaded files",
+                      tr.showInFilesBtnSub,
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w600,
                         fontSize: 10,

@@ -295,7 +295,12 @@ const SubjectDetail kXariciDetail = SubjectDetail(
   midtermDate: '',
   seminarMax: 20,
   seminarsTotal: 4,
-  seminarEntries: [],
+  seminarEntries: [
+    SeminarEntry(
+        title: 'Seminar 6 - Past Tense and Future Tense',
+        date: 'Dec 1, 2026',
+        score: 1),
+  ],
   finalScore: 0,
   finalMax: 50,
   finalScheduled: false,

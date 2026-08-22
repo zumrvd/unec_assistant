@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
+import 'package:unec_assistant/l10n/translations.dart';
 import '../../../models/post.dart';
 import '../../../models/channel.dart';
 import '../../../utils/app_toast.dart';
 
 // Category label lookup — collapses the old switch to one line.
-const _kCategoryLabels = {
-  ChannelCategory.official: 'Official',
-  ChannelCategory.clubs: 'Clubs',
-  ChannelCategory.devTeam: 'Dev Team',
-};
+// Category labels are now localized via strProvider
+
+
+
+
 
 class PostCard extends ConsumerStatefulWidget {
   final Post data;
@@ -37,18 +39,23 @@ class _PostCardState extends ConsumerState<PostCard> {
   bool _isExpanded = false;
 
   /// Fixed: was returning "hours ago" for day-level diffs.
-  String _timeAgo(DateTime dateTime) {
+  String _timeAgo(DateTime dateTime, AppStrings tr) {
     final diff = DateTime.now().difference(dateTime);
-    if (diff.inDays > 0) return '${diff.inDays}d ago';
-    if (diff.inHours > 0) return '${diff.inHours}h ago';
-    if (diff.inMinutes > 0) return '${diff.inMinutes}m ago';
-    return 'Just now';
+    if (diff.inDays > 0) return tr.feedTimeAgoDay(diff.inDays);
+    if (diff.inHours > 0) return tr.feedTimeAgoHour(diff.inHours);
+    if (diff.inMinutes > 0) return tr.feedTimeAgoMin(diff.inMinutes);
+    return tr.feedJustNow;
   }
 
   @override
   Widget build(BuildContext context) {
     final appColors = ref.watch(appColorsProvider);
-    final categoryLabel = _kCategoryLabels[widget.channel.category] ?? '';
+    final tr = ref.watch(strProvider);
+    final categoryLabel = switch (widget.channel.category) {
+      ChannelCategory.official => tr.feedFilterOfficial,
+      ChannelCategory.clubs => tr.feedFilterClubs,
+      ChannelCategory.devTeam => tr.feedFilterDevTeam,
+    };
 
     return GestureDetector(
       onTap: widget.onTap,
@@ -114,7 +121,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                         ],
                       ),
                       Text(
-                        '$categoryLabel · ${_timeAgo(widget.data.postedAt)}',
+                        '$categoryLabel · ${_timeAgo(widget.data.postedAt, tr)}',
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w500,
                           fontSize: 11,
@@ -169,7 +176,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                   onTap: () => setState(() => _isExpanded = !_isExpanded),
                   behavior: HitTestBehavior.opaque,
                   child: Text(
-                    _isExpanded ? 'Show less' : 'Read more',
+                    _isExpanded ? tr.feedShowLess : tr.feedReadMore,
                     style: GoogleFonts.redditSans(
                       color: appColors.primary,
                       fontWeight: FontWeight.w700,

@@ -6,6 +6,7 @@ import 'package:unec_assistant/models/lecture_material.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/materials_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 
 class TeachingMaterialsCard extends ConsumerWidget {
   const TeachingMaterialsCard({
@@ -122,10 +123,11 @@ class TeachingMaterialsCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
     final bundle = lecture;
     final bundleTitle = bundle == null
-        ? 'No materials yet'
-        : '${bundle.lectureLabel} : ${bundle.lectureTitle}';
+        ? tr.teachingMaterialsNoMaterials
+        : '${tr.localizeLectureLabel(bundle.lectureLabel)} : ${bundle.lectureTitle}';
     final bundleMeta = bundle == null
         ? ''
         : [
@@ -150,7 +152,7 @@ class TeachingMaterialsCard extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'TEACHING MATERIALS',
+                tr.drawerTeachingMaterials.toUpperCase(),
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 16,
@@ -172,7 +174,7 @@ class TeachingMaterialsCard extends ConsumerWidget {
                     vertical: 5,
                   ),
                   child: Text(
-                    'See all',
+                    tr.teachingMaterialsSeeAll,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w500,
                       fontSize: 11,
@@ -204,7 +206,7 @@ class TeachingMaterialsCard extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'Materials bundle for current class :',
+                  tr.teachingMaterialsBundleCurrent,
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w500,
                     fontSize: 14,
@@ -278,7 +280,7 @@ class TeachingMaterialsCard extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              'Download Bundle',
+                              tr.teachingMaterialsDownloadBundle,
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 13,
@@ -302,7 +304,7 @@ class TeachingMaterialsCard extends ConsumerWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            'Bundle including :',
+            tr.teachingMaterialsBundleIncluding,
             style: GoogleFonts.redditSans(
               fontWeight: FontWeight.w700,
               fontSize: 12,
@@ -312,7 +314,7 @@ class TeachingMaterialsCard extends ConsumerWidget {
           const SizedBox(height: 10),
           if (files.isEmpty)
             Text(
-              'No files in this bundle',
+              tr.teachingMaterialsNoFiles,
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w600,
                 fontSize: 12,
@@ -328,7 +330,7 @@ class TeachingMaterialsCard extends ConsumerWidget {
                     _iconForType(files[i].fileType),
                     _colorForType(files[i].fileType),
                     _colorForType(files[i].fileType).withValues(alpha: 0.15),
-                    files[i].fileTitle,
+                    tr.localizeLectureLabel(files[i].fileTitle),
                     '${files[i].fileSize} · ${files[i].uploadedAgo}',
                     appColors,
                     isLast: i == files.length - 1,

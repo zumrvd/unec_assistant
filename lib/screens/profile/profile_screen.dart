@@ -8,6 +8,7 @@ import 'package:unec_assistant/presentation/components/cards/setting_card2.dart'
 import 'package:unec_assistant/presentation/components/cards/student_id_card.dart';
 import 'package:unec_assistant/providers/student_card_customization_provider.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -24,6 +25,7 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
     final cardState = ref.watch(studentCardCustomizationProvider);
+    final tr = ref.watch(strProvider);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -60,7 +62,7 @@ class ProfileScreen extends ConsumerWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10.0),
                       child: Text(
-                        'Academic',
+                        tr.profileSectionAcademic,
                         style: GoogleFonts.redditSans(
                           color: appColors.textSecondary,
                           fontSize: 15,
@@ -84,7 +86,7 @@ class ProfileScreen extends ConsumerWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10.0),
                       child: Text(
-                        'Application',
+                        tr.profileSectionApplication,
                         style: GoogleFonts.redditSans(
                           color: appColors.textSecondary,
                           fontSize: 15,
@@ -104,7 +106,7 @@ class ProfileScreen extends ConsumerWidget {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10.0),
                       child: Text(
-                        'Feedback & Support',
+                        tr.profileSectionFeedback,
                         style: GoogleFonts.redditSans(
                           color: appColors.textSecondary,
                           fontSize: 15,

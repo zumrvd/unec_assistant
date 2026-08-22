@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../providers/smart_sync_provider.dart';
 
@@ -63,6 +64,7 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                   runSpacing: 2,
                   children: [
                     Text(
+                      softWrap: true,
                       title,
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
@@ -70,9 +72,11 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                         color: mainColor,
                       ),
                     ),
+
                     if (badge != null) ...[
                       Text(
                         badge,
+                        softWrap: true,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w600,
@@ -106,6 +110,7 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
   @override
   Widget build(BuildContext context) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return ListenableBuilder(
       listenable: widget.prefs,
@@ -129,32 +134,39 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 35,
-                        height: 35,
-                        decoration: BoxDecoration(
-                          color: appColors.primaryContainer,
-                          borderRadius: BorderRadius.circular(10),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 35,
+                          height: 35,
+                          decoration: BoxDecoration(
+                            color: appColors.primaryContainer,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            Icons.cloud_sync_rounded,
+                            size: 20,
+                            color: appColors.primary,
+                          ),
                         ),
-                        child: Icon(
-                          Icons.cloud_sync_rounded,
-                          size: 20,
-                          color: appColors.primary,
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            tr.smartSyncTitle,
+                            softWrap: true,
+                            style: GoogleFonts.redditSans(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 18,
+                              color: appColors.primary,
+                              height: 1.1,
+                            ),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        "Smart Sync",
-                        style: GoogleFonts.redditSans(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 20,
-                          color: appColors.primary,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                  const SizedBox(width: 12),
                   Switch(
                     value: isEnabled,
                     activeThumbColor: appColors.primary,
@@ -164,7 +176,7 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
               ),
               const SizedBox(height: 8),
               Text(
-                "Automatically download and update your class files so you're always prepared.",
+                tr.smartSyncDesc,
                 softWrap: true,
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
@@ -178,14 +190,13 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
               Divider(color: appColors.borderColor, thickness: 1),
               const SizedBox(height: 8),
 
-              // Tercihler Bölümü
               IgnorePointer(
                 ignoring: !isEnabled,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Download Preferences",
+                      tr.smartSyncDownloadPrefs,
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 15,
@@ -196,7 +207,6 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                     ),
                     const SizedBox(height: 4),
 
-                    // 1. BAŞLIK: Hangi Dosyalar (Which Files)
                     Row(
                       children: [
                         Container(
@@ -226,7 +236,7 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
-                            "Select which files you want to keep up-to-date:",
+                            tr.smartSyncWhichFiles,
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w600,
                               fontSize: 13,
@@ -240,14 +250,12 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                     ),
                     const SizedBox(height: 10),
 
-                    // Hangi Dosyalar Altındaki Seçenekler
                     _prefCheckboxRow(
                       checked: prefs.downloadCurrentClass,
                       enabled: isEnabled,
-                      title: "Current Class",
-                      badge: "(Highly Recommended)",
-                      description:
-                          "Always be prepared for class. Downloads essential files 30 minutes before lesson.",
+                      title: tr.smartSyncCurrentClass,
+                      badge: tr.smartSyncCurrentBadge,
+                      description: tr.smartSyncCurrentDesc,
                       onChanged: (v) => prefs.updateCurrentClass(v),
                       appColors: appColors,
                     ),
@@ -255,9 +263,8 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                     _prefCheckboxRow(
                       checked: prefs.downloadUpcomingClass,
                       enabled: isEnabled,
-                      title: "Upcoming Class",
-                      description:
-                          "Get a head start on next class's materials.",
+                      title: tr.smartSyncUpcomingClass,
+                      description: tr.smartSyncUpcomingDesc,
                       onChanged: (v) => prefs.updateUpcomingClass(v),
                       appColors: appColors,
                     ),
@@ -265,8 +272,8 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                     _prefCheckboxRow(
                       checked: prefs.downloadPreviousClass,
                       enabled: isEnabled,
-                      title: "Previous Class",
-                      description: "Keep last class's file for quick review.",
+                      title: tr.smartSyncPreviousClass,
+                      description: tr.smartSyncPreviousDesc,
                       onChanged: (v) => prefs.updatePreviousClass(v),
                       appColors: appColors,
                     ),
@@ -275,7 +282,6 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                     Divider(color: appColors.borderColor, thickness: 0.5),
                     const SizedBox(height: 12),
 
-                    // 2. BAŞLIK: Dosya Türleri (Types of Files)
                     Row(
                       children: [
                         Container(
@@ -303,7 +309,7 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
-                            "Select types of files to download:",
+                            tr.smartSyncFileTypes,
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w600,
                               fontSize: 13,
@@ -319,7 +325,7 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                     _prefCheckboxRow(
                       checked: prefs.downloadLecture,
                       enabled: isEnabled,
-                      title: "Lecture",
+                      title: tr.smartSyncLecture,
                       onChanged: (v) => prefs.updateLecture(v),
                       appColors: appColors,
                     ),
@@ -327,7 +333,7 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                     _prefCheckboxRow(
                       checked: prefs.downloadPresentation,
                       enabled: isEnabled,
-                      title: "Presentation",
+                      title: tr.smartSyncPresentation,
                       onChanged: (v) => prefs.updatePresentation(v),
                       appColors: appColors,
                     ),
@@ -335,7 +341,7 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                     _prefCheckboxRow(
                       checked: prefs.downloadSeminar,
                       enabled: isEnabled,
-                      title: "Seminar",
+                      title: tr.smartSyncSeminar,
                       onChanged: (v) => prefs.updateSeminar(v),
                       appColors: appColors,
                     ),
@@ -343,7 +349,7 @@ class _SmartSyncCardState extends ConsumerState<SmartSyncCard> {
                     _prefCheckboxRow(
                       checked: prefs.downloadOther,
                       enabled: isEnabled,
-                      title: "Other Files",
+                      title: tr.smartSyncOtherFiles,
                       onChanged: (v) => prefs.updateOther(v),
                       appColors: appColors,
                     ),

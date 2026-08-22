@@ -10,6 +10,7 @@ import 'package:unec_assistant/presentation/components/calendar/event_editor_she
 import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/calendar_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 
 enum CalendarView { month, week, day }
 
@@ -46,23 +47,6 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
   static const _weekDayWidth = 72.0;
   static const _totalGridHeight = 24 * _hourHeight;
   static final _semesterStart = DateTime(2026, 9, 1);
-
-  static const _monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-
-  static const _weekdayAbbr = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
   @override
   void initState() {
@@ -152,12 +136,16 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     return normalizeDay(d).subtract(Duration(days: weekday - 1));
   }
 
-  String _monthName(int month) => _monthNames[month - 1];
+  String _monthName(int month) {
+    final tr = ref.watch(strProvider);
+    return tr.monthsFull[month - 1];
+  }
 
   String _weekCycleLabel(DateTime weekStart) {
+    final tr = ref.watch(strProvider);
     final days = normalizeDay(weekStart).difference(_semesterStart).inDays;
     final cycleIndex = (days ~/ 7) % 2;
-    return cycleIndex == 0 ? 'Üst həftə' : 'Alt həftə';
+    return cycleIndex == 0 ? tr.scheduleWeekTop : tr.scheduleWeekBottom;
   }
 
   double _topForTime(DateTime time) {
@@ -227,10 +215,11 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
   }
 
   Widget _buildViewToggle(AppColors appColors) {
+    final tr = ref.watch(strProvider);
     final options = <(String, CalendarView)>[
-      ('Month', CalendarView.month),
-      ('Week', CalendarView.week),
-      ('Day', CalendarView.day),
+      (tr.scheduleMonthView, CalendarView.month),
+      (tr.scheduleWeekView, CalendarView.week),
+      (tr.scheduleDayView, CalendarView.day),
     ];
 
     return Padding(
@@ -274,6 +263,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
 
   Widget _buildMonthView(AppColors appColors) {
     ref.watch(calendarEventsProvider);
+    final tr = ref.watch(strProvider);
 
     final firstDayOfMonth = DateTime(_focusedDate.year, _focusedDate.month, 1);
     final startOffset = firstDayOfMonth.weekday - 1;
@@ -329,11 +319,11 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            for (final day in _weekdayAbbr)
+            for (final dayName in tr.weekdaysShort)
               Expanded(
                 child: Center(
                   child: Text(
-                    day,
+                    dayName,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w500,
                       fontSize: 12,
@@ -373,6 +363,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
   }
 
   Widget _buildMonthCell(DateTime date, AppColors appColors) {
+    final tr = ref.watch(strProvider);
     final isCurrentMonth = date.month == _focusedDate.month;
     final isToday = _isToday(date);
     final events = _eventsForDate(date);
@@ -426,7 +417,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
               ),
             if (isHbd)
               Text(
-                '🎂 HBD',
+                tr.scheduleHbd,
                 style: GoogleFonts.redditSans(
                   fontSize: 8,
                   color: const Color(0xFF950031),
@@ -511,6 +502,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
   }
 
   Widget _buildWeekPage(DateTime weekStart, AppColors appColors) {
+    final tr = ref.watch(strProvider);
     final weekDays = List.generate(
       7,
       (i) => DateTime(weekStart.year, weekStart.month, weekStart.day + i),
@@ -551,7 +543,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  _weekdayAbbr[day.weekday - 1],
+                                  tr.weekdaysShort[day.weekday - 1],
                                   style: GoogleFonts.redditSans(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12,
@@ -761,6 +753,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     required bool isActive,
     required AppColors appColors,
   }) {
+    final tr = ref.watch(strProvider);
     return GestureDetector(
       onTap: () => _openDetails(e),
       behavior: HitTestBehavior.opaque,
@@ -830,7 +823,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          'Active',
+                          tr.currentClassActive,
                           style: GoogleFonts.redditSans(
                             fontSize: 9,
                             color: const Color(0xFFF8F9FC),
@@ -933,6 +926,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     List<CalendarEvent> events,
     AppColors appColors,
   ) {
+    final tr = ref.watch(strProvider);
     final laidOut = _layoutOverlaps(events, day);
 
     return SingleChildScrollView(
@@ -992,7 +986,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                           left: 16,
                           right: 16,
                           child: Text(
-                            'No events scheduled for this day',
+                            tr.scheduleNoUpcomingEventsToday,
                             textAlign: TextAlign.center,
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w600,
@@ -1049,6 +1043,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     required bool isActive,
     required AppColors appColors,
   }) {
+    final tr = ref.watch(strProvider);
     return GestureDetector(
       onTap: () => _openDetails(e),
       behavior: HitTestBehavior.opaque,
@@ -1119,7 +1114,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          'Active',
+                          tr.currentClassActive,
                           style: GoogleFonts.redditSans(
                             fontSize: 9,
                             color: const Color(0xFFF8F9FC),

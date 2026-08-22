@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../presentation/components/lists/labels.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
+import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../providers/subscriptions_provider.dart';
 
 class ManageChannelsScreen extends ConsumerWidget {
@@ -10,11 +12,13 @@ class ManageChannelsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final channels = ref.watch(subscriptionsProvider);
+    final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     if (channels.isEmpty) {
       return Scaffold(
         backgroundColor: const Color(0xFFF8F9FC),
-        appBar: const CustomAppBar(title: 'Manage Subscribed Channels'),
+        appBar: CustomAppBar(title: tr.channelsTitle),
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -31,7 +35,7 @@ class ManageChannelsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'No subscriptions yet',
+                tr.channelsNoSubs,
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
@@ -40,7 +44,7 @@ class ManageChannelsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Subscribe to channels from the Feed\nto see them here.',
+                tr.channelsSubscribeHint,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w500,
@@ -57,7 +61,7 @@ class ManageChannelsScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FC),
-      appBar: const CustomAppBar(title: 'Manage Subscribed Channels'),
+      appBar: CustomAppBar(title: tr.channelsTitle),
       body: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
         itemCount: channels.length,
@@ -114,7 +118,7 @@ class ManageChannelsScreen extends ConsumerWidget {
                   GestureDetector(
                     onTap: () => ref.read(subscriptionsProvider.notifier).toggleSubscription(channel.channelId, false),
                     child: Text(
-                      'Unsubscribe',
+                      tr.channelsUnsubscribe,
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 11,

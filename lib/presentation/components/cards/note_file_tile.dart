@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../../models/note.dart';
 
@@ -78,7 +79,7 @@ class NoteFileTile extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    data.title.isEmpty ? 'Untitled' : data.title,
+                    data.title.isEmpty ? ref.watch(strProvider).noteUntitled : data.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.redditSans(
@@ -108,7 +109,7 @@ class NoteFileTile extends ConsumerWidget {
                         DateFormat('MMM d').format(data.updatedAt),
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w600,
-                          fontSize: 9,
+                          fontSize: 12,
                           color: appColors.textMuted,
                         ),
                       ),
@@ -117,7 +118,7 @@ class NoteFileTile extends ConsumerWidget {
                         behavior: HitTestBehavior.opaque,
                         child: Icon(
                           Icons.more_horiz_rounded,
-                          size: 16,
+                          size: 20,
                           color: appColors.textSecondary,
                         ),
                       ),

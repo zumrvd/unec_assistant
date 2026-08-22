@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import '../../../models/subject_detail.dart';
 
 class SubjectCreditCard extends ConsumerWidget {
@@ -9,9 +10,9 @@ class SubjectCreditCard extends ConsumerWidget {
 
   const SubjectCreditCard({required this.data, super.key});
 
-  @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
     final iconColor = appColors.warning;
 
     return Container(
@@ -43,7 +44,7 @@ class SubjectCreditCard extends ConsumerWidget {
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  "SUBJECT CREDIT",
+                  tr.subjectCreditTitle,
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w800,
                     fontSize: 16,
@@ -93,7 +94,7 @@ class SubjectCreditCard extends ConsumerWidget {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            "What are credits?",
+                            tr.subjectCreditWhatAre,
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w700,
                               fontSize: 15,
@@ -117,7 +118,7 @@ class SubjectCreditCard extends ConsumerWidget {
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text: "Educational units measuring course ",
+                                text: tr.subjectCreditDesc1,
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 11,
@@ -125,7 +126,7 @@ class SubjectCreditCard extends ConsumerWidget {
                                 ),
                               ),
                               TextSpan(
-                                text: "workload",
+                                text: tr.subjectCreditDesc2,
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 11,
@@ -133,8 +134,7 @@ class SubjectCreditCard extends ConsumerWidget {
                                 ),
                               ),
                               TextSpan(
-                                text:
-                                    ". Subjects with more credits have a greater impact on your overall ",
+                                text: tr.subjectCreditDesc3,
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 11,
@@ -142,7 +142,7 @@ class SubjectCreditCard extends ConsumerWidget {
                                 ),
                               ),
                               TextSpan(
-                                text: "grades.",
+                                text: tr.subjectCreditDesc4,
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 11,

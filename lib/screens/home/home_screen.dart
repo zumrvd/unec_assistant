@@ -17,6 +17,7 @@ import 'package:unec_assistant/providers/notes_provider.dart';
 import 'package:unec_assistant/providers/subject_detail_provider.dart';
 import 'package:unec_assistant/models/calendar_event.dart';
 import '../../presentation/components/lists/labels.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -25,6 +26,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
     final posts = ref.watch(feedPostsProvider);
+    final tr = ref.watch(strProvider);
     final recentFunction = ref.watch(recentFunctionProvider);
 
     // Section Visibility Logic
@@ -64,7 +66,7 @@ class HomeScreen extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: 35),
         children: [
           if (isClassAttendanceVisible) ...[
-            const SectionLabel('Class & Attendance'),
+            SectionLabel(tr.sectionClassAttendance),
             const SizedBox(height: 10),
             CurrentClassCard(
               onTap: () => context.go('/functions/${recentFunction.title}'),
@@ -75,13 +77,13 @@ class HomeScreen extends ConsumerWidget {
           ],
 
           if (hasRecentGrade) ...[
-            const SectionLabel('Academic'),
+            SectionLabel(tr.sectionAcademic),
             const RecentGradeCard(),
             const SizedBox(height: 10),
           ],
 
           if (isNewsFeedVisible) ...[
-            const SectionLabel('News Feed'),
+            SectionLabel(tr.sectionNewsFeed),
             const SizedBox(height: 10),
             PostCard(
               key: ValueKey(posts.first.id),
@@ -110,7 +112,7 @@ class HomeScreen extends ConsumerWidget {
           ],
 
           if (isPersonalVisible) ...[
-            const SectionLabel('Personal'),
+            SectionLabel(tr.sectionPersonal),
             const RecentNoteCard(),
           ],
         ],

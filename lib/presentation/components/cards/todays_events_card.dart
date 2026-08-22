@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/models/calendar_event.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 
 class TodaysEventsCard extends ConsumerStatefulWidget {
   final List<CalendarEvent> events;
@@ -142,6 +143,7 @@ class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
   @override
   Widget build(BuildContext context) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
     final int classCount = widget.events
         .where((e) => e.type == EventType.classEvent)
         .length;
@@ -170,31 +172,8 @@ class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
               nowMin
         : 0;
 
-    final List<String> weekdays = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday',
-    ];
-    final List<String> months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
     final String todayLabel =
-        "${weekdays[_now.weekday - 1]}, ${months[_now.month - 1]} ${_now.day}";
+        "${tr.weekdays[_now.weekday - 1]}, ${tr.monthsFull[_now.month - 1]} ${_now.day}";
 
     return Container(
       width: 300,
@@ -242,7 +221,7 @@ class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      "classes",
+                      tr.scheduleClasses,
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 12,
@@ -284,7 +263,7 @@ class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      "personal plans",
+                      tr.schedulePersonalPlans,
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 12,
@@ -305,7 +284,7 @@ class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                "Active",
+                tr.currentClassActive,
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 12,
@@ -322,7 +301,7 @@ class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "UP NEXT",
+                tr.currentClassUpNext,
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w600,
                   fontSize: 14,
@@ -340,7 +319,7 @@ class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    "$minutesUntilNext minutes later",
+                    tr.scheduleMinutesLater(minutesUntilNext),
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 12,
@@ -357,7 +336,7 @@ class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
             Padding(
               padding: const EdgeInsets.only(top: 4),
               child: Text(
-                "No upcoming events today",
+                tr.scheduleNoUpcomingEventsToday,
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w600,
                   fontSize: 12,

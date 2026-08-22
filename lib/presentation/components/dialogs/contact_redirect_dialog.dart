@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../models/about_app_info.dart';
 
@@ -26,6 +27,7 @@ class _ContactRedirectDialogContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return Dialog(
       backgroundColor: appColors.cardBackground,
@@ -61,7 +63,7 @@ class _ContactRedirectDialogContent extends ConsumerWidget {
             ),
             const SizedBox(height: 14),
             Text(
-              "Open ${data.label}?",
+              tr.dialogOpenTitle(data.label),
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w700,
                 fontSize: 15,
@@ -70,7 +72,7 @@ class _ContactRedirectDialogContent extends ConsumerWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              "You'll be redirected to ${data.label} to contact the developer.",
+              tr.dialogOpenBody(data.label),
               textAlign: TextAlign.center,
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w500,
@@ -94,7 +96,7 @@ class _ContactRedirectDialogContent extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       child: Center(
                         child: Text(
-                          "Cancel",
+                          tr.dialogCancel,
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w700,
                             fontSize: 12,
@@ -124,7 +126,7 @@ class _ContactRedirectDialogContent extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       child: Center(
                         child: Text(
-                          "Open",
+                          tr.dialogOpen,
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w700,
                             fontSize: 12,

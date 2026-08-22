@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -13,10 +14,10 @@ class FeedbackCard extends ConsumerStatefulWidget {
 }
 
 class _FeedbackCardState extends ConsumerState<FeedbackCard> {
-  String _selectedTarget = 'To Faculty';
+  String _selectedTarget = '';
   final TextEditingController _feedbackController = TextEditingController();
 
-  static const _targetOptions = ['To Faculty', 'To Developer Team', 'To Other'];
+  // Target options now use translated strings
 
   @override
   void dispose() {
@@ -65,6 +66,7 @@ class _FeedbackCardState extends ConsumerState<FeedbackCard> {
   @override
   Widget build(BuildContext context) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return Container(
       width: double.infinity,
@@ -83,9 +85,9 @@ class _FeedbackCardState extends ConsumerState<FeedbackCard> {
             spacing: 10,
             runSpacing: 10,
             children: [
-              _targetToggle(_targetOptions[0], appColors),
-              _targetToggle(_targetOptions[1], appColors),
-              _targetToggle(_targetOptions[2], appColors),
+              _targetToggle(tr.feedbackToFaculty, appColors),
+              _targetToggle(tr.feedbackToDev, appColors),
+              _targetToggle(tr.feedbackToOther, appColors),
             ],
           ),
           const SizedBox(height: 10),
@@ -109,7 +111,7 @@ class _FeedbackCardState extends ConsumerState<FeedbackCard> {
                 color: appColors.textPrimary,
               ),
               decoration: InputDecoration(
-                hintText: 'Write your feedback here...',
+                hintText: tr.feedbackHint,
                 hintStyle: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 12,
@@ -141,7 +143,7 @@ class _FeedbackCardState extends ConsumerState<FeedbackCard> {
                         TextSpan(
                           children: [
                             TextSpan(
-                              text: 'Your information is ',
+                              text: tr.feedbackPrivacyNote1,
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 12,
@@ -149,7 +151,7 @@ class _FeedbackCardState extends ConsumerState<FeedbackCard> {
                               ),
                             ),
                             TextSpan(
-                              text: 'never shared',
+                              text: tr.feedbackPrivacyNeverShared,
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 12,
@@ -157,7 +159,7 @@ class _FeedbackCardState extends ConsumerState<FeedbackCard> {
                               ),
                             ),
                             TextSpan(
-                              text: '. All feedbacks are completely ',
+                              text: tr.feedbackPrivacyNote2,
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 12,
@@ -165,7 +167,7 @@ class _FeedbackCardState extends ConsumerState<FeedbackCard> {
                               ),
                             ),
                             TextSpan(
-                              text: 'anonymous',
+                              text: tr.feedbackPrivacyAnonymous,
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 12,
@@ -173,7 +175,7 @@ class _FeedbackCardState extends ConsumerState<FeedbackCard> {
                               ),
                             ),
                             TextSpan(
-                              text: ' and used only for improvement.',
+                              text: tr.feedbackPrivacyNote3,
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 12,
@@ -205,7 +207,7 @@ class _FeedbackCardState extends ConsumerState<FeedbackCard> {
                     ),
                   ),
                   child: Text(
-                    'Submit',
+                    tr.feedbackSubmit,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 13,
@@ -221,7 +223,7 @@ class _FeedbackCardState extends ConsumerState<FeedbackCard> {
             onTap: _launchLearnMore,
             behavior: HitTestBehavior.opaque,
             child: Text(
-              'Learn more about anonymous feedbacks',
+              tr.feedbackLearnMore,
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w700,
                 fontSize: 12,

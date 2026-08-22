@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
+import 'package:unec_assistant/l10n/translations.dart';
 import '../../../models/lecture_material.dart';
 import '../../../providers/materials_provider.dart';
 
@@ -33,7 +35,7 @@ class _LectureMaterialsCardState extends ConsumerState<LectureMaterialsCard> {
     stops: [0.0, 0.5, 1.0],
   );
 
-  Widget _fileRow(LectureFile file, AppColors appColors) {
+  Widget _fileRow(LectureFile file, AppColors appColors, AppStrings tr) {
     final IconData icon =
         kFileTypeIcons[file.fileType] ?? Icons.insert_drive_file_rounded;
     final Color color =
@@ -63,7 +65,7 @@ class _LectureMaterialsCardState extends ConsumerState<LectureMaterialsCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                file.fileTitle,
+                tr.localizeLectureLabel(file.fileTitle),
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
@@ -106,6 +108,7 @@ class _LectureMaterialsCardState extends ConsumerState<LectureMaterialsCard> {
   @override
   Widget build(BuildContext context) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return Container(
       width: double.infinity,
@@ -129,7 +132,7 @@ class _LectureMaterialsCardState extends ConsumerState<LectureMaterialsCard> {
                   child: Text.rich(
                     TextSpan(
                       children: [
-                        TextSpan(text: "${widget.data.lectureLabel}: "),
+                        TextSpan(text: "${tr.localizeLectureLabel(widget.data.lectureLabel)}: "),
                         TextSpan(text: widget.data.lectureTitle),
                       ],
                     ),
@@ -170,7 +173,7 @@ class _LectureMaterialsCardState extends ConsumerState<LectureMaterialsCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Materials bundle for ${widget.data.lectureLabel}:",
+                        tr.subjectMaterialsBundleFor(tr.localizeLectureLabel(widget.data.lectureLabel)),
                         style: GoogleFonts.redditSans(
                           fontWeight: FontWeight.w700,
                           fontSize: 10,
@@ -200,7 +203,7 @@ class _LectureMaterialsCardState extends ConsumerState<LectureMaterialsCard> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  widget.data.bundleFileName,
+                                  tr.localizeLectureLabel(widget.data.bundleFileName),
                                   overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.redditSans(
                                     fontWeight: FontWeight.w700,
@@ -238,7 +241,7 @@ class _LectureMaterialsCardState extends ConsumerState<LectureMaterialsCard> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                "Download Bundle",
+                                tr.teachingMaterialsDownloadBundle,
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 10,
@@ -260,7 +263,7 @@ class _LectureMaterialsCardState extends ConsumerState<LectureMaterialsCard> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  "Bundle including :",
+                  tr.teachingMaterialsBundleIncluding,
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 10,
@@ -275,7 +278,7 @@ class _LectureMaterialsCardState extends ConsumerState<LectureMaterialsCard> {
                   separatorBuilder: (context, index) =>
                       const SizedBox(height: 8),
                   itemBuilder: (context, index) =>
-                      _fileRow(widget.data.files[index], appColors),
+                      _fileRow(widget.data.files[index], appColors, tr),
                 ),
               ],
             ),

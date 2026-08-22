@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import 'package:uuid/uuid.dart';
 import '../../../presentation/components/lists/labels.dart';
 import '../../../presentation/components/inputs/app_search_bar.dart';
@@ -54,9 +55,9 @@ class _NoteFilesScreenState extends ConsumerState<NoteFilesScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
           ),
-          title: const SectionLabel('Delete Note?'),
+          title: SectionLabel(ref.read(strProvider).notesDeleteTitle),
           content: Text(
-            'Are you sure you want to delete "${note.title.isEmpty ? 'Untitled' : note.title}"? This action cannot be undone.',
+            ref.read(strProvider).notesDeleteDesc(note.title.isEmpty ? ref.read(strProvider).noteUntitled : note.title),
             style: GoogleFonts.redditSans(
               fontSize: 14,
               color: appColors.textSecondary,
@@ -69,7 +70,7 @@ class _NoteFilesScreenState extends ConsumerState<NoteFilesScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Cancel',
+                  ref.read(strProvider).notesDeleteCancel,
                   style: GoogleFonts.redditSans(color: appColors.textSecondary),
                 ),
               ),
@@ -83,7 +84,7 @@ class _NoteFilesScreenState extends ConsumerState<NoteFilesScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Delete',
+                  ref.read(strProvider).notesDeleteConfirm,
                   style: GoogleFonts.redditSans(
                     color: appColors.error,
                     fontWeight: FontWeight.bold,
@@ -116,7 +117,7 @@ class _NoteFilesScreenState extends ConsumerState<NoteFilesScreen> {
           children: [
             AppSearchBar(
               controller: _searchController,
-              hintText: 'Search in folder...',
+              hintText: ref.watch(strProvider).notesSearchFolderHint,
               onChanged: (q) => setState(() => _searchQuery = q),
             ),
             const SizedBox(height: 25),
@@ -126,8 +127,8 @@ class _NoteFilesScreenState extends ConsumerState<NoteFilesScreen> {
                   padding: const EdgeInsets.only(top: 40),
                   child: Text(
                     _searchQuery.isEmpty
-                        ? "No notes in this folder"
-                        : "No notes matching your search",
+                        ? ref.watch(strProvider).notesEmptyFolder
+                        : ref.watch(strProvider).notesEmptySearch,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 14,

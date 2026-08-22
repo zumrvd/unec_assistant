@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
+import 'package:unec_assistant/l10n/translations.dart';
 import 'package:go_router/go_router.dart';
 import '../../models/post.dart';
 import '../../models/channel.dart';
@@ -12,6 +14,8 @@ import '../../presentation/components/dialogs/discard_changes_dialog.dart';
 import '../../providers/post_request_provider.dart';
 import '../../providers/signature_provider.dart';
 import '../../utils/app_toast.dart';
+import '../../providers/theme_provider.dart';
+import '../../presentation/theme/app_colors.dart';
 
 enum CreatePostView { editor, pending, approved }
 
@@ -72,16 +76,18 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     });
   }
 
+  AppStrings get _tr => ref.read(strProvider);
+
   void _submitRequest() {
     if (_bodyController.text.isEmpty ||
         _emailController.text.isEmpty ||
         _nameController.text.isEmpty) {
-      AppToast.show(context, 'Please fill all required fields');
+      AppToast.show(context, _tr.createPostFillFields);
       return;
     }
 
     if (!_emailController.text.contains('@')) {
-      AppToast.show(context, 'Please enter a valid email');
+      AppToast.show(context, _tr.createPostInvalidEmail);
       return;
     }
 
@@ -112,39 +118,42 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        title: Text('Request Sent',
-            style: GoogleFonts.redditSans(fontWeight: FontWeight.bold)),
-        content: Text(
-          'Your post has been sent to audits (zverdiyevaa9@gmail.com). You will be notified once it is approved.',
-          style: GoogleFonts.redditSans(),
-        ),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              Navigator.pop(context); // Close dialog
-              if (mounted) {
-                context.pop(); // Return to feed using go_router
-              }
-            },
-            behavior: HitTestBehavior.opaque,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Text('OK',
-                  style: GoogleFonts.redditSans(
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF0569FF))),
-            ),
+      builder: (context) {
+        final appColors = ref.watch(appColorsProvider);
+        return AlertDialog(
+          backgroundColor: appColors.surface,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          title: Text(_tr.createPostRequestSentTitle,
+              style: GoogleFonts.redditSans(fontWeight: FontWeight.bold, color: appColors.textPrimary)),
+          content: Text(
+            _tr.createPostSuccessDesc,
+            style: GoogleFonts.redditSans(color: appColors.textSecondary),
           ),
-        ],
-      ),
+          actions: [
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+                if (mounted) {
+                  context.pop();
+                }
+              },
+              behavior: HitTestBehavior.opaque,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: Text(_tr.createPostOk,
+                    style: GoogleFonts.redditSans(
+                        fontWeight: FontWeight.w700,
+                        color: appColors.primary)),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    // Initial auto-fill from most recent signature if empty
     ref.listen(signatureProvider, (previous, next) {
       if (next.isNotEmpty &&
           _nameController.text.isEmpty &&
@@ -153,6 +162,8 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
         _applySignature(next.last);
       }
     });
+
+    final appColors = ref.watch(appColorsProvider);
 
     return PopScope(
       canPop: false,
@@ -163,15 +174,15 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
         await _onBack(context);
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFF8F9FC),
+        backgroundColor: appColors.background,
         appBar: CustomAppBar(
           title: _getAppBarTitle(),
           onBackTap: () => _onBack(context),
         ),
         body: Column(
           children: [
-            _buildViewToggle(),
-            Expanded(child: _buildCurrentView()),
+            _buildViewToggle(appColors),
+            Expanded(child: _buildCurrentView(appColors)),
           ],
         ),
       ),
@@ -181,26 +192,26 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
   String _getAppBarTitle() {
     switch (_currentView) {
       case CreatePostView.editor:
-        return 'Create Post';
+        return _tr.createPostTitle;
       case CreatePostView.pending:
-        return 'Waiting Approval';
+        return _tr.createPostWaitingApproval;
       case CreatePostView.approved:
-        return 'Shared Posts';
+        return _tr.createPostSharedPosts;
     }
   }
 
-  Widget _buildViewToggle() {
+  Widget _buildViewToggle(AppColors appColors) {
     final options = <(String, CreatePostView)>[
-      ('Editor', CreatePostView.editor),
-      ('Waiting', CreatePostView.pending),
-      ('Shared', CreatePostView.approved),
+      (_tr.createPostEditorTab, CreatePostView.editor),
+      (_tr.createPostWaitingTab, CreatePostView.pending),
+      (_tr.createPostSharedTab, CreatePostView.approved),
     ];
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(bottom: BorderSide(color: Color(0xFFE0E4F0), width: 1)),
+      decoration: BoxDecoration(
+        color: appColors.surface,
+        border: Border(bottom: BorderSide(color: appColors.borderColor, width: 1)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -213,7 +224,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
                   color: _currentView == options[i].$2
-                      ? const Color(0xFF0569FF)
+                      ? appColors.primary
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -223,8 +234,8 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
                     color: _currentView == options[i].$2
-                        ? Colors.white
-                        : const Color(0xFF838A97),
+                        ? appColors.textInverse
+                        : appColors.textSecondary,
                   ),
                 ),
               ),
@@ -235,22 +246,22 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     );
   }
 
-  Widget _buildCurrentView() {
+  Widget _buildCurrentView(AppColors appColors) {
     switch (_currentView) {
       case CreatePostView.editor:
-        return _buildEditorView();
+        return _buildEditorView(appColors);
       case CreatePostView.pending:
-        return _buildPendingView();
+        return _buildPendingView(appColors);
       case CreatePostView.approved:
-        return _buildApprovedView();
+        return _buildApprovedView(appColors);
     }
   }
 
-  Widget _buildEditorView() {
+  Widget _buildEditorView(AppColors appColors) {
     final previewChannel = Channel(
       channelId: 'preview',
       channelName:
-          _nameController.text.isEmpty ? 'Your Name' : _nameController.text,
+          _nameController.text.isEmpty ? _tr.createPostYourNamePlaceholder : _nameController.text,
       category: _selectedCategory,
       isVerified: false,
     );
@@ -259,7 +270,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       postId: 'preview',
       channelId: 'preview',
       bodyText: _bodyController.text.isEmpty
-          ? 'Your post content will appear here...'
+          ? _tr.createPostPreviewBodyPlaceholder
           : _bodyController.text,
       feedType: _getFeedTypeFromCategory(_selectedCategory),
       postedAt: DateTime.now(),
@@ -274,15 +285,16 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildAuditInfoCard(),
+          _buildAuditInfoCard(appColors),
           const SizedBox(height: 25),
-          _buildSectionTitle('SENDER DETAILS'),
+          _buildSectionTitle(_tr.createPostSenderDetails, appColors),
           const SizedBox(height: 12),
-          _buildSignatureDropdown(),
+          _buildSignatureDropdown(appColors),
           const SizedBox(height: 12),
           _buildTextField(
+            appColors: appColors,
             controller: _nameController,
-            hintText: 'Full Name',
+            hintText: _tr.createPostFullNameHint,
             icon: Icons.person_outline_rounded,
             onChanged: (val) {
               setState(() => _selectedSignatureId = null);
@@ -290,8 +302,9 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
           ),
           const SizedBox(height: 12),
           _buildTextField(
+            appColors: appColors,
             controller: _emailController,
-            hintText: 'Your Email (Sender)',
+            hintText: _tr.createPostEmailHint,
             icon: Icons.email_outlined,
             keyboardType: TextInputType.emailAddress,
             onChanged: (val) {
@@ -299,22 +312,23 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
             },
           ),
           const SizedBox(height: 12),
-          _buildSignatureToggle(),
+          _buildSignatureToggle(appColors),
           const SizedBox(height: 25),
-          _buildSectionTitle('POST CONTENT'),
+          _buildSectionTitle(_tr.createPostPostContent, appColors),
           const SizedBox(height: 12),
-          _buildCategorySelector(),
+          _buildCategorySelector(appColors),
           const SizedBox(height: 12),
           _buildTextField(
+            appColors: appColors,
             controller: _bodyController,
-            hintText: 'What\'s on your mind?',
+            hintText: _tr.createPostContentHint,
             maxLines: 5,
             onChanged: (_) => setState(() {}),
           ),
           const SizedBox(height: 12),
-          _buildAttachmentButton(),
+          _buildAttachmentButton(appColors),
           const SizedBox(height: 35),
-          _buildSectionTitle('LIVE PREVIEW'),
+          _buildSectionTitle(_tr.createPostLivePreview, appColors),
           const SizedBox(height: 15),
           PostCard(
             data: previewPost,
@@ -329,14 +343,14 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
             onShareTap: () {},
           ),
           const SizedBox(height: 40),
-          _buildSubmitButton(),
+          _buildSubmitButton(appColors),
           const SizedBox(height: 40),
         ],
       ),
     );
   }
 
-  Widget _buildSignatureDropdown() {
+  Widget _buildSignatureDropdown(AppColors appColors) {
     final signatures = ref.watch(signatureProvider);
     if (signatures.isEmpty) return const SizedBox.shrink();
 
@@ -344,17 +358,18 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: appColors.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE0E4F0)),
+        border: Border.all(color: appColors.borderColor),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: _selectedSignatureId,
-          hint: Text('Select saved signature', 
-            style: GoogleFonts.redditSans(fontSize: 14, color: const Color(0xFF838A97))),
+          dropdownColor: appColors.surface,
+          hint: Text(_tr.createPostSelectSignatureHint, 
+            style: GoogleFonts.redditSans(fontSize: 14, color: appColors.textSecondary)),
           isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF838A97)),
+          icon: Icon(Icons.keyboard_arrow_down_rounded, color: appColors.textSecondary),
           items: signatures.map((sig) {
             return DropdownMenuItem<String>(
               value: sig.id,
@@ -363,7 +378,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                   Expanded(
                     child: Text(
                       sig.name,
-                      style: GoogleFonts.redditSans(fontSize: 14, color: const Color(0xFF1F1F1F)),
+                      style: GoogleFonts.redditSans(fontSize: 14, color: appColors.textPrimary),
                     ),
                   ),
                   GestureDetector(
@@ -374,9 +389,9 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                       }
                     },
                     behavior: HitTestBehavior.opaque,
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      child: Icon(Icons.delete_outline_rounded, size: 18, color: Color(0xFFFF4D4D)),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      child: Icon(Icons.delete_outline_rounded, size: 18, color: appColors.danger),
                     ),
                   ),
                 ],
@@ -394,12 +409,12 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     );
   }
 
-  Widget _buildPendingView() {
+  Widget _buildPendingView(AppColors appColors) {
     final pendingRequests = ref.watch(pendingRequestsProvider);
 
     if (pendingRequests.isEmpty) {
-      return _buildEmptyState('Waiting for your first approval?',
-          'Send a post for review and it will appear here!');
+      return _buildEmptyState(_tr.createPostPendingEmptyTitle,
+          _tr.createPostPendingEmptyDesc, appColors);
     }
 
     return ListView.separated(
@@ -408,16 +423,16 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       separatorBuilder: (context, index) => const SizedBox(height: 15),
       itemBuilder: (context, index) {
         final req = pendingRequests[index];
-        return _buildRequestTile(req, Icons.access_time_rounded, Colors.amber);
+        return _buildRequestTile(req, Icons.access_time_rounded, appColors.warning, appColors);
       },
     );
   }
 
-  Widget _buildApprovedView() {
+  Widget _buildApprovedView(AppColors appColors) {
     final approvedRequests = ref.watch(approvedRequestsProvider);
 
     if (approvedRequests.isEmpty) {
-      return _buildEmptyState('No shared posts yet.', 'Create your first post now!');
+      return _buildEmptyState(_tr.createPostSharedEmptyTitle, _tr.createPostSharedEmptyDesc, appColors);
     }
 
     return ListView.separated(
@@ -426,18 +441,18 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
       separatorBuilder: (context, index) => const SizedBox(height: 15),
       itemBuilder: (context, index) {
         final req = approvedRequests[index];
-        return _buildRequestTile(req, Icons.check_circle_outline_rounded, Colors.green);
+        return _buildRequestTile(req, Icons.check_circle_outline_rounded, appColors.success, appColors);
       },
     );
   }
 
-  Widget _buildRequestTile(PostRequest req, IconData icon, Color color) {
+  Widget _buildRequestTile(PostRequest req, IconData icon, Color color, AppColors appColors) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: appColors.surface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFE0E4F0)),
+        border: Border.all(color: appColors.borderColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -452,7 +467,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 14,
-                    color: const Color(0xFF1F1F1F),
+                    color: appColors.textPrimary,
                   ),
                 ),
               ),
@@ -460,7 +475,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 _timeAgo(req.createdAt),
                 style: GoogleFonts.redditSans(
                   fontSize: 11,
-                  color: const Color(0xFF838A97),
+                  color: appColors.textSecondary,
                 ),
               ),
             ],
@@ -472,7 +487,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
             overflow: TextOverflow.ellipsis,
             style: GoogleFonts.redditSans(
               fontSize: 13,
-              color: const Color(0xFF1F1F1F),
+              color: appColors.textPrimary,
               height: 1.4,
             ),
           ),
@@ -481,14 +496,14 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     );
   }
 
-  Widget _buildEmptyState(String title, String message) {
+  Widget _buildEmptyState(String title, String message, AppColors appColors) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(40),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.post_add_rounded, size: 64, color: Color(0xFFE0E4F0)),
+            Icon(Icons.post_add_rounded, size: 64, color: appColors.textMuted),
             const SizedBox(height: 20),
             Text(
               title,
@@ -496,7 +511,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w700,
                 fontSize: 16,
-                color: const Color(0xFF1F1F1F),
+                color: appColors.textPrimary,
               ),
             ),
             const SizedBox(height: 8),
@@ -505,7 +520,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
               textAlign: TextAlign.center,
               style: GoogleFonts.redditSans(
                 fontSize: 13,
-                color: const Color(0xFF838A97),
+                color: appColors.textSecondary,
               ),
             ),
             const SizedBox(height: 24),
@@ -516,12 +531,12 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0569FF),
+                    color: appColors.primary,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    'Go to Editor',
-                    style: GoogleFonts.redditSans(fontWeight: FontWeight.w600, color: Colors.white),
+                    _tr.createPostGoToEditor,
+                    style: GoogleFonts.redditSans(fontWeight: FontWeight.w600, color: appColors.textInverse),
                   ),
                 ),
               ),
@@ -533,46 +548,45 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
 
   String _timeAgo(DateTime dateTime) {
     final diff = DateTime.now().difference(dateTime);
-    if (diff.inDays > 0) return '${diff.inDays}d ago';
-    if (diff.inHours > 0) return '${diff.inHours}h ago';
-    if (diff.inMinutes > 0) return '${diff.inMinutes}m ago';
-    return 'Just now';
+    if (diff.inDays > 0) return _tr.createPostDaysAgo(diff.inDays);
+    if (diff.inHours > 0) return _tr.createPostHoursAgo(diff.inHours);
+    if (diff.inMinutes > 0) return _tr.createPostMinsAgo(diff.inMinutes);
+    return _tr.createPostJustNow;
   }
 
-  Widget _buildAuditInfoCard() {
+  Widget _buildAuditInfoCard(AppColors appColors) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFE8F0FE),
+        color: appColors.primaryContainer,
         borderRadius: BorderRadius.circular(16),
-        border:
-            Border.all(color: const Color(0xFF0569FF).withValues(alpha: 0.1)),
+        border: Border.all(color: appColors.primary.withValues(alpha: 0.1)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.info_outline_rounded,
-              color: Color(0xFF0569FF), size: 22),
+          Icon(Icons.info_outline_rounded,
+              color: appColors.primary, size: 22),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Audit Approval Process',
+                  _tr.createPostAuditInfoTitle,
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 14,
-                    color: const Color(0xFF0569FF),
+                    color: appColors.primary,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'All posts are sent to our team for verification. Once approved, your post will be visible in the Discover feed.',
+                  _tr.createPostAuditInfoDesc,
                   style: GoogleFonts.redditSans(
                     fontWeight: FontWeight.w500,
                     fontSize: 12,
-                    color: const Color(0xFF4285F4),
+                    color: appColors.textPrimary,
                     height: 1.4,
                   ),
                 ),
@@ -584,19 +598,20 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(String title, AppColors appColors) {
     return Text(
       title,
       style: GoogleFonts.redditSans(
         fontWeight: FontWeight.w800,
         fontSize: 11,
-        color: const Color(0xFF838A97),
+        color: appColors.textSecondary,
         letterSpacing: 1.2,
       ),
     );
   }
 
   Widget _buildTextField({
+    required AppColors appColors,
     required TextEditingController controller,
     required String hintText,
     IconData? icon,
@@ -606,9 +621,9 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: appColors.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE0E4F0)),
+        border: Border.all(color: appColors.borderColor),
       ),
       child: TextField(
         controller: controller,
@@ -616,13 +631,13 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
         keyboardType: keyboardType,
         onChanged: onChanged,
         style:
-            GoogleFonts.redditSans(fontSize: 14, color: const Color(0xFF1F1F1F)),
+            GoogleFonts.redditSans(fontSize: 14, color: appColors.textPrimary),
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: GoogleFonts.redditSans(
-              color: const Color(0xFF838A97), fontSize: 14),
+              color: appColors.textSecondary, fontSize: 14),
           prefixIcon: icon != null
-              ? Icon(icon, color: const Color(0xFF838A97), size: 20)
+              ? Icon(icon, color: appColors.textSecondary, size: 20)
               : null,
           border: InputBorder.none,
           contentPadding: const EdgeInsets.all(16),
@@ -631,27 +646,28 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     );
   }
 
-  Widget _buildCategorySelector() {
+  Widget _buildCategorySelector(AppColors appColors) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: appColors.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE0E4F0)),
+        border: Border.all(color: appColors.borderColor),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<ChannelCategory>(
           value: _selectedCategory,
+          dropdownColor: appColors.surface,
           isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down_rounded,
-              color: Color(0xFF838A97)),
+          icon: Icon(Icons.keyboard_arrow_down_rounded,
+              color: appColors.textSecondary),
           items: ChannelCategory.values.map((cat) {
             return DropdownMenuItem(
               value: cat,
               child: Text(
                 _getCategoryLabel(cat),
                 style: GoogleFonts.redditSans(
-                    fontSize: 14, color: const Color(0xFF1F1F1F)),
+                    fontSize: 14, color: appColors.textPrimary),
               ),
             );
           }).toList(),
@@ -668,31 +684,31 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     );
   }
 
-  Widget _buildAttachmentButton() {
+  Widget _buildAttachmentButton(AppColors appColors) {
     return GestureDetector(
       onTap: () {
-      AppToast.show(context, 'Image selection will be implemented soon');
+      AppToast.show(context, _tr.createPostAttachmentNotImpl);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: const Color(0xFFF0F4FF),
+          color: appColors.primaryContainer,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-              color: const Color(0xFF0569FF).withValues(alpha: 0.2),
+              color: appColors.primary.withValues(alpha: 0.2),
               style: BorderStyle.solid),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.image_outlined, color: Color(0xFF0569FF), size: 20),
+            Icon(Icons.image_outlined, color: appColors.primary, size: 20),
             const SizedBox(width: 10),
             Text(
-              'Add Attachment',
+              _tr.createPostAddAttachment,
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w700,
                 fontSize: 13,
-                color: const Color(0xFF0569FF),
+                color: appColors.primary,
               ),
             ),
           ],
@@ -701,18 +717,18 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     );
   }
 
-  Widget _buildSubmitButton() {
+  Widget _buildSubmitButton(AppColors appColors) {
     return GestureDetector(
       onTap: _submitRequest,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: const Color(0xFF0569FF),
+          color: appColors.primary,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF0569FF).withValues(alpha: 0.3),
+              color: appColors.primary.withValues(alpha: 0.3),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -720,11 +736,11 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
         ),
         child: Center(
           child: Text(
-            'Send for Approval',
+            _tr.createPostSubmitBtn,
             style: GoogleFonts.redditSans(
               fontWeight: FontWeight.w700,
               fontSize: 15,
-              color: Colors.white,
+              color: appColors.textInverse,
             ),
           ),
         ),
@@ -732,35 +748,35 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
     );
   }
 
-  Widget _buildSignatureToggle() {
+  Widget _buildSignatureToggle(AppColors appColors) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: appColors.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE0E4F0)),
+        border: Border.all(color: appColors.borderColor),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
-              const Icon(Icons.history_edu_rounded,
-                  color: Color(0xFF838A97), size: 20),
+              Icon(Icons.history_edu_rounded,
+                  color: appColors.textSecondary, size: 20),
               const SizedBox(width: 12),
               Text(
-                'Save as signature',
+                _tr.createPostSaveSignature,
                 style: GoogleFonts.redditSans(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: const Color(0xFF1F1F1F),
+                  color: appColors.textPrimary,
                 ),
               ),
             ],
           ),
           Switch(
             value: _saveAsSignature,
-            activeThumbColor: const Color(0xFF0569FF),
+            activeThumbColor: appColors.primary,
             onChanged: (val) => setState(() => _saveAsSignature = val),
           ),
         ],
@@ -771,11 +787,11 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
   String _getCategoryLabel(ChannelCategory category) {
     switch (category) {
       case ChannelCategory.official:
-        return 'Official Announcement';
+        return _tr.createPostCatOfficial;
       case ChannelCategory.clubs:
-        return 'Club Update';
+        return _tr.createPostCatClub;
       case ChannelCategory.devTeam:
-        return 'Dev Team Log';
+        return _tr.createPostCatDev;
     }
   }
 

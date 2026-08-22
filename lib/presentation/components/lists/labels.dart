@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../providers/about_app_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 
 class SectionLabel extends ConsumerWidget {
   final String label;
@@ -29,11 +30,12 @@ class AboutAppFooter extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          kFooterCopyright,
+          tr.footerCopyright,
           textAlign: TextAlign.center,
           style: GoogleFonts.redditSans(
             fontWeight: FontWeight.w500,
@@ -43,7 +45,7 @@ class AboutAppFooter extends ConsumerWidget {
         ),
         const SizedBox(height: 2),
         Text(
-          kFooterRights,
+          tr.footerRights,
           textAlign: TextAlign.center,
           style: GoogleFonts.redditSans(
             fontWeight: FontWeight.w500,
@@ -55,12 +57,12 @@ class AboutAppFooter extends ConsumerWidget {
         Text.rich(
           TextSpan(
             children: [
-              const TextSpan(text: 'Bu tətbiq '),
+              TextSpan(text: tr.footerMadeWithPre),
               TextSpan(
-                text: 'UNEC tələbələri üçün',
+                text: tr.footerMadeWithItalic,
                 style: GoogleFonts.redditSans(fontStyle: FontStyle.italic),
               ),
-              const TextSpan(text: ' sevgi ilə hazırlanmışdır <3'),
+              TextSpan(text: tr.footerMadeWithPost),
             ],
           ),
           textAlign: TextAlign.center,

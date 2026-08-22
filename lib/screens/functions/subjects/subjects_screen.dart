@@ -7,7 +7,7 @@ import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../presentation/components/buttons/subjects/download_curriculum_button.dart';
 import '../../../presentation/components/cards/semester_info_card.dart';
 import '../../../providers/subject_detail_provider.dart';
-
+import 'package:unec_assistant/providers/locale_provider.dart';
 import 'package:unec_assistant/presentation/components/lists/labels.dart';
 
 class SubjectsScreen extends ConsumerWidget {
@@ -18,10 +18,11 @@ class SubjectsScreen extends ConsumerWidget {
     final allSubjects = ref.watch(allSubjectsProvider);
     final progDetail = allSubjects.firstWhere((s) => s.subjectId == '1');
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return Scaffold(
       backgroundColor: appColors.background,
-      appBar: const CustomAppBar(title: 'Subjects'),
+      appBar: CustomAppBar(title: tr.subjectsScreenTitle),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 16),
         child: Column(
@@ -30,7 +31,7 @@ class SubjectsScreen extends ConsumerWidget {
           children: [
             SemesterInfoCard(data: progDetail),
             DownloadCurriculumButton(onTap: () {}),
-            SectionLabel('All subjects  ${allSubjects.length}'),
+            SectionLabel(tr.subjectsAllSubjects(allSubjects.length)),
             ...allSubjects.map(
               (subject) => SubjectButton(
                 subject: subject,

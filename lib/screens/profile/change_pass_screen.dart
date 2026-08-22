@@ -8,6 +8,7 @@ import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/user_security_provider.dart';
 import 'package:unec_assistant/presentation/components/lists/labels.dart';
 import 'package:unec_assistant/utils/app_toast.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 
 class ChangePassScreen extends ConsumerStatefulWidget {
   const ChangePassScreen({super.key});
@@ -56,8 +57,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
           final minutes = remaining.inMinutes;
           final seconds = remaining.inSeconds % 60;
           setState(() {
-            _cooldownText =
-                'Security cooldown: $minutes:${seconds.toString().padLeft(2, '0')} remaining';
+            _cooldownText = ref.read(strProvider).changePassCooldown(minutes, seconds.toString().padLeft(2, '0'));
           });
         }
       } else {
@@ -71,28 +71,29 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
 
   bool _meetsRequirement(String requirement) {
     final text = _newPasswordController.text;
-    switch (requirement) {
-      case '8-32 characters long':
-        return text.length >= 8 && text.length <= 32;
-      case 'One uppercase letter (A-Z)':
-        return text.contains(RegExp(r'[A-Z]'));
-      case 'One lowercase letter (a-z)':
-        return text.contains(RegExp(r'[a-z]'));
-      case 'One number':
-        return text.contains(RegExp(r'[0-9]'));
-      case 'One special character (!@#\$...)':
-        return text.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'));
-      case 'Different from last 3 passwords':
-        final security = ref.read(userSecurityProvider);
-        return !security.isPasswordInHistory(text);
-      default:
-        return false;
+    final str = ref.read(strProvider);
+    
+    if (requirement == str.changePassReqLength) {
+      return text.length >= 8 && text.length <= 32;
+    } else if (requirement == str.changePassReqUppercase) {
+      return text.contains(RegExp(r'[A-Z]'));
+    } else if (requirement == str.changePassReqLowercase) {
+      return text.contains(RegExp(r'[a-z]'));
+    } else if (requirement == str.changePassReqNumber) {
+      return text.contains(RegExp(r'[0-9]'));
+    } else if (requirement == str.changePassReqSpecial) {
+      return text.contains(RegExp(r'[!@#\$%^&*(),.?":{}|<>]'));
+    } else if (requirement == str.changePassReqDifferent) {
+      final security = ref.read(userSecurityProvider);
+      return !security.isPasswordInHistory(text);
     }
+    
+    return false;
   }
 
   Future<void> _handleUpdate() async {
     if (_newPasswordController.text != _confirmPasswordController.text) {
-      AppToast.show(context, 'Passwords do not match');
+      AppToast.show(context, ref.read(strProvider).changePassErrorMismatch);
       return;
     }
 
@@ -110,17 +111,17 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
     if (!mounted) return;
 
     if (success) {
-      AppToast.show(context, 'Password changed successfully!');
+      AppToast.show(context, ref.read(strProvider).changePassSuccess);
       context.pop();
     } else {
       final security = ref.read(userSecurityProvider);
       if (security.isBlocked) {
-        AppToast.show(context, 'Account temporarily locked. Try again later.');
+        AppToast.show(context, ref.read(strProvider).changePassErrorLocked);
         _startCooldownTimer();
       } else {
         AppToast.show(
           context,
-          'Incorrect current password. ${security.remainingAttempts} attempts remaining.',
+          ref.read(strProvider).changePassErrorIncorrect(security.remainingAttempts),
         );
       }
     }
@@ -130,19 +131,20 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
   Widget build(BuildContext context) {
     final appColors = ref.watch(appColorsProvider);
     final securityState = ref.watch(userSecurityProvider);
-    final allRequirementsMet = [
-      '8-32 characters long',
-      'One uppercase letter (A-Z)',
-      'One lowercase letter (a-z)',
-      'One number',
-      'One special character (!@#\$...)',
-      'Different from last 3 passwords',
+    final str = ref.watch(strProvider);
+    final allRequirementsMet = <String>[
+      str.changePassReqLength,
+      str.changePassReqUppercase,
+      str.changePassReqLowercase,
+      str.changePassReqNumber,
+      str.changePassReqSpecial,
+      str.changePassReqDifferent,
     ].every(_meetsRequirement);
 
     return Scaffold(
       backgroundColor: appColors.background,
       appBar: CustomAppBar(
-        title: 'Change Password',
+        title: str.changePassTitle,
         onBackTap: () => context.pop(),
       ),
       body: SingleChildScrollView(
@@ -166,7 +168,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Set a new password',
+              str.changePassHeader,
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w800,
                 fontSize: 20,
@@ -175,7 +177,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
             ),
             const SizedBox(height: 4),
             Text(
-              'This password does not affect your\nUnec Kabinet Password',
+              str.changePassSubtitle,
               textAlign: TextAlign.center,
               style: GoogleFonts.redditSans(
                 fontWeight: FontWeight.w500,
@@ -195,7 +197,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
               child: Column(
                 children: [
                   _buildPasswordField(
-                    label: 'Current password',
+                    label: str.changePassCurrent,
                     controller: _currentPasswordController,
                     isObscured: _isCurrentObscured,
                     icon: Icons.lock_outline_rounded,
@@ -206,7 +208,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                   ),
                   Divider(height: 1, color: appColors.divider),
                   _buildPasswordField(
-                    label: 'New password',
+                    label: str.changePassNew,
                     controller: _newPasswordController,
                     isObscured: _isNewObscured,
                     icon: Icons.shield_moon_outlined,
@@ -217,7 +219,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                   ),
                   Divider(height: 1, color: appColors.divider),
                   _buildPasswordField(
-                    label: 'Confirm password',
+                    label: str.changePassConfirm,
                     controller: _confirmPasswordController,
                     isObscured: _isConfirmObscured,
                     icon: Icons.sync_rounded,
@@ -245,7 +247,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                   Padding(
                     padding: const EdgeInsets.all(16),
                     child: Text(
-                      'Password requirements',
+                      str.changePassRequirements,
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 15,
@@ -254,22 +256,22 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                     ),
                   ),
                   Divider(height: 1, color: appColors.divider),
-                  _buildRequirementItem('8-32 characters long', appColors),
+                  _buildRequirementItem(str.changePassReqLength, appColors),
                   _buildRequirementItem(
-                    'One uppercase letter (A-Z)',
+                    str.changePassReqUppercase,
                     appColors,
                   ),
                   _buildRequirementItem(
-                    'One lowercase letter (a-z)',
+                    str.changePassReqLowercase,
                     appColors,
                   ),
-                  _buildRequirementItem('One number', appColors),
+                  _buildRequirementItem(str.changePassReqNumber, appColors),
                   _buildRequirementItem(
-                    'One special character (!@#\$...)',
+                    str.changePassReqSpecial,
                     appColors,
                   ),
                   _buildRequirementItem(
-                    'Different from last 3 passwords',
+                    str.changePassReqDifferent,
                     appColors,
                   ),
                 ],
@@ -357,7 +359,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                             ),
                             const SizedBox(width: 10),
                             Text(
-                              'Update password',
+                              str.changePassUpdateBtn,
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 16,
@@ -378,7 +380,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Text(
-                  'Forgot current password?',
+                  str.changePassForgot,
                   style: GoogleFonts.redditSans(
                     color: appColors.primary,
                     fontWeight: FontWeight.w600,
@@ -393,7 +395,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Text(
-                  'Having troubles with your Unec Kabinet password?',
+                  str.changePassTrouble,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.redditSans(
                     color: appColors.primary,
@@ -455,7 +457,7 @@ class _ChangePassScreenState extends ConsumerState<ChangePassScreen> {
                     fontSize: 15,
                   ),
                   decoration: InputDecoration(
-                    hintText: 'Enter password',
+                    hintText: ref.read(strProvider).changePassEnterHint,
                     hintStyle: GoogleFonts.redditSans(
                       color: appColors.textMuted,
                       fontSize: 15,

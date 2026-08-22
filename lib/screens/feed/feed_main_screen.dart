@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 import '../../../presentation/components/buttons/feed_filter_tabs.dart';
 import '../../../presentation/components/cards/post_card.dart';
 import '../../../presentation/components/inputs/app_search_bar.dart';
+import '../../../presentation/components/skeletons/feed_skeleton.dart';
 import '../../../providers/feed_provider.dart';
 
 class FeedMainScreen extends ConsumerStatefulWidget {
@@ -27,6 +29,7 @@ class _FeedMainScreenState extends ConsumerState<FeedMainScreen> {
   @override
   Widget build(BuildContext context) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
     final feedState = ref.watch(feedProvider);
     final repo = ref.read(feedRepositoryProvider);
 
@@ -38,7 +41,7 @@ class _FeedMainScreenState extends ConsumerState<FeedMainScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 10),
             child: Text(
-              'News Feed',
+              tr.feedTitle,
               style: GoogleFonts.redditSans(
                 color: appColors.textSecondary,
                 fontSize: 15,
@@ -59,7 +62,7 @@ class _FeedMainScreenState extends ConsumerState<FeedMainScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 35),
             child: AppSearchBar(
               controller: _searchController,
-              hintText: 'Search posts...',
+              hintText: tr.feedSearchHint,
               onChanged: (q) =>
                   ref.read(feedProvider.notifier).setSearchQuery(q),
             ),
@@ -67,13 +70,11 @@ class _FeedMainScreenState extends ConsumerState<FeedMainScreen> {
           const SizedBox(height: 20),
           Expanded(
             child: feedState.isLoading && feedState.posts.isEmpty
-                ? Center(
-                    child: CircularProgressIndicator(color: appColors.primary),
-                  )
+                ? const FeedSkeleton()
                 : feedState.posts.isEmpty
                 ? Center(
                     child: Text(
-                      'No posts found',
+                      tr.feedNoPosts,
                       style: GoogleFonts.redditSans(
                         color: appColors.textSecondary,
                       ),

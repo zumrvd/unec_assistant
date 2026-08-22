@@ -7,6 +7,7 @@ import '../../../../providers/subject_detail_provider.dart';
 import '../../../../models/lecture_material.dart';
 import '../../../../presentation/components/cards/lecture_materials_card.dart';
 import '../../../../presentation/components/lists/labels.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 
 class SubjectMaterialsDetailScreen extends ConsumerWidget {
   final String subjectId;
@@ -18,6 +19,7 @@ class SubjectMaterialsDetailScreen extends ConsumerWidget {
     final allSubjects = ref.watch(allSubjectsProvider);
     final subject = allSubjects.firstWhere((s) => s.subjectId == subjectId);
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     List<LectureMaterial> lectures;
     switch (subjectId) {
@@ -56,7 +58,7 @@ class SubjectMaterialsDetailScreen extends ConsumerWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 40),
                   child: Text(
-                    "No materials available yet",
+                    tr.subjectMaterialsNoMaterials,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 14,

@@ -6,6 +6,7 @@ import 'package:unec_assistant/presentation/components/cards/calendar_card.dart'
 import 'package:unec_assistant/presentation/components/cards/todays_events_card.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/providers/calendar_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 
 import 'package:unec_assistant/presentation/components/lists/labels.dart';
 
@@ -35,6 +36,7 @@ class ScheduleScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final allEvents = ref.watch(calendarEventsProvider);
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
     final now = DateTime.now();
     final todaysEvents = allEvents
         .where(
@@ -67,7 +69,7 @@ class ScheduleScreen extends ConsumerWidget {
           child: const Icon(Icons.add_rounded, color: Colors.white, size: 32),
         ),
       ),
-      appBar: const CustomAppBar(title: 'Schedule'),
+      appBar: CustomAppBar(title: tr.scheduleBtnTitle),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(vertical: 20),
@@ -81,9 +83,9 @@ class ScheduleScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   spacing: 10,
                   children: [
-                    const SectionLabel('Today\'s plans'),
+                    SectionLabel(tr.scheduleTodaysPlans),
                     TodaysEventsCard(events: todaysEvents),
-                    const SectionLabel('Calendar'),
+                    SectionLabel(tr.scheduleCalendar),
                   ],
                 ),
               ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 
-class SmartSyncButton extends StatelessWidget {
+class SmartSyncButton extends ConsumerWidget {
   final VoidCallback? onTap;
 
   const SmartSyncButton({
@@ -21,7 +23,9 @@ class SmartSyncButton extends StatelessWidget {
   );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final tr = ref.watch(strProvider);
+
     return GestureDetector(
       onTap: onTap ?? () {},
       child: Container(
@@ -45,7 +49,7 @@ class SmartSyncButton extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Manage & See Smart Sync Files",
+                          tr.smartSyncBtnTitle,
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w700,
                             fontSize: 15,
@@ -54,7 +58,7 @@ class SmartSyncButton extends StatelessWidget {
                           softWrap: true,
                         ),
                         Text(
-                          "Set your Auto-Download preferences",
+                          tr.smartSyncBtnSub,
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w600,
                             fontSize: 10,

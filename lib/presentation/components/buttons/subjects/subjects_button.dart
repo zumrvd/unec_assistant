@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
 
 class SubjectsButton extends ConsumerStatefulWidget {
   const SubjectsButton({
@@ -64,6 +65,7 @@ class _SubjectsButtonState extends ConsumerState<SubjectsButton>
   @override
   Widget build(BuildContext context) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,7 +107,7 @@ class _SubjectsButtonState extends ConsumerState<SubjectsButton>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Subjects',
+                            tr.subjectsBtnTitle,
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w700,
                               fontSize: 15,
@@ -114,7 +116,7 @@ class _SubjectsButtonState extends ConsumerState<SubjectsButton>
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            'For the full academic semester',
+                            tr.subjectsBtnSub,
                             style: GoogleFonts.redditSans(
                               fontWeight: FontWeight.w700,
                               fontSize: 10,
@@ -132,7 +134,7 @@ class _SubjectsButtonState extends ConsumerState<SubjectsButton>
                               vertical: 3,
                             ),
                             child: Text(
-                              'Grades · Materials',
+                              tr.subjectsBtnGradesMaterials,
                               style: GoogleFonts.redditSans(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 8,
@@ -227,7 +229,7 @@ class _SubjectsButtonState extends ConsumerState<SubjectsButton>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Teaching Materials',
+                                  tr.subjectsBtnTeachingMaterials,
                                   style: GoogleFonts.redditSans(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 13,
@@ -236,7 +238,7 @@ class _SubjectsButtonState extends ConsumerState<SubjectsButton>
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  'Lectures, seminars & tests',
+                                  tr.subjectsBtnTeachingMaterialsSub,
                                   style: GoogleFonts.redditSans(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 10,
@@ -298,7 +300,7 @@ class _SubjectsButtonState extends ConsumerState<SubjectsButton>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Grades',
+                                  tr.subjectsBtnGrades,
                                   style: GoogleFonts.redditSans(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 13,
@@ -307,7 +309,7 @@ class _SubjectsButtonState extends ConsumerState<SubjectsButton>
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  'Seminars & exam results',
+                                  tr.subjectsBtnGradesSub,
                                   style: GoogleFonts.redditSans(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 10,

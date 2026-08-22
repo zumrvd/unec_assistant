@@ -1,0 +1,395 @@
+﻿UNEC Assistant - Phase 1 Translation Dictionary
+================================================
+Languages: English (EN) | Azerbaijani (AZ) | Russian (RU)
+Generated: 2026-08-22
+
+NOTE: AZ column uses Azerbaijani Latin script.
+      RU column: all text is in Cyrillic in actual code.
+      Proper nouns (teacher names, subjects, group codes) = unchanged in all languages.
+      {n}, {m}, {s}, {platform} = runtime placeholders.
+
+===== GROUP 1: Navigation & Section Labels ==========================================================
+KEY                           | EN                     | AZ                              | RU
+------------------------------|------------------------|---------------------------------|--------------------------------------
+nav_home                      | Home                   | Ana Sehife                      | Главная
+nav_functions                 | Functions              | Funksiyalar                     | Функции
+nav_feed                      | News Feed              | Xeber Lenti                     | Новостная Лента
+nav_notifications             | Notifications          | Bildirisher                     | Уведомления
+nav_profile                   | Profile                | Profil                          | Профиль
+section_class_attendance      | Class & Attendance     | Ders & Davamiyyet               | Занятие и Посещаемость
+section_academic              | Academic               | Akademik                        | Академическое
+section_news_feed             | News Feed              | Xeber Lenti                     | Новостная Лента
+section_personal              | Personal               | Shexsi                          | Личное
+section_about_us              | About Us               | Haqqimizda                      | О нас
+section_contact_us            | Contact Us             | Bizimle Elaqe                   | Связаться
+section_about_app             | About App              | Proqram Haqqinda                | О Приложении
+
+===== GROUP 2: Profile Screen =======================================================================
+KEY                           | EN                     | AZ                              | RU
+------------------------------|------------------------|---------------------------------|--------------------------------------
+profile_section_academic      | Academic               | Akademik                        | Академическое
+profile_section_application   | Application            | Tetbiq                          | Приложение
+profile_section_feedback      | Feedback & Support     | Rey & Destok                    | Отзывы и Поддержка
+
+===== GROUP 3: Settings Card 1 (Academic) ===========================================================
+KEY                           | EN                           | AZ                              | RU
+------------------------------|------------------------------|---------------------------------|--------------------------------------
+settings_academic_profile     | Academic Profile             | Akademik Profil                 | Академический Профиль
+settings_academic_profile_sub | Your full transcript         | Tam akademik qeydiyyatiniz      | Ваша полная успеваемость
+settings_unec_cabinet         | Unec Cabinet                 | UNEC Kabineti                   | Кабинет UNEC
+settings_unec_cabinet_sub     | Direct link to your cabinet  | Kabinetinize birbasha kechid    | Прямая ссылка на кабинет
+settings_change_password      | Change Password              | Shifeni Deyishdir               | Изменить Пароль
+settings_change_password_sub  | Resets your password         | Shifeni sifirlaiyir             | Сбросить пароль
+
+===== GROUP 4: Settings Card 2 (App Settings) =======================================================
+KEY                           | EN                     | AZ                              | RU
+------------------------------|------------------------|---------------------------------|--------------------------------------
+settings_app_theme            | App Theme              | Proqram Movzusu                 | Тема Приложения
+settings_notifications        | Notifications          | Bildirisher                     | Уведомления
+settings_about_app            | About App              | Proqram Haqqinda                | О Приложении
+settings_about_app_version    | v 1.1.0 IT team inc.   | v 1.1.0 IT team inc.            | v 1.1.0 IT team inc.
+settings_language             | Language               | Dil                             | Язык
+theme_system                  | System                 | Sistem                          | Система
+theme_light                   | Light                  | Ishiqli                         | Светлая
+theme_dark                    | Dark                   | Qaranlig                        | Тёмная
+lang_english                  | English                | English                         | English
+lang_azerbaijani              | Azerbaijani            | Azerbaycan dili                 | Azərbaycan dili
+lang_russian                  | Russian                | Russki yazyk                    | Русский язык
+
+===== GROUP 5: App Drawer ===========================================================================
+KEY                           | EN                        | AZ                              | RU
+------------------------------|---------------------------|---------------------------------|--------------------------------------
+drawer_title                  | App Directory             | Proqram Kataloqu                | Каталог Приложения
+drawer_subtitle               | Quick access to all feat. | Butun xuss.e suretli chixish    | Быстрый доступ ко всем функциям
+drawer_section_news_social    | NEWS & SOCIAL             | XEBERLER & SOSIAL               | НОВОСТИ И СОЦСЕТИ
+drawer_section_academic       | ACADEMIC                  | AKADEMIK                        | АКАДЕМИЧЕСКОЕ
+drawer_section_materials      | MATERIALS & NOTES         | MATERIALLAR & QEYDLER           | МАТЕРИАЛЫ И ЗАМЕТКИ
+drawer_section_account        | ACCOUNT                   | HESAB                           | АККАУНТ
+drawer_news_feed              | News Feed                 | Xeber Lenti                     | Новостная Лента
+drawer_create_post            | Create Post               | Paylaashim Yarat                | Создать Запись
+drawer_manage_channels        | Manage Channels           | Kanallari Idare Et              | Управление Каналами
+drawer_attendance             | Attendance                | Davamiyyet                      | Посещаемость
+drawer_weekly_schedule        | Weekly Schedule           | Heftelik Cedvel                 | Расписание
+drawer_current_class          | Current Class             | Cari Ders                       | Текущее Занятие
+drawer_all_grades             | All Grades                | Butun Qiymetler                 | Все Оценки
+drawer_grade_calculator       | Grade Calculator          | Qiymet Kalkulyatoru             | Калькулятор Оценок
+drawer_subjects               | Subjects                  | Fennler                         | Предметы
+drawer_teaching_materials     | Teaching Materials        | Tedris Materiallari             | Учебные Материалы
+drawer_smart_sync             | Smart Sync                | Agilli Sinxronizasiya           | Умная Синхронизация
+drawer_notes                  | Notes                     | Qeydler                         | Заметки
+drawer_my_profile             | My Profile                | Menim Profilim                  | Мой Профиль
+drawer_student_id_card        | Student ID Card           | Telebe Vesiqesi                 | Студенческий Билет
+drawer_academic_profile       | Academic Profile          | Akademik Profil                 | Академический Профиль
+drawer_security_password      | Security & Password       | Tehlukesizlik & Shifre          | Безопасность и Пароль
+drawer_share_profile          | Share Profile             | Profili Paylaash                | Поделиться Профилем
+drawer_about_app              | About App                 | Proqram Haqqinda                | О Приложении
+
+===== GROUP 6: Current Class Card & Button ==========================================================
+KEY                           | EN                             | AZ                              | RU
+------------------------------|--------------------------------|---------------------------------|--------------------------------------
+current_class_label           | CURRENT CLASS                  | CARI DERS                       | ТЕКУЩЕЕ ЗАНЯТИЕ
+current_class_upnext          | UP NEXT                        | SONRAKI                         | СЛЕДУЮЩЕЕ
+current_class_no_active       | No class is currently active   | Hal-hazirda aktiv ders yoxdur   | Активных занятий нет
+current_class_later_today     | Later today                    | Bu gun sonra                    | Позже сегодня
+current_class_tomorrow        | Tomorrow                       | Sabah                           | Завтра
+current_class_upcoming        | Upcoming                       | Gozlenilir                      | Предстоящее
+current_class_room            | Room                           | Otaq                            | Аудитория
+current_class_subject         | Subject                        | Fenn                            | Предмет
+current_class_type            | Type                           | Nov                             | Тип
+current_class_teacher         | Teacher                        | Mualim                          | Преподаватель
+current_class_progress_line   | Progress Line                  | Teraqqi Xetti                   | Линия Прогресса
+current_class_starts          | starts                         | bashlanir                       | начало
+current_class_ends            | ends                           | bitir                           | конец
+current_class_time_left       | Time left                      | Qalan vaxt                      | Оставшееся время
+current_class_completed       | Completed                      | Tamamlandi                      | Выполнено
+current_class_floor_hint      | on the {n}{suffix} floor       | {n}-ci mertebede                | на {n}-м этаже
+current_class_btn_title       | Current class                  | Cari ders                       | Текущее занятие
+current_class_btn_sub         | Ongoing class, its materials   | Dersin materiallari ve melumlari| Материалы и информация о занятии
+                              | and info                       |                                 |
+
+===== GROUP 7: Schedule Card & Button ===============================================================
+KEY                           | EN                     | AZ                              | RU
+------------------------------|------------------------|---------------------------------|--------------------------------------
+schedule_upcoming_exam        | Upcoming Exam          | Gozlenilen Imtahan              | Предстоящий Экзамен
+schedule_personal_plan        | Personal Plan          | Shexsi Plan                     | Личный Plan
+schedule_active               | ACTIVE                 | AKTIV                           | АКТИВНО
+schedule_today                | Today                  | Bu gun                          | Сегодня
+schedule_tomorrow             | Tomorrow               | Sabah                           | Завтра
+schedule_time                 | Time                   | Vaxt                            | Время
+schedule_btn_title            | Schedule               | Cedvel                          | Расписание
+schedule_btn_sub              | For the semester       | Semestr uchun                   | На семестр
+
+===== GROUP 8: Attendance Card ======================================================================
+KEY                           | EN                        | AZ                              | RU
+------------------------------|---------------------------|---------------------------------|--------------------------------------
+attendance_used               | used                      | istifade edilib                 | использовано
+attendance_limit              | Limit : {n}               | Limit : {n}                     | Лимит : {n}
+attendance_left_pill          | {n} Left                  | {n} Qaldi                       | {n} Осталось
+attendance_no_left            | no absence left           | buraxilish huququ qalmayib      | пропусков не осталось
+attendance_absences_left      | {n} absences left         | {n} buraxilish qaldi            | {n} пропусков осталось
+
+===== GROUP 9: Recent Grade Card ====================================================================
+KEY                           | EN                     | AZ                              | RU
+------------------------------|------------------------|---------------------------------|--------------------------------------
+grade_seminar_label           | SEMINAR GRADE          | SEMINAR QIYMETI                 | ОЦЕНКА ЗА СЕМИНАР
+grade_midterm_label           | MIDTERM GRADE          | YARIYIL QIYMETI                 | ОЦЕНКА ЗА РУБЕЖНЫЙ
+grade_final_label             | FINAL EXAM GRADE       | YEKUN IMTAHAN QIYMETI           | ОЦЕНКА ЗА ФИНАЛЬНЫЙ
+grade_midterm_exam            | Midterm Exam           | Yariyil Imtahani                | Рубежный Экзамен
+grade_final_exam              | Final Exam             | Yekun Imtahan                   | Финальный Экзамен
+grade_date_received           | Date received          | Alinma tarixi                   | Дата получения
+
+===== GROUP 10: Recent Note Card ====================================================================
+KEY                           | EN                        | AZ                              | RU
+------------------------------|---------------------------|---------------------------------|--------------------------------------
+note_recent_label             | RECENT NOTE               | SON QEYD                        | ПОСЛЕДНЯЯ ЗАМЕТКА
+note_untitled                 | Untitled                  | Bashliqsiz                      | Без названия
+note_no_content               | No additional content     | Elave mezmun yoxdur             | Дополнительного содержимого нет
+
+===== GROUP 11: News Feed Screen ====================================================================
+KEY                           | EN                     | AZ                              | RU
+------------------------------|------------------------|---------------------------------|--------------------------------------
+feed_title                    | News Feed              | Xeber Lenti                     | Новостная Лента
+feed_search_hint              | Search posts...        | Paylaashimlari axtar...         | Поиск записей...
+feed_no_posts                 | No posts found         | Paylaashim tapilmadi            | Записей не найдено
+feed_filter_discover          | Discover               | Keshfet                         | Открытие
+feed_filter_subscribed        | Subscribed             | Abune Olunmush                  | Подписки
+feed_filter_official          | Official               | Resmi                           | Официальное
+feed_filter_clubs             | Clubs                  | Klublar                         | Клубы
+feed_filter_dev_team          | Dev Team               | Dev Komandasi                   | Команда Dev
+feed_read_more                | Read more              | Daha chox oxu                   | Читать далее
+feed_show_less                | Show less              | Daha azini goster               | Свернуть
+feed_just_now                 | Just now               | Indice                          | Только что
+feed_link_copied              | Link copied to clipbrd | Kechid buferine kopyalandi      | Ссылка скопирована
+feed_category_official        | Official               | Resmi                           | Официальное
+feed_category_clubs           | Clubs                  | Klublar                         | Клубы
+feed_category_dev_team        | Dev Team               | Dev Komandasi                   | Команда Dev
+
+===== GROUP 12: Manage Channels =====================================================================
+KEY                           | EN                             | AZ                              | RU
+------------------------------|--------------------------------|---------------------------------|--------------------------------------
+channels_title                | Manage Subscribed Channels     | Abune Kanallari Idare Et        | Управление Подписками
+channels_no_subs              | No subscriptions yet           | Hele abune yoxdur               | Подписок пока нет
+channels_subscribe_hint       | Subscribe to channels from the | Onlari burada gormek uchun      | Подпишитесь на каналы в Ленте,
+                              | Feed to see them here.         | Lentden kanallara abune olun.   | чтобы они появились здесь.
+channels_unsubscribe          | Unsubscribe                    | Abunelikden Chix                | Отписаться
+
+===== GROUP 13: Create Post Screen ==================================================================
+KEY                           | EN                              | AZ                              | RU
+------------------------------|------------------------------- -|---------------------------------|--------------------------------------
+create_post_title             | Create Post                     | Paylaashim Yarat                | Создать Запись
+create_post_waiting_approval  | Waiting Approval                | Tesdiq Gozlenilir               | Ожидает Одобрения
+create_post_shared_posts      | Shared Posts                    | Paylaashilan Yazilar            | Опубликованные Записи
+create_post_tab_editor        | Editor                          | Redaktor                        | Редактор
+create_post_tab_waiting       | Waiting                         | Gozlenilir                      | Ожидание
+create_post_tab_shared        | Shared                          | Paylaashilmish                  | Опубликовано
+create_post_select_signature  | Select saved signature          | Saxlanilmish imza sechin        | Выберите сохранённую подпись
+create_post_what_on_mind      | What's on your mind?            | Fikriniz nedir?                 | Что у вас на уме?
+create_post_live_preview      | LIVE PREVIEW                    | CANLI ONIZLEME                  | ПРЕДПРОСМОТР
+create_post_audit_title       | Audit Approval Process          | Audit Tesdiq Prosesi            | Процесс Проверки Аудитом
+create_post_audit_desc        | All posts are sent to our team  | Butun yazilar yoxlanilmaq uchun | Все записи отправляются нашей
+                              | for verification. Once approved | komandamiza gonderilir.         | команде. После одобрения запись
+                              | your post will be visible in    | Tesdiqlendiкden sonra yaziniz   | появится в ленте Открытия.
+                              | the Discover feed.              | Keshfet lentinde gorunecek.     |
+create_post_add_attachment    | Add Attachment                  | Elave Et                        | Добавить Вложение
+create_post_send_approval     | Send for Approval               | Tesdiq uchun Gonder             | Отправить на Одобрение
+create_post_save_signature    | Save as signature               | Imza kimi saxla                 | Сохранить как подпись
+create_post_cat_official      | Official Announcement           | Resmi Elan                      | Официальное Объявление
+create_post_cat_club          | Club Update                     | Klub Yenilenmesi                | Обновление Клуба
+create_post_cat_dev           | Dev Team Log                    | Dev Komandasi Jurnali           | Журнал Команды Dev
+create_post_request_sent_ttl  | Request Sent                    | Sorgu Gonderildi                | Запрос Отправлен
+create_post_request_sent_body | Your post has been sent to      | Yaziniz yoxlamaya gonderildi.   | Ваша запись отправлена на аудит.
+                              | audits. Notified once approved. | Bildiris gonderilecek.          | Уведомим после одобрения.
+create_post_ok                | OK                              | Tamam                           | ОК
+create_post_fill_fields       | Please fill all required fields | Teleb olunan saheleri doldurun  | Заполните все обязательные поля
+create_post_no_pending        | Waiting for your first approval?| Ilk tesdigi gozleyirsiniz?      | Ждёте первого одобрения?
+create_post_no_pending_sub    | Send a post for review; it will | Yoxlamaq uchun yazi gonderin,   | Отправьте запись на проверку —
+                              | appear here!                    | burada gorunecek!               | она появится здесь!
+create_post_no_shared         | No shared posts yet.            | Hele paylaashilmish yazi yoxdur | Опубликованных записей пока нет.
+create_post_no_shared_sub     | Create your first post now!     | Indi ilk yazinizi yaradin!      | Создайте свою первую запись!
+create_post_go_editor         | Go to Editor                    | Redaktora Kech                  | Перейти в Редактор
+create_post_img_coming_soon   | Image selection coming soon     | Shekil seчimi tezlikle elave    | Выбор изображений — скоро
+
+===== GROUP 14: Post Detail Screen ==================================================================
+KEY                           | EN                     | AZ                              | RU
+------------------------------|------------------------|---------------------------------|--------------------------------------
+post_not_found                | Post not found         | Yazi tapilmadi                  | Запись не найдена
+post_comment_most_recent      | Most recent            | En yeni                         | Самые новые
+post_comment_most_liked       | Most liked             | En chox beyenilmish             | Самые популярные
+
+===== GROUP 15: Notifications Screen ================================================================
+KEY                           | EN                                  | AZ                              | RU
+------------------------------|-------------------------------------|---------------------------------|--------------------------------------
+notif_title                   | Notifications                       | Bildirisher                     | Уведомления
+notif_mark_all_read           | Mark all as read                    | Hamisini oxunmush kimi isharele | Отметить всё как прочитанное
+notif_none_yet                | No notifications yet                | Hele bildiris yoxdur            | Уведомлений пока нет
+notif_disabled_title          | Notifications are turned off        | Bildirisher sondurulub          | Уведомления отключены
+notif_disabled_sub            | You can enable them in Settings     | Parametrlerde aktivleshdireb.   | Включите в Настройках, чтобы
+                              | to stay updated.                    |                                 | получать обновления.
+notif_group_today             | Today                               | Bu gun                          | Сегодня
+notif_group_yesterday         | Yesterday                           | Dunen                           | Вчера
+
+===== GROUP 16: Academic Profile Screen =============================================================
+KEY                           | EN                              | AZ                              | RU
+------------------------------|------------------------------- -|---------------------------------|--------------------------------------
+academic_profile_title        | Academic profile                | Akademik profil                 | Академический Профиль
+academic_info_title           | Academic information            | Akademik melumatlar             | Академическая Информация
+academic_standing_title       | Academic standing               | Akademik vezyiyyet              | Академический Статус
+academic_club_memberships     | Club memberships                | Klub uvzlukleri                 | Членство в Клубах
+academic_faculty              | Faculty                         | Fakulte                         | Факультет
+academic_major                | Major                           | Ixtisas                         | Специализация
+academic_year                 | Year                            | Kurs                            | Курс
+academic_enrolled             | Enrolled                        | Qeydiyyat tarixi                | Дата Зачисления
+academic_gpa                  | Cumulative GPA                  | Umumi Ortalama                  | Средний Балл GPA
+academic_active               | Active                          | Aktiv                           | Активен
+academic_student_id           | ID:                             | ID:                             | ID:
+academic_share_btn            | Share student profile           | Telebe profilini paylaash       | Поделиться Профилем Студента
+academic_share_btn_sub        | Generate a clean shareable text | Paylaashila bilen metn yarat    | Создать чистый текст для публик.
+
+===== GROUP 17: Change Password Screen ==============================================================
+KEY                           | EN                                  | AZ                              | RU
+------------------------------|-------------------------------------|---------------------------------|--------------------------------------
+change_pass_title             | Change Password                     | Shifeni Deyishdir               | Изменить Пароль
+change_pass_set_new           | Set a new password                  | Yeni shifre teyin edin          | Задайте новый пароль
+change_pass_cabinet_note      | This password does not affect your  | Bu shifre UNEC Kabinetinizin    | Этот пароль не влияет на пароль
+                              | Unec Kabinet Password               | shefresine tesir etmir          | вашего Кабинета UNEC
+change_pass_current           | Current password                    | Cari shifre                     | Текущий Пароль
+change_pass_new               | New password                        | Yeni shifre                     | Новый Пароль
+change_pass_confirm           | Confirm password                    | Shifeni tesdiqle                | Подтвердите Пароль
+change_pass_requirements      | Password requirements               | Shifre tebebleri                | Требования к Паролю
+change_pass_req_length        | 8-32 characters long                | 8-32 simvol uzunlugunda         | От 8 до 32 символов
+change_pass_req_upper         | One uppercase letter (A-Z)          | Bir boyuk herf (A-Z)            | Одна заглавная буква (A-Z)
+change_pass_req_lower         | One lowercase letter (a-z)          | Bir kichik herf (a-z)           | Одна строчная буква (a-z)
+change_pass_req_number        | One number                          | Bir reqem                       | Одна цифра
+change_pass_req_special       | One special character (!@#...)      | Bir xususi simvol (!@#...)      | Один спецсимвол (!@#...)
+change_pass_req_history       | Different from last 3 passwords     | Son 3 shifreden ferqli          | Не совпадает с 3 предыдущими
+change_pass_update_btn        | Update password                     | Shifeni Yenile                  | Обновить пароль
+change_pass_forgot            | Forgot current password?            | Cari shifeni unutdunuz?         | Забыли текущий пароль?
+change_pass_kabinet_trouble   | Having troubles with your Unec      | UNEC Kabineti shifrenizle       | Проблемы с паролем UNEC Кабинета?
+                              | Kabinet password?                   | problem yashayirsiniz?          |
+change_pass_success_toast     | Password changed successfully!      | Shifre ugurla deyishdirildi!    | Пароль успешно изменён!
+change_pass_no_match_toast    | Passwords do not match              | Shifreler uygun gelmir          | Пароли не совпадают
+change_pass_blocked_toast     | Account temporarily locked.         | Hesab muvveqqeti bloklandi.     | Аккаунт временно заблокирован.
+                              | Try again later.                    | Daha sonra yeniden ched edin.   | Попробуйте позже.
+change_pass_attempts_toast    | Incorrect current password.         | Cari shifre yanilishdir.        | Неверный текущий пароль.
+                              | {n} attempts remaining.             | {n} ched qalir.                 | Осталось {n} попыток.
+change_pass_cooldown          | Security cooldown: {m}:{s} remaining| Tehlukesizlik: {m}:{s} qalir   | Блокировка: {m}:{s} осталось
+
+===== GROUP 18: About App Screen & Cards ============================================================
+KEY                           | EN                              | AZ                              | RU
+------------------------------|------------------------------- -|---------------------------------|--------------------------------------
+about_app_title               | About App                       | Proqram Haqqinda                | О Приложении
+about_app_row_platforms       | Platforms                       | Platformalar                    | Платформы
+about_app_row_version         | Version                         | Versiya                         | Версия
+about_app_row_min_sdk         | Minimum SDK                     | Minimum SDK                     | Минимальный SDK
+about_app_row_license         | License                         | Lisenziya                       | Лицензия
+about_app_row_framework       | Framework                       | Framework                       | Framework
+about_app_row_language        | Language                        | Proqramlasdirma dili            | Язык Программирования
+about_us_hello_heading        | Hello World,                    | Salam Dunya,                    | Привет, Мир,
+about_us_hello_body           | I am a first-year IT student at | Men UNEC-in birinci kurs IT     | Я первокурсник факультета ИТ в
+                              | UNEC with a passion for build-  | telesbiYem, real problemler     | UNEC, увлечённый созданием ПО
+                              | ing software that solves real   | hell eden proqram teminatı      | для решения реальных задач.
+                              | world challenges.               | qurmaga hevesliYem.             |
+about_us_started_heading      | How it started?                 | Nece bashladi?                  | Как всё началось?
+about_us_started_body         | My development journey began    | Proqramlasdirma yolculugum      | Мой путь разработчика начался с
+                              | out of a simple desire to make  | gundelik tapshiriqlar asan-     | простого желания упростить
+                              | everyday tasks easier.          | laashirmaq iteуindeten bashladi | повседневные задачи.
+about_us_started_italic       | Let's redefine our university   | Gelin universitetde teecrubemizi| Давайте вместе переосмыслим
+                              | experience together.            | birlikde yeniden mueyyenleshdirk| наш университетский опыт.
+developer_greeting            | Hey there! I'm,                 | Salam! Men,                     | Привет! Я,
+developer_subtitle            | a.k.a The Developer of This App | hemcinin Bu Tetbiqin Yaradicisi | она же Разработчик этого приложен.
+developer_role_tags           | Junior * Full-Stack * Developer | Junior * Full-Stack * Proqramci | Junior * Full-Stack * Разработчик
+
+===== GROUP 19: Footer ==============================================================================
+KEY                           | EN                              | AZ                              | RU
+------------------------------|------------------------------- -|---------------------------------|--------------------------------------
+footer_copyright              | (c) 2026 Zumrud * UNEC Komeki   | (c) 2026 Zumrud * UNEC Komeki   | (c) 2026 Zumrud * UNEC Komeki
+footer_rights                 | All rights reserved             | Butun huquqlar qorunur          | Все права защищены
+footer_made_with              | Made with love for UNEC         | UNEC telebeleri uchin sevgi ile | Создано с любовью для студентов
+                              | students <3                     | hazirlanmishdir <3              | UNEC <3
+
+===== GROUP 20: Dialogs =============================================================================
+KEY                           | EN                                  | AZ                              | RU
+------------------------------|-------------------------------------|---------------------------------|--------------------------------------
+dialog_open_title             | Open {platform}?                    | {platform}-u ac?                | Открыть {platform}?
+dialog_open_body              | You'll be redirected to {platform}  | Tertibatci ile elaqe saxlamaq   | Вас перенаправят в {platform}
+                              | to contact the developer.           | uchin {platform}-a yonlend.     | для связи с разработчиком.
+dialog_cancel                 | Cancel                              | Legv et                         | Отмена
+dialog_open                   | Open                                | Ac                              | Открыть
+dialog_discard_title          | Discard changes?                    | Deyishiklikleri legv et?        | Отменить изменения?
+dialog_discard_body           | If you go back now, your post       | Indi geri qayitsaniz, yazi      | Если вы вернётесь, черновик
+                              | draft will be lost.                 | loyiheniz silinecek.            | записи будет удалён.
+dialog_discard_btn            | Discard                             | Legv et                         | Отменить
+
+===== GROUP 21: Profile Pop-up ======================================================================
+KEY                           | EN                        | AZ                              | RU
+------------------------------|---------------------------|---------------------------------|--------------------------------------
+popup_manage_account          | Manage your Account       | Hesabinizi Idare Edin           | Управление Аккаунтом
+popup_add_account             | Add another account       | Bashqa hesab elave et           | Добавить аккаунт
+popup_sign_out                | Sign out                  | Chixish et                      | Выйти
+popup_privacy_policy          | Privacy Policy            | Mexfilik Siyaseti               | Политика Конфиденциальности
+popup_terms_of_service        | Terms of Service          | Xidmet Shertleri                | Условия Использования
+
+===== GROUP 22: Smart Sync Card =====================================================================
+KEY                           | EN                                  | AZ                              | RU
+------------------------------|-------------------------------------|---------------------------------|--------------------------------------
+smart_sync_title              | Smart Sync                          | Agilli Sinxronizasiya           | Умная Синхронизация
+smart_sync_desc               | Automatically download and update   | Sinif fayllarinizi avtomatik    | Автоматически загружайте файлы,
+                              | your class files so you're always   | yukleyin ve yeniley in ki,      | чтобы всегда быть готовыми.
+                              | prepared.                           | hemishe hazir olasiniz.         |
+smart_sync_download_prefs     | Download Preferences                | Yuklenme Secimleri              | Настройки Загрузки
+smart_sync_which_files        | Select which files to keep updated: | Aktual faylları secin:          | Выберите файлы для обновления:
+smart_sync_current_class      | Current Class                       | Cari Ders                       | Текущее Занятие
+smart_sync_current_badge      | (Highly Recommended)                | (Cox Tovsiye Edilir)            | (Настоятельно Рекомендуется)
+smart_sync_current_desc       | Always be prepared. Downloads       | Hemishe dersliye hazir olun.    | Всегда будьте готовы. Загружает
+                              | essential files 30 min before class.| 30 deq. evvel yukleyir.         | файлы за 30 мин. до урока.
+smart_sync_upcoming_class     | Upcoming Class                      | Gozlenilen Ders                 | Предстоящее Занятие
+smart_sync_upcoming_desc      | Get a head start on next class.     | Novbeti dersin mat. onceden.    | Заранее ознакомьтесь с мат.
+smart_sync_previous_class     | Previous Class                      | Evvelki Ders                    | Предыдущее Занятие
+smart_sync_previous_desc      | Keep last class file for review.    | Son dersin faylini saxlayin.    | Файл последнего занятия для обзора
+smart_sync_file_types         | Select types of files to download:  | Fayl novlerini secin:           | Выберите типы файлов:
+smart_sync_lecture            | Lecture                             | Muahize                         | Лекция
+smart_sync_presentation       | Presentation                        | Prezentasiya                    | Презентация
+smart_sync_seminar            | Seminar                             | Seminar                         | Семинар
+smart_sync_other_files        | Other Files                         | Diger Fayllar                   | Другие Файлы
+
+===== GROUP 23: Feedback Card =======================================================================
+KEY                           | EN                                  | AZ                              | RU
+------------------------------|-------------------------------------|---------------------------------|--------------------------------------
+feedback_to_faculty           | To Faculty                          | Fakulteye                       | Факультету
+feedback_to_dev               | To Developer Team                   | Proqrami Komandasina            | Команде Разработчиков
+feedback_to_other             | To Other                            | Digerine                        | Другому
+feedback_hint                 | Write your feedback here...         | Reynizi buraya yazin...         | Напишите ваш отзыв здесь...
+feedback_privacy_note_1       | Your information is                 | Melumatlariniz                  | Ваши данные
+feedback_privacy_never_shared | never shared                        | hec vaxt paylaashilmir          | никогда не передаются
+feedback_privacy_note_2       | . All feedbacks are completely      | . Butun reyer tamamilе          | . Все отзывы полностью
+feedback_privacy_anon         | anonymous                           | anonimdir                       | анонимны
+feedback_privacy_note_3       | and used only for improvement.      | ve yalniz inkishaf uchin.       | и только для улучшения.
+feedback_submit               | Submit                              | Gonder                          | Отправить
+feedback_learn_more           | Learn more about anon. feedbacks    | Anonim reyler haqqinda daha cox | Узнать больше об анон. отзывах
+
+===== GROUP 24: Functions Screen Buttons ============================================================
+KEY                           | EN                        | AZ                              | RU
+------------------------------|---------------------------|---------------------------------|--------------------------------------
+btn_notes_title               | Notes                     | Qeydler                         | Заметки
+btn_notes_sub                 | To-do lists & quick notes | Yapilacaqlar & suretli qeydler  | Списки дел и быстрые заметки
+
+===== GROUP 25: Month Abbreviations =================================================================
+KEY          | EN    | AZ    | RU
+-------------|-------|-------|-------
+month_jan    | Jan   | Yan   | Янв
+month_feb    | Feb   | Fev   | Фев
+month_mar    | Mar   | Mar   | Мар
+month_apr    | Apr   | Apr   | Апр
+month_may    | May   | May   | Май
+month_jun    | Jun   | Iyn   | Июн
+month_jul    | Jul   | Iyl   | Июл
+month_aug    | Aug   | Avq   | Авг
+month_sep    | Sep   | Sen   | Сен
+month_oct    | Oct   | Okt   | Окт
+month_nov    | Nov   | Noy   | Ноя
+month_dec    | Dec   | Dek   | Дек
+
+================================================================================
+SUMMARY: ~170 keys | 25 groups | EN / AZ / RU
+NEXT: Reply 'proceed to Phase 2' (with any edits) to begin code injection.
+================================================================================

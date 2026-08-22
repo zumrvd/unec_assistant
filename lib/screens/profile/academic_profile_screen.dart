@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unec_assistant/presentation/components/lists/labels.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
+import 'package:unec_assistant/l10n/translations.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/student_profile_provider.dart';
 
@@ -21,11 +23,12 @@ class AcademicProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(studentProfileProvider);
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
 
     return Scaffold(
       backgroundColor: appColors.background,
       appBar: CustomAppBar(
-        title: 'Academic profile',
+        title: tr.academicProfileTitle,
         onBackTap: () => context.pop(),
       ),
       body: SingleChildScrollView(
@@ -33,7 +36,7 @@ class AcademicProfileScreen extends ConsumerWidget {
         child: Column(
           children: [
             // Card 1: Student Name + Status
-            _buildMainInfoCard(profile, appColors),
+            _buildMainInfoCard(profile, appColors, tr),
             const SizedBox(height: 16),
 
             // Card 2: Academic Information
@@ -41,13 +44,13 @@ class AcademicProfileScreen extends ConsumerWidget {
               icon: Icons.menu_rounded,
               iconColor: appColors.primary,
               iconBgColor: appColors.primaryContainer,
-              title: 'Academic information',
+              title: tr.academicInfoTitle,
               appColors: appColors,
               rows: [
-                _buildInfoRow('Faculty', profile.faculty, appColors),
-                _buildInfoRow('Major', profile.major, appColors),
-                _buildInfoRow('Year', profile.year, appColors),
-                _buildInfoRow('Enrolled', profile.enrollmentDate, appColors),
+                _buildInfoRow(tr.academicFaculty, profile.faculty, appColors),
+                _buildInfoRow(tr.academicMajor, profile.major, appColors),
+                _buildInfoRow(tr.academicYear, profile.year, appColors),
+                _buildInfoRow(tr.academicEnrolled, profile.enrollmentDate, appColors),
               ],
             ),
             const SizedBox(height: 16),
@@ -57,7 +60,7 @@ class AcademicProfileScreen extends ConsumerWidget {
               icon: Icons.star_rounded,
               iconColor: appColors.success,
               iconBgColor: appColors.success.withValues(alpha: 0.15),
-              title: 'Academic standing',
+              title: tr.academicStandingTitle,
               appColors: appColors,
               rows: [
                 _buildInfoRow(
@@ -76,7 +79,7 @@ class AcademicProfileScreen extends ConsumerWidget {
               icon: Icons.person_rounded,
               iconColor: appColors.notificationPurple,
               iconBgColor: appColors.notificationPurpleContainer,
-              title: 'Club memberships',
+              title: tr.academicClubMemberships,
               appColors: appColors,
               rows: [
                 Padding(
@@ -100,14 +103,14 @@ class AcademicProfileScreen extends ConsumerWidget {
             const SizedBox(height: 30),
 
             // Share Button
-            _buildShareButton(context),
+            _buildShareButton(context, tr),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildMainInfoCard(dynamic profile, AppColors appColors) {
+  Widget _buildMainInfoCard(dynamic profile, AppColors appColors, AppStrings tr) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -167,7 +170,7 @@ class AcademicProfileScreen extends ConsumerWidget {
                           ),
                         ),
                         child: Text(
-                          'Active',
+                          tr.academicActive,
                           style: GoogleFonts.redditSans(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
@@ -320,7 +323,7 @@ class AcademicProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildShareButton(BuildContext context) {
+  Widget _buildShareButton(BuildContext context, AppStrings tr) {
     return GestureDetector(
       onTap: () => context.push('/profile/share_profile'),
       behavior: HitTestBehavior.opaque,
@@ -332,7 +335,7 @@ class AcademicProfileScreen extends ConsumerWidget {
           borderRadius: BorderRadius.circular(24),
           border: Border.all(color: const Color(0xFF0569FF), width: 1.5),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         child: Row(
           children: [
             Container(
@@ -355,15 +358,15 @@ class AcademicProfileScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Share student profile',
+                    tr.academicShareBtn,
                     style: GoogleFonts.redditSans(
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.w700,
                       color: const Color(0xFFF8F9FC),
                     ),
                   ),
                   Text(
-                    'Generate a clean shareable text',
+                    tr.academicShareBtnSub,
                     style: GoogleFonts.redditSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,

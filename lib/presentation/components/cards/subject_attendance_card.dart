@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
+import 'package:unec_assistant/providers/locale_provider.dart';
+import 'package:unec_assistant/l10n/translations.dart';
 import '../../../models/subject_detail.dart';
 
 class SubjectAttendanceCard extends ConsumerStatefulWidget {
@@ -21,6 +23,7 @@ class _SubjectAttendanceCardState extends ConsumerState<SubjectAttendanceCard> {
   @override
   Widget build(BuildContext context) {
     final appColors = ref.watch(appColorsProvider);
+    final tr = ref.watch(strProvider);
     final int absencesLeft =
         widget.subject.absenceLimit - widget.subject.absencesUsed;
     final double usedRatio =
@@ -61,11 +64,11 @@ class _SubjectAttendanceCardState extends ConsumerState<SubjectAttendanceCard> {
         ? appColors.attendanceOrange
         : appColors.success;
 
-    final String pillLabel = "$absencesLeft Left";
+    final String pillLabel = tr.attendanceLeftPill(absencesLeft);
 
     final String absencesLeftLabel = isDanger
-        ? "no absence left"
-        : "$absencesLeft absences left";
+        ? tr.attendanceNoLeft
+        : tr.attendanceAbsencesLeft(absencesLeft);
 
     final Color statusBg = isDanger
         ? appColors.error.withValues(alpha: 0.08)
@@ -197,6 +200,7 @@ class _SubjectAttendanceCardState extends ConsumerState<SubjectAttendanceCard> {
               isCaution,
               isDanger,
               appColors,
+              tr,
             ),
             crossFadeState: _isExpanded
                 ? CrossFadeState.showSecond
@@ -219,6 +223,7 @@ class _SubjectAttendanceCardState extends ConsumerState<SubjectAttendanceCard> {
     bool isCaution,
     bool isDanger,
     AppColors appColors,
+    AppStrings tr,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -249,7 +254,7 @@ class _SubjectAttendanceCardState extends ConsumerState<SubjectAttendanceCard> {
                     ),
                   ),
                   Text(
-                    "used",
+                    tr.attendanceUsed,
                     style: GoogleFonts.redditSans(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
@@ -267,7 +272,7 @@ class _SubjectAttendanceCardState extends ConsumerState<SubjectAttendanceCard> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Limit : ${widget.subject.absenceLimit}",
+                      tr.attendanceLimit(widget.subject.absenceLimit),
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w600,
                         fontSize: 13,
@@ -324,6 +329,7 @@ class _SubjectAttendanceCardState extends ConsumerState<SubjectAttendanceCard> {
                       isCaution,
                       isDanger,
                       appColors,
+                      tr,
                     ),
                   ),
                 ),
@@ -340,6 +346,7 @@ class _SubjectAttendanceCardState extends ConsumerState<SubjectAttendanceCard> {
     bool isCaution,
     bool isDanger,
     AppColors appColors,
+    AppStrings tr,
   ) {
     final normalStyle = GoogleFonts.redditSans(
       fontWeight: FontWeight.w600,
@@ -354,32 +361,20 @@ class _SubjectAttendanceCardState extends ConsumerState<SubjectAttendanceCard> {
 
     if (isSafe) {
       return [
-        TextSpan(text: "You are safe. ", style: normalStyle),
-        TextSpan(text: "Less than 50%", style: boldStyle),
-        TextSpan(
-          text:
-              " of your absence allowance has been used. Use the rest wisely.",
-          style: normalStyle,
-        ),
+        TextSpan(text: tr.attendanceSafeText1, style: normalStyle),
+        TextSpan(text: tr.attendanceSafeText2, style: boldStyle),
+        TextSpan(text: tr.attendanceSafeText3, style: normalStyle),
       ];
     } else if (isCaution) {
       return [
-        TextSpan(text: "Caution. ", style: normalStyle),
-        TextSpan(text: "More than 50%", style: boldStyle),
-        TextSpan(
-          text:
-              " of your absence allowance has been used. Use the rest wisely.",
-          style: normalStyle,
-        ),
+        TextSpan(text: tr.attendanceCautionText1, style: normalStyle),
+        TextSpan(text: tr.attendanceCautionText2, style: boldStyle),
+        TextSpan(text: tr.attendanceCautionText3, style: normalStyle),
       ];
     } else {
       return [
-        TextSpan(
-          text:
-              "You have reached your limit. Any further absences will result in a ",
-          style: normalStyle,
-        ),
-        TextSpan(text: "course failure.", style: boldStyle),
+        TextSpan(text: tr.attendanceDangerText1, style: normalStyle),
+        TextSpan(text: tr.attendanceDangerText2, style: boldStyle),
       ];
     }
   }
