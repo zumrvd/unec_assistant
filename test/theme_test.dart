@@ -4,8 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:unec_assistant/presentation/components/cards/setting_card1.dart';
 import 'package:unec_assistant/presentation/components/cards/setting_card2.dart';
 import 'package:unec_assistant/presentation/components/cards/theme_setting_card.dart';
+import 'package:unec_assistant/data/mock_academic_repository.dart';
 import 'package:unec_assistant/providers/notes_provider.dart';
-import 'package:unec_assistant/providers/subject_detail_provider.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/components/buttons/attendance/attendance_button.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
@@ -184,13 +184,20 @@ void main() {
       expect(folders.first.iconBg, const Color(0x26DA4979));
     });
 
-    test('SubjectDetail constants have correct colors', () {
-      expect(kProgDetail.iconColor, const Color(0xFF0569FF));
-      expect(kFizikaDetail.iconColor, const Color(0xFF0F6E11));
-      expect(kAzDetail.iconColor, const Color(0xFF854F0B));
-      expect(kXettiDetail.iconColor, const Color(0xFF993C1D));
-      expect(kInfoDetail.iconColor, const Color(0xFFDA4979));
-      expect(kXariciDetail.iconColor, const Color(0xFF534AB7));
+    test('SubjectDetail repository entries have correct colours', () async {
+      // Read subjects from the same MockAcademicRepository that the app uses at
+      // runtime. The colours are defined there — not in package-level constants.
+      final repo = MockAcademicRepository();
+      final subjects = await repo.fetchSubjects('fall-2025');
+
+      final byId = {for (final s in subjects) s.subjectId: s};
+
+      expect(byId['1']!.iconColor, const Color(0xFF0569FF));  // Prog
+      expect(byId['2']!.iconColor, const Color(0xFF0F6E11));  // Fizika
+      expect(byId['3']!.iconColor, const Color(0xFF854F0B));  // Az
+      expect(byId['4']!.iconColor, const Color(0xFF993C1D));  // Xetti
+      expect(byId['5']!.iconColor, const Color(0xFFDA4979));  // Info
+      expect(byId['6']!.iconColor, const Color(0xFF534AB7));  // Xarici
     });
 
     testWidgets('AttendanceButton renders with muted red palette styling', (

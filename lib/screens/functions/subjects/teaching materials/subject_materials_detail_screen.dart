@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
 import '../../../../providers/materials_provider.dart';
 import '../../../../providers/subject_detail_provider.dart';
-import '../../../../models/lecture_material.dart';
 import '../../../../presentation/components/cards/lecture_materials_card.dart';
 import '../../../../presentation/components/lists/labels.dart';
 import 'package:unec_assistant/providers/locale_provider.dart';
@@ -21,29 +20,9 @@ class SubjectMaterialsDetailScreen extends ConsumerWidget {
     final appColors = ref.watch(appColorsProvider);
     final tr = ref.watch(strProvider);
 
-    List<LectureMaterial> lectures;
-    switch (subjectId) {
-      case '1':
-        lectures = kProgLectures;
-        break;
-      case '2':
-        lectures = kFizikaLectures;
-        break;
-      case '3':
-        lectures = kAzLectures;
-        break;
-      case '4':
-        lectures = kXettiLectures;
-        break;
-      case '5':
-        lectures = kInfoLectures;
-        break;
-      case '6':
-        lectures = kXariciLectures;
-        break;
-      default:
-        lectures = kEmptyLectures;
-    }
+    // Materials come from the repository via subjectMaterialsProvider.
+    // Replaces the previous switch statement over named lecture list constants.
+    final lectures = ref.watch(subjectMaterialsProvider(subjectId));
 
     return Scaffold(
       backgroundColor: appColors.background,

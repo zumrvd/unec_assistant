@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
-import '../../../models/subject_detail.dart';
+import '../../../providers/subject_detail_provider.dart';
 import '../../../presentation/components/cards/subject_name_card.dart';
 import '../../../presentation/components/buttons/subjects/open_action_button.dart';
 import '../../../presentation/components/cards/teacher_card.dart';
@@ -13,14 +13,22 @@ import '../../../presentation/components/lists/labels.dart';
 import 'package:unec_assistant/providers/locale_provider.dart';
 
 class SubjectDetailScreen extends ConsumerWidget {
-  final SubjectDetail data;
+  /// The subject to display, resolved from [allSubjectsProvider] by [subjectId].
+  final String subjectId;
 
-  const SubjectDetailScreen({required this.data, super.key});
+  const SubjectDetailScreen({required this.subjectId, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
     final tr = ref.watch(strProvider);
+
+    // Look up the live subject from the repository-backed provider.
+    final subjects = ref.watch(allSubjectsProvider);
+    final data = subjects.firstWhere(
+      (s) => s.subjectId == subjectId,
+      orElse: () => subjects.first,
+    );
 
     return Scaffold(
       backgroundColor: appColors.background,

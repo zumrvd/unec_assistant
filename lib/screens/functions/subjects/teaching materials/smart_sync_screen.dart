@@ -17,6 +17,7 @@ class SmartSyncScreen extends ConsumerStatefulWidget {
 class _SmartSyncScreenState extends ConsumerState<SmartSyncScreen> {
   final SmartSyncPreferences _prefs = SmartSyncPreferences();
 
+  @override
   Widget build(BuildContext context) {
     final appColors = ref.watch(appColorsProvider);
     final tr = ref.watch(strProvider);

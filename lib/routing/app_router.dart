@@ -21,7 +21,6 @@ import 'package:unec_assistant/screens/functions/subjects/teaching%20materials/s
 import 'package:unec_assistant/screens/functions/subjects/grades/grades_screen.dart';
 import 'package:unec_assistant/screens/functions/subjects/grades/grade_calculator_screen.dart';
 import 'package:unec_assistant/screens/functions/subjects/grades/subject_grades_screen.dart';
-import 'package:unec_assistant/providers/subject_detail_provider.dart';
 import 'package:unec_assistant/screens/functions/subjects/subject_detail_screen.dart';
 import 'package:unec_assistant/screens/functions/notes/note_files_screen.dart';
 import 'package:unec_assistant/screens/functions/notes/note_editor_screen.dart';
@@ -94,34 +93,10 @@ final GoRouter appRouter = GoRouter(
                   builder: (context, state) => const SubjectsScreen(),
                   routes: [
                     GoRoute(
-                      path: '1',
-                      builder: (context, state) =>
-                          const SubjectDetailScreen(data: kProgDetail),
-                    ),
-                    GoRoute(
-                      path: '2',
-                      builder: (context, state) =>
-                          const SubjectDetailScreen(data: kFizikaDetail),
-                    ),
-                    GoRoute(
-                      path: '3',
-                      builder: (context, state) =>
-                          const SubjectDetailScreen(data: kAzDetail),
-                    ),
-                    GoRoute(
-                      path: '4',
-                      builder: (context, state) =>
-                          const SubjectDetailScreen(data: kXettiDetail),
-                    ),
-                    GoRoute(
-                      path: '5',
-                      builder: (context, state) =>
-                          const SubjectDetailScreen(data: kInfoDetail),
-                    ),
-                    GoRoute(
-                      path: '6',
-                      builder: (context, state) =>
-                          const SubjectDetailScreen(data: kXariciDetail),
+                      path: ':subjectId',
+                      builder: (context, state) => SubjectDetailScreen(
+                        subjectId: state.pathParameters['subjectId']!,
+                      ),
                     ),
                   ],
                 ),
@@ -151,34 +126,10 @@ final GoRouter appRouter = GoRouter(
                           const GradeCalculatorScreen(),
                     ),
                     GoRoute(
-                      path: 'subject/1',
-                      builder: (context, state) =>
-                          const SubjectGradesScreen(data: kProgDetail),
-                    ),
-                    GoRoute(
-                      path: 'subject/2',
-                      builder: (context, state) =>
-                          const SubjectGradesScreen(data: kFizikaDetail),
-                    ),
-                    GoRoute(
-                      path: 'subject/3',
-                      builder: (context, state) =>
-                          const SubjectGradesScreen(data: kAzDetail),
-                    ),
-                    GoRoute(
-                      path: 'subject/4',
-                      builder: (context, state) =>
-                          const SubjectGradesScreen(data: kXettiDetail),
-                    ),
-                    GoRoute(
-                      path: 'subject/5',
-                      builder: (context, state) =>
-                          const SubjectGradesScreen(data: kInfoDetail),
-                    ),
-                    GoRoute(
-                      path: 'subject/6',
-                      builder: (context, state) =>
-                          const SubjectGradesScreen(data: kXariciDetail),
+                      path: 'subject/:subjectId',
+                      builder: (context, state) => SubjectGradesScreen(
+                        subjectId: state.pathParameters['subjectId']!,
+                      ),
                     ),
                   ],
                 ),

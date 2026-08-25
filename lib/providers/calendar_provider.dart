@@ -1,80 +1,42 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:unec_assistant/models/calendar_event.dart';
-import 'package:unec_assistant/utils/subject_event_link.dart';
 
+import '../data/repository_providers.dart';
+import '../models/calendar_event.dart';
+import '../utils/subject_event_link.dart';
+
+/// Manages the full semester event list.
+///
+/// On initialisation the notifier fetches the schedule from
+/// [ScheduleRepository] via [scheduleRepositoryProvider]. User-created
+/// personal events (add / edit / delete) are applied as pure state mutations
+/// on top of the server-sourced baseline — they are not written back to the
+/// repository (personal event persistence is a separate concern).
 class CalendarEventsNotifier extends Notifier<List<CalendarEvent>> {
   @override
   List<CalendarEvent> build() {
-    return generateSemesterSchedule(
-      startDate: DateTime(2026, 9, 15),
-      numberOfWeeks: 15,
-    );
+    Future.microtask(_loadSchedule);
+    return const [];
   }
 
-  /// Projects the 2-week (Week A / Week B) template across [numberOfWeeks].
-  /// Template day offsets 0–6 = ust hefte (A), 7–13 = alt hefte (Week B).
-  List<CalendarEvent> generateSemesterSchedule({
-    required DateTime startDate,
-    required int numberOfWeeks,
-    List<CalendarEvent>? template,
-  }) {
-    final base = normalizeDay(startDate);
-    final mondayOfBase = base.subtract(Duration(days: base.weekday - 1));
+  // ---------------------------------------------------------------------------
+  // Internal load / reload
+  // ---------------------------------------------------------------------------
 
-    final tpl = template ?? kTwoWeekTemplate;
-    final generated = <CalendarEvent>[];
-    final cycles = (numberOfWeeks / 2).ceil();
-
-    final templateAnchor = DateTime(2026, 1, 5);
-
-    for (var cycle = 0; cycle < cycles; cycle++) {
-      final cycleStart = mondayOfBase.add(Duration(days: cycle * 14));
-      for (final event in tpl) {
-        final templateDay = normalizeDay(
-          event.startTime,
-        ).difference(templateAnchor).inDays;
-        final duration = event.endTime.difference(event.startTime);
-        final start = DateTime(
-          cycleStart.year,
-          cycleStart.month,
-          cycleStart.day + templateDay,
-          event.startTime.hour,
-          event.startTime.minute,
-        );
-
-        if (start.isBefore(base)) continue;
-
-        final end = start.add(duration);
-        generated.add(
-          event.copyWith(
-            id: '${event.id}-c$cycle-${start.millisecondsSinceEpoch}',
-            startTime: start,
-            endTime: end,
-            timeRange: event.displayTimeRange,
-            isRecurring: true,
-          ),
-        );
-      }
+  Future<void> _loadSchedule() async {
+    try {
+      final repo = ref.read(scheduleRepositoryProvider);
+      final events = await repo.fetchSemesterSchedule(kCurrentSemesterId);
+      state = List<CalendarEvent>.from(events);
+    } catch (e, st) {
+      debugPrint('CalendarEventsNotifier._loadSchedule error: $e\n$st');
+      // Keep current state (may be empty on first load; screen shows empty calendar).
     }
-
-    generated.addAll(_demoOneOffs());
-    return generated;
   }
 
-  List<CalendarEvent> _demoOneOffs() {
-    return [
-      CalendarEvent(
-        id: 'personal-nov-16',
-        title: 'Kitabxana sessiyası',
-        subtype: 'Personal',
-        location: 'Kitabxana',
-        startTime: DateTime(2026, 11, 25, 15, 0),
-        endTime: DateTime(2026, 11, 25, 16, 30),
-        type: EventType.personalEvent,
-        isRecurring: false,
-      ),
-    ];
-  }
+  // ---------------------------------------------------------------------------
+  // User-facing mutations (personal events only — not persisted to repo)
+  // ---------------------------------------------------------------------------
 
   void addEvent(CalendarEvent event) {
     state = [...state, withResolvedSubjectId(event)];
@@ -103,35 +65,44 @@ class CalendarEventsNotifier extends Notifier<List<CalendarEvent>> {
     state = state.where((e) => e.id != id).toList();
   }
 
+  // ---------------------------------------------------------------------------
+  // Query helpers
+  // ---------------------------------------------------------------------------
+
   List<CalendarEvent> getEventsForDay(DateTime day) {
     final d = normalizeDay(day);
-    final matches = state.where((e) {
+    return (state.where((e) {
       final start = e.startDay;
       final end = e.endDay;
       return !d.isBefore(start) && !d.isAfter(end);
-    }).toList()..sort((a, b) => a.startTime.compareTo(b.startTime));
-    return matches;
+    }).toList()
+      ..sort((a, b) => a.startTime.compareTo(b.startTime)));
   }
 
+  // ---------------------------------------------------------------------------
+  // Bulk replacement / reload
+  // ---------------------------------------------------------------------------
+
+  /// Replaces the entire event list.
+  ///
+  /// Useful for injecting a fully resolved list from an external source
+  /// (e.g. a one-time migration or import flow).
   void replaceAll(List<CalendarEvent> events) {
     state = List<CalendarEvent>.from(events);
   }
 
-  void regenerateSemester({
-    required DateTime startDate,
-    required int numberOfWeeks,
-  }) {
-    state = generateSemesterSchedule(
-      startDate: startDate,
-      numberOfWeeks: numberOfWeeks,
-    );
-  }
+  /// Re-fetches the semester schedule from the repository.
+  ///
+  /// Previously `regenerateSemester({startDate, numberOfWeeks})` — the
+  /// generation parameters are now encapsulated inside the repository
+  /// implementation and are not a concern of the notifier.
+  Future<void> regenerateSemester() => _loadSchedule();
 }
 
 final calendarEventsProvider =
     NotifierProvider<CalendarEventsNotifier, List<CalendarEvent>>(
-      CalendarEventsNotifier.new,
-    );
+  CalendarEventsNotifier.new,
+);
 
 /// Convenience: events for a specific day from the notifier.
 List<CalendarEvent> eventsForDay(WidgetRef ref, DateTime day) {

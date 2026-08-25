@@ -1,336 +1,89 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../data/repository_providers.dart';
 import '../models/subject_detail.dart';
-import '../models/seminar_entry.dart';
-import 'materials_provider.dart';
 
-const SubjectDetail kProgDetail = SubjectDetail(
-  subjectId: '1',
-  subjectCode: '00035 - P1',
-  subjectName: 'Programlaşdırmanın əsasları',
-  subjectTag: 'Lecture · Seminar',
-  teacherName: 'Prof. Əli Böyükkişiyev',
-  teacherRank: 'Associate Professor, CS Dept.',
-  teacherEmail: 'aliboyukkisiyev@unec.edu.az',
-  semesterLabel: 'in this semester',
-  semesterType: 'FALL semester, 2025',
-  startDate: 'September 15',
-  endDate: 'December 28',
-  totalCredits: 30,
-  totalSubjects: 6,
-  totalHours: 900,
-  auditoriumHours: 230,
-  lectureHours: 120,
-  seminarHours: 195,
-  labHours: 15,
-  subjectTotalHours: 180,
-  subjectAuditoriumHours: 60,
-  subjectLectureHours: 30,
-  subjectSeminarHours: 35,
-  sessionsPerWeek: 3,
-  hrsPerWeek: 6,
-  classDays: 'Mon · Fri',
-  subjectCredit: 6,
-  gradeTag: 'Seminar · Midterm',
-  midtermScore: 28,
-  midtermMax: 30,
-  midtermScheduled: true,
-  midtermNote: '',
-  midtermExamCode: '10_25_01_575-1_00035_Proqramlaşdırmanın əsasları_sq',
-  midtermDate: '11/12/2025',
-  seminarMax: 20,
-  seminarsTotal: 4,
-  seminarEntries: [
-    SeminarEntry(
-        title: 'Seminar 4 - Dəyişənlər və məlumat tipləri',
-        date: 'Oct 10, 2026',
-        score: 10),
-    SeminarEntry(
-        title: 'Seminar 7 - Funksiyalar və prosedurlar',
-        date: 'Nov 14, 2026',
-        score: 9),
-  ],
-  finalScore: 0,
-  finalMax: 50,
-  finalScheduled: false,
-  finalNote: 'Final not scheduled yet',
-  absencesUsed: 2,
-  absenceLimit: 7,
-  fileCount: 0,
-  icon: Icons.menu_book_rounded,
-  iconColor: Color(0xFF0569FF),
-  iconBg: Color(0x260569FF),
-);
+// =============================================================================
+// State + Notifier
+// =============================================================================
 
-const SubjectDetail kFizikaDetail = SubjectDetail(
-  subjectId: '2',
-  subjectCode: '00036 - F1',
-  subjectName: 'Fizika',
-  subjectTag: 'Lecture · Laboratory',
-  teacherName: 'Doc. Rəşad Qasımov',
-  teacherRank: 'Head of Physics Dept.',
-  teacherEmail: 'rashadgasimov@unec.edu.az',
-  semesterLabel: 'in this semester',
-  semesterType: 'FALL semester, 2025',
-  startDate: 'September 15',
-  endDate: 'December 28',
-  totalCredits: 30,
-  totalSubjects: 6,
-  totalHours: 900,
-  auditoriumHours: 230,
-  lectureHours: 120,
-  seminarHours: 195,
-  labHours: 15,
-  subjectTotalHours: 180,
-  subjectAuditoriumHours: 60,
-  subjectLectureHours: 30,
-  subjectSeminarHours: 0,
-  sessionsPerWeek: 2,
-  hrsPerWeek: 4,
-  classDays: 'Tue · Thu',
-  subjectCredit: 5,
-  gradeTag: 'Laboratory',
-  midtermScore: 0,
-  midtermMax: 30,
-  midtermScheduled: false,
-  midtermNote: 'Midterm not scheduled yet',
-  midtermExamCode: '123',
-  midtermDate: '11/12/2025',
-  seminarMax: 20,
-  seminarsTotal: 4,
-  seminarEntries: [
-  ],
-  finalScore: 0,
-  finalMax: 50,
-  finalScheduled: false,
-  finalNote: 'Final not scheduled yet',
-  absencesUsed: 7,
-  absenceLimit: 7,
-  fileCount: 0,
-  icon: Icons.menu_book_rounded,
-  iconColor: Color(0xFF0F6E11),
-  iconBg: Color(0x260F6E11),
-);
+/// Holds the academic data state for all enrolled subjects.
+class AcademicState {
+  const AcademicState({
+    this.subjects = const [],
+    this.isLoading = false,
+    this.error,
+  });
 
-const SubjectDetail kAzDetail = SubjectDetail(
-  subjectId: '3',
-  subjectCode: '00037 - A1',
-  subjectName: 'Azərbaycan dilində işguzar və akademik kommunikasiya',
-  subjectTag: 'Seminar (Online)',
-  teacherName: 'Dr. Günel Məmmədova',
-  teacherRank: 'Senior Lecturer',
-  teacherEmail: 'gunelmammadova@unec.edu.az',
-  semesterLabel: 'in this semester',
-  semesterType: 'FALL semester, 2025',
-  startDate: 'September 15',
-  endDate: 'December 28',
-  totalCredits: 30,
-  totalSubjects: 6,
-  totalHours: 900,
-  auditoriumHours: 230,
-  lectureHours: 120,
-  seminarHours: 195,
-  labHours: 15,
-  subjectTotalHours: 120,
-  subjectAuditoriumHours: 45,
-  subjectLectureHours: 0,
-  subjectSeminarHours: 45,
-  sessionsPerWeek: 1,
-  hrsPerWeek: 2,
-  classDays: 'Wed',
-  subjectCredit: 4,
-  gradeTag: 'Seminar',
-  midtermScore: 0,
-  midtermMax: 30,
-  midtermScheduled: false,
-  midtermNote: 'Midterm not scheduled yet',
-  midtermExamCode: '',
-  midtermDate: '',
-  seminarMax: 20,
-  seminarsTotal: 4,
-  seminarEntries: [],
-  finalScore: 0,
-  finalMax: 50,
-  finalScheduled: false,
-  finalNote: 'Final not scheduled yet',
-  absencesUsed: 0,
-  absenceLimit: 7,
-  fileCount: 0,
-  icon: Icons.menu_book_rounded,
-  iconColor: Color(0xFF854F0B),
-  iconBg: Color(0x26E3993C),
-);
+  final List<SubjectDetail> subjects;
+  final bool isLoading;
+  final String? error;
 
-const SubjectDetail kXettiDetail = SubjectDetail(
-  subjectId: '4',
-  subjectCode: '00038 - X1',
-  subjectName: 'Xətti cəbr və analitik həndəsə',
-  subjectTag: 'Lecture · Seminar',
-  teacherName: 'Prof. Vaqif Quliyev',
-  teacherRank: 'Member of Academy of Sciences',
-  teacherEmail: 'vaqifguliyev@unec.edu.az',
-  semesterLabel: 'in this semester',
-  semesterType: 'FALL semester, 2025',
-  startDate: 'September 15',
-  endDate: 'December 28',
-  totalCredits: 30,
-  totalSubjects: 6,
-  totalHours: 900,
-  auditoriumHours: 230,
-  lectureHours: 120,
-  seminarHours: 195,
-  labHours: 15,
-  subjectTotalHours: 150,
-  subjectAuditoriumHours: 60,
-  subjectLectureHours: 30,
-  subjectSeminarHours: 30,
-  sessionsPerWeek: 2,
-  hrsPerWeek: 4,
-  classDays: 'Mon · Fri',
-  subjectCredit: 6,
-  gradeTag: 'Seminar · Midterm',
-  midtermScore: 25,
-  midtermMax: 30,
-  midtermScheduled: true,
-  midtermNote: '',
-  midtermExamCode: '',
-  midtermDate: '',
-  seminarMax: 20,
-  seminarsTotal: 4,
-  seminarEntries: [],
-  finalScore: 0,
-  finalMax: 50,
-  finalScheduled: false,
-  finalNote: 'Final not scheduled yet',
-  absencesUsed: 4,
-  absenceLimit: 7,
-  fileCount: 0,
-  icon: Icons.menu_book_rounded,
-  iconColor: Color(0xFF993C1D),
-  iconBg: Color(0x26993C1D),
-);
+  AcademicState copyWith({
+    List<SubjectDetail>? subjects,
+    bool? isLoading,
+    String? error,
+  }) {
+    return AcademicState(
+      subjects: subjects ?? this.subjects,
+      isLoading: isLoading ?? this.isLoading,
+      error: error,
+    );
+  }
+}
 
-const SubjectDetail kInfoDetail = SubjectDetail(
-  subjectId: '5',
-  subjectCode: '00039 - I1',
-  subjectName: 'İnformasiya texnologiyalarının əsasları',
-  subjectTag: 'Lecture · Seminar',
-  teacherName: 'Doc. Sevinc Abasova',
-  teacherRank: 'Associate Professor',
-  teacherEmail: 'sevincabasova@unec.edu.az',
-  semesterLabel: 'in this semester',
-  semesterType: 'FALL semester, 2025',
-  startDate: 'September 15',
-  endDate: 'December 28',
-  totalCredits: 30,
-  totalSubjects: 6,
-  totalHours: 900,
-  auditoriumHours: 230,
-  lectureHours: 120,
-  seminarHours: 195,
-  labHours: 15,
-  subjectTotalHours: 150,
-  subjectAuditoriumHours: 60,
-  subjectLectureHours: 30,
-  subjectSeminarHours: 30,
-  sessionsPerWeek: 3,
-  hrsPerWeek: 6,
-  classDays: 'Thu',
-  subjectCredit: 6,
-  gradeTag: 'Seminar',
-  midtermScore: 0,
-  midtermMax: 30,
-  midtermScheduled: false,
-  midtermNote: 'Midterm not scheduled yet',
-  midtermExamCode: '',
-  midtermDate: '',
-  seminarMax: 20,
-  seminarsTotal: 4,
-  seminarEntries: [],
-  finalScore: 0,
-  finalMax: 50,
-  finalScheduled: false,
-  finalNote: 'Final not scheduled yet',
-  absencesUsed: 4,
-  absenceLimit: 7,
-  fileCount: 0,
-  icon: Icons.menu_book_rounded,
-  iconColor: Color(0xFFDA4979),
-  iconBg: Color(0x26DA4979),
-);
+/// Loads enrolled subjects (with grades and attendance) from
+/// [AcademicRepository] and exposes them through the derived providers below.
+///
+/// Consumers use [allSubjectsProvider] or [attentionSubjectsProvider] rather
+/// than watching this notifier directly, preserving the same public API
+/// that all screens already consume.
+class AcademicNotifier extends Notifier<AcademicState> {
+  @override
+  AcademicState build() {
+    Future.microtask(_load);
+    return const AcademicState(isLoading: true);
+  }
 
-const SubjectDetail kXariciDetail = SubjectDetail(
-  subjectId: '6',
-  subjectCode: '00040 - X2',
-  subjectName: 'Xarici dildə işguzar və akademik kommunikasiya',
-  subjectTag: 'Seminar',
-  teacherName: 'Lalə Hacıyeva',
-  teacherRank: 'Senior Instructor',
-  teacherEmail: 'lalahajiyeva@unec.edu.az',
-  semesterLabel: 'in this semester',
-  semesterType: 'FALL semester, 2025',
-  startDate: 'September 15',
-  endDate: 'December 28',
-  totalCredits: 30,
-  totalSubjects: 6,
-  totalHours: 900,
-  auditoriumHours: 230,
-  lectureHours: 120,
-  seminarHours: 195,
-  labHours: 15,
-  subjectTotalHours: 120,
-  subjectAuditoriumHours: 45,
-  subjectLectureHours: 0,
-  subjectSeminarHours: 45,
-  sessionsPerWeek: 1,
-  hrsPerWeek: 2,
-  classDays: 'Wed',
-  subjectCredit: 3,
-  gradeTag: 'Seminar',
-  midtermScore: 0,
-  midtermMax: 30,
-  midtermScheduled: false,
-  midtermNote: 'Midterm not scheduled yet',
-  midtermExamCode: '',
-  midtermDate: '',
-  seminarMax: 20,
-  seminarsTotal: 4,
-  seminarEntries: [
-    SeminarEntry(
-        title: 'Seminar 6 - Past Tense and Future Tense',
-        date: 'Dec 1, 2026',
-        score: 1),
-  ],
-  finalScore: 0,
-  finalMax: 50,
-  finalScheduled: false,
-  finalNote: 'Final not scheduled yet',
-  absencesUsed: 2,
-  absenceLimit: 7,
-  fileCount: 0,
-  icon: Icons.menu_book_rounded,
-  iconColor: Color(0xFF534AB7),
-  iconBg: Color(0x26534AB7),
-);
+  Future<void> _load() async {
+    state = state.copyWith(isLoading: true);
+    try {
+      final repo = ref.read(academicRepositoryProvider);
+      final subjects = await repo.fetchSubjects(kCurrentSemesterId);
+      state = AcademicState(subjects: subjects, isLoading: false);
+    } catch (e, st) {
+      debugPrint('AcademicNotifier._load error: $e\n$st');
+      state = AcademicState(error: e.toString(), isLoading: false);
+    }
+  }
 
+  /// Force-refresh all subject data (grades, attendance, etc.).
+  Future<void> refresh() => _load();
+}
+
+/// Root notifier provider. Prefer the derived providers below in UI code.
+final academicNotifierProvider =
+    NotifierProvider<AcademicNotifier, AcademicState>(AcademicNotifier.new);
+
+// =============================================================================
+// Derived providers — identical public API to what screens already consume
+// =============================================================================
+
+/// All enrolled subjects for the current semester, including grades and
+/// attendance data.
+///
+/// Previously a `Provider<List<SubjectDetail>>` backed by compile-time
+/// constants. Now reactive to [AcademicRepository] — screens are unchanged.
 final allSubjectsProvider = Provider<List<SubjectDetail>>((ref) {
-  const baseSubjects = [
-    kProgDetail,
-    kFizikaDetail,
-    kAzDetail,
-    kXettiDetail,
-    kInfoDetail,
-    kXariciDetail,
-  ];
-
-  return baseSubjects.map((subject) {
-    final lectures = kSubjectLecturesMap[subject.subjectId] ?? [];
-    final actualFileCount = calculateTotalFiles(lectures);
-    return subject.copyWith(fileCount: actualFileCount);
-  }).toList();
+  return ref.watch(academicNotifierProvider).subjects;
 });
 
+/// Subjects that have crossed the attention threshold
+/// (≥ 50 % of allowed absences used).
+///
+/// Previously derived from the const list. Now derived from [allSubjectsProvider]
+/// which is itself repository-backed — screens are unchanged.
 final attentionSubjectsProvider = Provider<List<SubjectDetail>>((ref) {
-  final subjects = ref.watch(allSubjectsProvider);
-  return subjects.where((s) => s.needsAttention).toList();
+  return ref.watch(allSubjectsProvider).where((s) => s.needsAttention).toList();
 });

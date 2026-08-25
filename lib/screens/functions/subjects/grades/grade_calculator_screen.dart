@@ -15,6 +15,9 @@ class GradeCalculatorScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
     final tr = ref.watch(strProvider);
+    // Subjects come from the repository via allSubjectsProvider.
+    // The GradeCalculatorCard receives them as a regular (non-const) list.
+    final subjects = ref.watch(allSubjectsProvider);
 
     return Scaffold(
       backgroundColor: appColors.background,
@@ -31,19 +34,12 @@ class GradeCalculatorScreen extends ConsumerWidget {
                 topRight: Radius.circular(18),
               ),
             ),
-            const GradeCalculatorCard(
-              borderRadius: BorderRadius.only(
+            GradeCalculatorCard(
+              borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(18),
                 bottomRight: Radius.circular(18),
               ),
-              subjects: [
-                kProgDetail,
-                kFizikaDetail,
-                kAzDetail,
-                kXettiDetail,
-                kInfoDetail,
-                kXariciDetail,
-              ],
+              subjects: subjects,
             ),
           ],
         ),
