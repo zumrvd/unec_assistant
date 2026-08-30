@@ -142,7 +142,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Profile Informations'), findsOneWidget);
+      expect(find.text('Academic Profile'), findsOneWidget);
       expect(find.text('Your full transcript'), findsOneWidget);
       expect(find.text('Unec Cabinet'), findsOneWidget);
       expect(find.text('Direct link to your cabinet'), findsOneWidget);

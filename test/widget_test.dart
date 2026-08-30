@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:unec_assistant/main.dart';
-import 'package:unec_assistant/providers/current_class_provider.dart';
+import 'package:unec_assistant/providers/time_provider.dart';
 import 'package:unec_assistant/routing/main_scaffold.dart';
 
 void main() {
@@ -26,5 +27,9 @@ void main() {
     expect(find.bySemanticsLabel('Functions'), findsOneWidget);
     expect(find.bySemanticsLabel('Feed'), findsOneWidget);
     expect(find.bySemanticsLabel('Profile'), findsOneWidget);
+
+    // Tap on Functions tab
+    await tester.tap(find.byIcon(Icons.school_rounded));
+    await tester.pumpAndSettle();
   });
 }

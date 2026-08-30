@@ -8,13 +8,17 @@ import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/providers/locale_provider.dart';
 import 'package:unec_assistant/l10n/translations.dart';
 import 'package:unec_assistant/providers/calendar_provider.dart';
+import 'package:unec_assistant/providers/time_provider.dart';
 
 class ScheduleCard extends ConsumerWidget {
   const ScheduleCard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final now = DateTime.now();
+    final now = ref.watch(nowTickerProvider).maybeWhen(
+          data: (d) => d,
+          orElse: () => ref.watch(nowProvider),
+        );
     final events = ref.watch(calendarEventsProvider);
     final appColors = ref.watch(appColorsProvider);
     final tr = ref.watch(strProvider);
@@ -39,7 +43,7 @@ class ScheduleCard extends ConsumerWidget {
         now.isBefore(firstEvent.endTime);
 
     final String semanticLabel = firstEvent != null
-        ? 'Upcoming ${isExam ? 'Exam' : 'Personal Plan'}: ${firstEvent.title}, ${_formatDate(firstEvent.startTime, tr)} at ${firstEvent.displayTimeRange}'
+        ? 'Upcoming ${isExam ? 'Exam' : 'Personal Plan'}: ${firstEvent.title}, ${_formatDate(firstEvent.startTime, tr, now)} at ${firstEvent.displayTimeRange}'
         : '';
 
     if (!hasEvent) {
@@ -150,7 +154,7 @@ class ScheduleCard extends ConsumerWidget {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
-                                _formatDate(firstEvent?.startTime ?? now, tr),
+                                _formatDate(firstEvent?.startTime ?? now, tr, now),
                                 style: GoogleFonts.redditSans(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 10,
@@ -273,8 +277,7 @@ class ScheduleCard extends ConsumerWidget {
     );
   }
 
-  String _formatDate(DateTime date, AppStrings tr) {
-    final now = DateTime.now();
+  String _formatDate(DateTime date, AppStrings tr, DateTime now) {
     if (date.year == now.year &&
         date.month == now.month &&
         date.day == now.day) {

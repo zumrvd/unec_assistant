@@ -17,7 +17,7 @@ class ManageChannelsScreen extends ConsumerWidget {
 
     if (channels.isEmpty) {
       return Scaffold(
-        backgroundColor: const Color(0xFFF8F9FC),
+        backgroundColor: appColors.background,
         appBar: CustomAppBar(title: tr.channelsTitle),
         body: Center(
           child: Column(
@@ -27,11 +27,15 @@ class ManageChannelsScreen extends ConsumerWidget {
                 width: 72,
                 height: 72,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFEEF4FF),
+                  color: appColors.primaryContainer,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 alignment: Alignment.center,
-                child: const Icon(Icons.notifications_off_outlined, size: 36, color: Color(0xFF0569FF)),
+                child: Icon(
+                  Icons.notifications_off_outlined,
+                  size: 36,
+                  color: appColors.primary,
+                ),
               ),
               const SizedBox(height: 16),
               Text(
@@ -39,7 +43,7 @@ class ManageChannelsScreen extends ConsumerWidget {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
-                  color: const Color(0xFF1F1F1F),
+                  color: appColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 8),
@@ -49,7 +53,7 @@ class ManageChannelsScreen extends ConsumerWidget {
                 style: GoogleFonts.redditSans(
                   fontWeight: FontWeight.w500,
                   fontSize: 13,
-                  color: const Color(0xFF838A97),
+                  color: appColors.textMuted,
                   height: 1.5,
                 ),
               ),
@@ -60,7 +64,7 @@ class ManageChannelsScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FC),
+      backgroundColor: appColors.background,
       appBar: CustomAppBar(title: tr.channelsTitle),
       body: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
@@ -72,20 +76,20 @@ class ManageChannelsScreen extends ConsumerWidget {
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: appColors.cardBackground,
                 borderRadius: BorderRadius.circular(18),
-                border: Border.all(color: const Color(0xFFE0E4F0)),
+                border: Border.all(color: appColors.borderColor),
               ),
               child: Row(
                 children: [
                   CircleAvatar(
-                    backgroundColor: const Color(0xFFE8F0FE),
+                    backgroundColor: appColors.primaryContainer,
                     child: Text(
                       channel.channelName.substring(0, 1),
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w800,
                         fontSize: 16,
-                        color: const Color(0xFF0569FF),
+                        color: appColors.primary,
                       ),
                     ),
                   ),
@@ -99,7 +103,7 @@ class ManageChannelsScreen extends ConsumerWidget {
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w700,
                             fontSize: 14,
-                            color: const Color(0xFF1F1F1F),
+                            color: appColors.textPrimary,
                           ),
                         ),
                         Text(
@@ -107,22 +111,29 @@ class ManageChannelsScreen extends ConsumerWidget {
                           style: GoogleFonts.redditSans(
                             fontWeight: FontWeight.w600,
                             fontSize: 10,
-                            color: const Color(0xFF838A97),
+                            color: appColors.textMuted,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const Icon(Icons.notifications_rounded, color: Color(0xFF0569FF), size: 22),
+                  Icon(
+                    Icons.notifications_rounded,
+                    color: appColors.primary,
+                    size: 22,
+                  ),
                   const SizedBox(width: 15),
                   GestureDetector(
-                    onTap: () => ref.read(subscriptionsProvider.notifier).toggleSubscription(channel.channelId, false),
+                    onTap: () => ref
+                        .read(subscriptionsProvider.notifier)
+                        .toggleSubscription(channel.channelId, false),
+                    behavior: HitTestBehavior.opaque,
                     child: Text(
                       tr.channelsUnsubscribe,
                       style: GoogleFonts.redditSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 11,
-                        color: const Color(0xFFD54829),
+                        color: appColors.danger,
                       ),
                     ),
                   ),

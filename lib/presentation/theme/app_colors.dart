@@ -241,7 +241,7 @@ class AppColors {
       green15 = green15Color,
       green2 = green2Color,
       yellow = yellowColor,
-      yellowDark = const Color.fromARGB(255, 239, 140, 19),
+      yellowDark = yellowDarkColor,
       yellow15 = yellow15Color,
       yellowText = yellowTextColor,
       red = redColor,

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,6 +5,7 @@ import 'package:unec_assistant/models/calendar_event.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/locale_provider.dart';
+import 'package:unec_assistant/providers/time_provider.dart';
 
 class TodaysEventsCard extends ConsumerStatefulWidget {
   final List<CalendarEvent> events;
@@ -17,22 +17,13 @@ class TodaysEventsCard extends ConsumerStatefulWidget {
 }
 
 class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
-  late Timer _timer;
-  DateTime _now = DateTime.now();
-
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(minutes: 1), (_) {
-      if (mounted) {
-        setState(() => _now = DateTime.now());
-      }
-    });
   }
 
   @override
   void dispose() {
-    _timer.cancel();
     super.dispose();
   }
 
@@ -144,6 +135,10 @@ class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
   Widget build(BuildContext context) {
     final appColors = ref.watch(appColorsProvider);
     final tr = ref.watch(strProvider);
+    final now = ref
+        .watch(nowTickerProvider)
+        .maybeWhen(data: (d) => d, orElse: () => ref.watch(nowProvider));
+
     final int classCount = widget.events
         .where((e) => e.type == EventType.classEvent)
         .length;
@@ -151,7 +146,7 @@ class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
         .where((e) => e.type == EventType.personalEvent)
         .length;
 
-    final nowMin = _now.hour * 60 + _now.minute;
+    final nowMin = now.hour * 60 + now.minute;
 
     final Iterable<CalendarEvent?> nullableEvents = widget.events
         .cast<CalendarEvent?>();
@@ -173,7 +168,7 @@ class _TodaysEventsCardState extends ConsumerState<TodaysEventsCard> {
         : 0;
 
     final String todayLabel =
-        "${tr.weekdays[_now.weekday - 1]}, ${tr.monthsFull[_now.month - 1]} ${_now.day}";
+        "${tr.weekdays[now.weekday - 1]}, ${tr.monthsFull[now.month - 1]} ${now.day}";
 
     return Container(
       width: 300,

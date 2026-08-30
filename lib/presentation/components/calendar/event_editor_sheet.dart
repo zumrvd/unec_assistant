@@ -6,6 +6,7 @@ import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/utils/subject_event_link.dart';
 import 'package:unec_assistant/providers/locale_provider.dart';
+import 'package:unec_assistant/providers/time_provider.dart';
 
 Future<CalendarEvent?> showEventEditorSheet(
   BuildContext context, {
@@ -19,17 +20,17 @@ Future<CalendarEvent?> showEventEditorSheet(
     builder: (context) {
       return _EventEditorSheet(
         existing: existing,
-        initialDay: initialDay ?? DateTime.now(),
+        initialDay: initialDay,
       );
     },
   );
 }
 
 class _EventEditorSheet extends ConsumerStatefulWidget {
-  const _EventEditorSheet({required this.initialDay, this.existing});
+  const _EventEditorSheet({this.initialDay, this.existing});
 
   final CalendarEvent? existing;
-  final DateTime initialDay;
+  final DateTime? initialDay;
 
   @override
   ConsumerState<_EventEditorSheet> createState() => _EventEditorSheetState();
@@ -48,10 +49,11 @@ class _EventEditorSheetState extends ConsumerState<_EventEditorSheet> {
   void initState() {
     super.initState();
     final e = widget.existing;
+    final now = ref.read(nowProvider);
     _titleCtrl = TextEditingController(text: e?.title ?? '');
     _descCtrl = TextEditingController(text: e?.description ?? '');
     _locationCtrl = TextEditingController(text: e?.location ?? '');
-    _day = normalizeDay(e?.startTime ?? widget.initialDay);
+    _day = normalizeDay(e?.startTime ?? widget.initialDay ?? now);
     _start = e != null
         ? TimeOfDay(hour: e.startTime.hour, minute: e.startTime.minute)
         : const TimeOfDay(hour: 9, minute: 0);
@@ -122,7 +124,7 @@ class _EventEditorSheetState extends ConsumerState<_EventEditorSheet> {
       CalendarEvent(
         id:
             widget.existing?.id ??
-            'evt-${DateTime.now().millisecondsSinceEpoch}',
+            'evt-${ref.read(nowProvider).millisecondsSinceEpoch}',
         title: title,
         subtype: widget.existing?.subtype ?? subtype,
         location: _locationCtrl.text.trim(),

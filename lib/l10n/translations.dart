@@ -310,10 +310,10 @@ class AppStrings {
   String get feedCategoryClubs => _t('Clubs', 'Klublar', 'Клубы');
   String get feedCategoryDevTeam =>
       _t('Dev Team', 'Dev Komandası', 'Команда Dev');
-  String feedTimeAgoDay(int n) => _t('${n}d ago', '${n}g əvvəl', '${n}д назад');
+  String feedTimeAgoDay(int n) => _t('${n}d ago', '${n}g əvvəl', '$nд назад');
   String feedTimeAgoHour(int n) =>
-      _t('${n}h ago', '${n}s əvvəl', '${n}ч назад');
-  String feedTimeAgoMin(int n) => _t('${n}m ago', '${n}d əvvəl', '${n}м назад');
+      _t('${n}h ago', '${n}s əvvəl', '$nч назад');
+  String feedTimeAgoMin(int n) => _t('${n}m ago', '${n}d əvvəl', '$nм назад');
 
   // ── Manage Channels ───────────────────────────────────────────────────────
   String get channelsTitle => _t(

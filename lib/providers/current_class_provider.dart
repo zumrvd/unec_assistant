@@ -7,14 +7,7 @@ import '../providers/calendar_provider.dart';
 import '../providers/materials_provider.dart';
 import '../providers/subject_detail_provider.dart';
 import '../utils/subject_event_link.dart';
-
-/// Ticks once per minute so active/upcoming resolution stays current.
-final nowTickerProvider = StreamProvider<DateTime>((ref) async* {
-  yield DateTime.now();
-  await for (final _ in Stream.periodic(const Duration(minutes: 1))) {
-    yield DateTime.now();
-  }
-});
+import 'time_provider.dart';
 
 /// Relative day of an upcoming class vs "now".
 enum NextClassWhen { today, tomorrow, later }
@@ -113,10 +106,9 @@ NextClassWhen _whenFor(DateTime eventStart, DateTime now) {
 /// Schedule, and [allMaterialsProvider] to resolve the relevant lecture.
 final currentClassProvider = Provider<CurrentClassState>((ref) {
   final nowAsync = ref.watch(nowTickerProvider);
-  final now = nowAsync.when(
+  final now = nowAsync.maybeWhen(
     data: (d) => d,
-    loading: () => DateTime.now(),
-    error: (_, _) => DateTime.now(),
+    orElse: () => ref.read(nowProvider),
   );
 
   final subjects = ref.watch(allSubjectsProvider);

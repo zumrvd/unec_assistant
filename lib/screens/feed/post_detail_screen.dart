@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/providers/locale_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../models/channel.dart';
 import '../../../models/comment.dart';

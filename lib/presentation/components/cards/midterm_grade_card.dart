@@ -17,6 +17,7 @@ class MidtermGradeCard extends ConsumerWidget {
     stops: [0.0, 0.5, 1.0],
   );
 
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
     final tr = ref.watch(strProvider);
