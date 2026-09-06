@@ -87,6 +87,7 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
       );
     }
 
+    
     final post = state.post!;
     final channel = state.channel!;
 

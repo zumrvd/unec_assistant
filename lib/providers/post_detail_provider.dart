@@ -77,6 +77,7 @@ class PostDetailNotifier extends Notifier<PostDetailState> {
     }
   }
 
+
   Future<void> loadPostData(String postId) async {
     state = state.copyWith(isLoading: true, post: null, channel: null, comments: [], replies: {});
     final repo = ref.read(feedRepositoryProvider);

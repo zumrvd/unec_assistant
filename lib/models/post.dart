@@ -12,6 +12,7 @@ class Post {
   final int shareCount;
   final bool isLikedByCurrentUser;
 
+
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
       postId: json['postId'] as String,
