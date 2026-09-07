@@ -76,7 +76,6 @@ class _SeminarGradesCardState extends ConsumerState<SeminarGradesCard> {
     );
   }
 
-  @override
   Widget build(BuildContext context) {
     final appColors = ref.watch(appColorsProvider);
     final tr = ref.watch(strProvider);

@@ -7,7 +7,7 @@ import 'package:unec_assistant/presentation/components/cards/todays_events_card.
 import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/providers/calendar_provider.dart';
 import 'package:unec_assistant/providers/locale_provider.dart';
-import 'package:unec_assistant/providers/time_provider.dart';
+
 import 'package:unec_assistant/presentation/components/lists/labels.dart';
 
 class ScheduleScreen extends ConsumerWidget {
@@ -25,7 +25,7 @@ class ScheduleScreen extends ConsumerWidget {
   Future<void> _openCreateSheet(BuildContext context, WidgetRef ref) async {
     final created = await showEventEditorSheet(
       context,
-      initialDay: ref.read(nowProvider),
+      initialDay: DateTime.now(),
     );
     if (created != null) {
       ref.read(calendarEventsProvider.notifier).addEvent(created);
@@ -37,7 +37,7 @@ class ScheduleScreen extends ConsumerWidget {
     final allEvents = ref.watch(calendarEventsProvider);
     final appColors = ref.watch(appColorsProvider);
     final tr = ref.watch(strProvider);
-    final now = ref.watch(nowProvider);
+    final now = DateTime.now();
     final todaysEvents = allEvents
         .where(
           (e) =>
@@ -84,7 +84,7 @@ class ScheduleScreen extends ConsumerWidget {
                   spacing: 10,
                   children: [
                     SectionLabel(tr.scheduleTodaysPlans),
-                    Center(child: TodaysEventsCard(events: todaysEvents)),
+                    TodaysEventsCard(events: todaysEvents),
                     SectionLabel(tr.scheduleCalendar),
                   ],
                 ),

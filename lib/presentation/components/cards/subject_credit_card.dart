@@ -10,7 +10,6 @@ class SubjectCreditCard extends ConsumerWidget {
 
   const SubjectCreditCard({required this.data, super.key});
 
-  @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
     final tr = ref.watch(strProvider);

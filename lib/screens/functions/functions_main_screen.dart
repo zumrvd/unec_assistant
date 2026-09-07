@@ -22,10 +22,7 @@ class FunctionsMainScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: appColors.background,
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(
-          parent: AlwaysScrollableScrollPhysics(),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 35.0, vertical: 12.0),
+        padding: const EdgeInsets.symmetric(horizontal: 35.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -70,7 +67,6 @@ class FunctionsMainScreen extends ConsumerWidget {
             const SizedBox(height: 10),
 
             NotesButton(onTap: () => context.push('/notes')),
-            const SizedBox(height: 24),
           ],
         ),
       ),

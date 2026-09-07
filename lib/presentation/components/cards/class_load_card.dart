@@ -47,7 +47,6 @@ class ClassLoadCard extends ConsumerWidget {
     );
   }
 
-  @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
     final tr = ref.watch(strProvider);

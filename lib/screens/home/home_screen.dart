@@ -18,7 +18,6 @@ import 'package:unec_assistant/providers/subject_detail_provider.dart';
 import 'package:unec_assistant/models/calendar_event.dart';
 import '../../presentation/components/lists/labels.dart';
 import 'package:unec_assistant/providers/locale_provider.dart';
-import 'package:unec_assistant/providers/time_provider.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -31,7 +30,7 @@ class HomeScreen extends ConsumerWidget {
     final recentFunction = ref.watch(recentFunctionProvider);
 
     // Section Visibility Logic
-    final now = ref.watch(nowProvider);
+    final now = DateTime.now();
 
     // 1. Class & Attendance
     final currentClassState = ref.watch(currentClassProvider);
@@ -93,7 +92,7 @@ class HomeScreen extends ConsumerWidget {
                 channelId: 'ch1', // Fallback for old model compatibility
                 bodyText: posts.first.content,
                 feedType: PostFeedType.official,
-                postedAt: now,
+                postedAt: DateTime.now(),
                 likeCount: posts.first.likeCount,
                 commentCount: posts.first.commentCount,
                 shareCount: 0,

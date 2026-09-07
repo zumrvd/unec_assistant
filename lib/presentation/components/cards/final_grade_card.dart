@@ -10,7 +10,6 @@ class FinalGradeCard extends ConsumerWidget {
 
   const FinalGradeCard({required this.data, super.key});
 
-  @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
     final tr = ref.watch(strProvider);

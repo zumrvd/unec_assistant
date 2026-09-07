@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/providers/locale_provider.dart';
-import 'package:unec_assistant/providers/time_provider.dart';
 import '../../../models/subject_detail.dart';
 import '../../../providers/subject_detail_provider.dart';
 
@@ -34,12 +33,13 @@ class GradeEvent {
 class RecentGradeCard extends ConsumerWidget {
   const RecentGradeCard({super.key});
 
-  DateTime? _parseDate(String dateStr, DateTime now) {
+  DateTime? _parseDate(String dateStr) {
     if (dateStr.isEmpty) return null;
     try {
       if (dateStr.contains(',')) {
         return DateFormat('MMM d, yyyy').parse(dateStr);
       } else {
+        final now = DateTime.now();
         return DateFormat('MMMM d').parse(dateStr).copyWith(year: now.year);
       }
     } catch (e) {
@@ -49,7 +49,6 @@ class RecentGradeCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final now = ref.watch(nowProvider);
     final subjects = ref.watch(allSubjectsProvider);
     final appColors = ref.watch(appColorsProvider);
     final tr = ref.watch(strProvider);
@@ -59,7 +58,7 @@ class RecentGradeCard extends ConsumerWidget {
     for (final s in subjects) {
       // 1. Seminars
       for (final e in s.seminarEntries) {
-        final parsed = _parseDate(e.date, now);
+        final parsed = _parseDate(e.date);
         if (parsed != null) {
           allEvents.add(
             GradeEvent(
@@ -77,7 +76,7 @@ class RecentGradeCard extends ConsumerWidget {
 
       // 2. Midterm
       if (s.midtermScore > 0) {
-        final parsed = _parseDate(s.midtermDate, now);
+        final parsed = _parseDate(s.midtermDate);
         if (parsed != null) {
           allEvents.add(
             GradeEvent(
@@ -95,7 +94,7 @@ class RecentGradeCard extends ConsumerWidget {
 
       // 3. Final
       if (s.finalScore > 0) {
-        final parsed = _parseDate(s.finalExamDate, now);
+        final parsed = _parseDate(s.finalExamDate);
         if (parsed != null) {
           allEvents.add(
             GradeEvent(

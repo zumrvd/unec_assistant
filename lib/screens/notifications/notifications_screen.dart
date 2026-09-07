@@ -9,7 +9,6 @@ import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import '../../models/app_notification.dart';
 import '../../providers/notification_provider.dart';
 import '../../presentation/components/lists/labels.dart';
-import 'package:unec_assistant/providers/time_provider.dart';
 
 class NotificationsScreen extends ConsumerWidget {
   const NotificationsScreen({super.key});
@@ -20,12 +19,11 @@ class NotificationsScreen extends ConsumerWidget {
     final isEnabled = ref.watch(notificationsEnabledProvider);
     final appColors = ref.watch(appColorsProvider);
     final tr = ref.watch(strProvider);
-    final now = ref.watch(nowProvider);
 
     // Grouping logic
     final Map<String, List<AppNotification>> grouped = {};
     for (var n in notifications) {
-      String groupKey = _getGroupKey(n.timestamp, tr, now);
+      String groupKey = _getGroupKey(n.timestamp, tr);
       grouped.putIfAbsent(groupKey, () => []).add(n);
     }
 
@@ -96,7 +94,8 @@ class NotificationsScreen extends ConsumerWidget {
     );
   }
 
-  String _getGroupKey(DateTime date, AppStrings tr, DateTime now) {
+  String _getGroupKey(DateTime date, AppStrings tr) {
+    final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
     final notificationDate = DateTime(date.year, date.month, date.day);

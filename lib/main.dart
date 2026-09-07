@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -11,8 +12,7 @@ import 'package:unec_assistant/presentation/theme/app_colors.dart';
 
 void main() => runApp(
   DevicePreview(
-    //enabled: !kReleaseMode, // ON
-    enabled: false, // OFF
+    enabled: !kReleaseMode,
     builder: (context) => const ProviderScope(child: UnecAssistantApp()),
   ),
 );

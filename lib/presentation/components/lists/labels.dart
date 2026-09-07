@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
+import '../../../providers/about_app_provider.dart';
 import 'package:unec_assistant/providers/locale_provider.dart';
 
 class SectionLabel extends ConsumerWidget {

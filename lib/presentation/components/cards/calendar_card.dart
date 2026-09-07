@@ -11,7 +11,6 @@ import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/calendar_provider.dart';
 import 'package:unec_assistant/providers/locale_provider.dart';
-import 'package:unec_assistant/providers/time_provider.dart';
 
 enum CalendarView { month, week, day }
 
@@ -35,8 +34,10 @@ class CalendarCard extends ConsumerStatefulWidget {
 
 class _CalendarCardState extends ConsumerState<CalendarCard> {
   CalendarView _view = CalendarView.month;
-  late DateTime _focusedDate;
-  late DateTime _selectedDate;
+  DateTime _focusedDate = DateTime.now();
+  DateTime _selectedDate = DateTime.now();
+  late Timer _nowTimer;
+  DateTime _now = DateTime.now();
   late ScrollController _weekScrollController;
   late ScrollController _dayScrollController;
   final ScrollController _weekHorizontalController = ScrollController();
@@ -51,13 +52,18 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
   void initState() {
     super.initState();
 
-    final now = ref.read(nowProvider);
-    _focusedDate = widget.initialDate ?? now;
-    _selectedDate = widget.initialDate ?? now;
-
     if (widget.initialView != null) {
       _view = widget.initialView!;
     }
+    if (widget.initialDate != null) {
+      _focusedDate = widget.initialDate!;
+      _selectedDate = widget.initialDate!;
+    }
+
+    _nowTimer = Timer.periodic(const Duration(minutes: 1), (_) {
+      if (!mounted) return;
+      setState(() => _now = DateTime.now());
+    });
 
     double initialOffset = 8 * _hourHeight;
     if (widget.initialScrollTime != null) {
@@ -100,6 +106,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
 
   @override
   void dispose() {
+    _nowTimer.cancel();
     _weekScrollController.dispose();
     _dayScrollController.dispose();
     _weekHorizontalController.dispose();
@@ -112,10 +119,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
   }
 
   bool _isActiveNow(CalendarEvent e) {
-    final now = ref.watch(nowTickerProvider).maybeWhen(
-      data: (d) => d,
-      orElse: () => ref.watch(nowProvider),
-    );
+    final now = _now;
     if (!isSameCalendarDay(now, e.startTime) &&
         !isSameCalendarDay(now, e.endTime)) {
       if (!(now.isAfter(e.startTime) && now.isBefore(e.endTime))) {
@@ -125,13 +129,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
     return !now.isBefore(e.startTime) && !now.isAfter(e.endTime);
   }
 
-  bool _isToday(DateTime d) {
-    final now = ref.watch(nowTickerProvider).maybeWhen(
-      data: (d) => d,
-      orElse: () => ref.watch(nowProvider),
-    );
-    return isSameCalendarDay(d, now);
-  }
+  bool _isToday(DateTime d) => isSameCalendarDay(d, _now);
 
   DateTime _weekStart(DateTime d) {
     final weekday = d.weekday;
@@ -156,11 +154,7 @@ class _CalendarCardState extends ConsumerState<CalendarCard> {
   }
 
   double _nowTop() {
-    final now = ref.watch(nowTickerProvider).maybeWhen(
-      data: (d) => d,
-      orElse: () => ref.watch(nowProvider),
-    );
-    final topRatio = (now.hour * 60 + now.minute) / (24 * 60);
+    final topRatio = (_now.hour * 60 + _now.minute) / (24 * 60);
     return topRatio * _totalGridHeight;
   }
 

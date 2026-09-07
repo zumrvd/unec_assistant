@@ -7,7 +7,6 @@ import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/presentation/theme/app_colors.dart';
 import 'package:unec_assistant/providers/locale_provider.dart';
 import 'package:unec_assistant/l10n/translations.dart';
-import 'package:unec_assistant/providers/time_provider.dart';
 
 class CurrentClassDetailedCard extends ConsumerWidget {
   const CurrentClassDetailedCard({
@@ -98,17 +97,13 @@ class CurrentClassDetailedCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final appColors = ref.watch(appColorsProvider);
     final tr = ref.watch(strProvider);
-    final clock = now ??
-        ref.watch(nowTickerProvider).maybeWhen(
-              data: (d) => d,
-              orElse: () => ref.watch(nowProvider),
-            );
+    final clock = now ?? DateTime.now();
     final startMin = event.startTime.hour * 60 + event.startTime.minute;
     final endMin = event.endTime.hour * 60 + event.endTime.minute;
     final duration = (endMin - startMin).clamp(1, 24 * 60);
     final effectiveNowMin = forceZeroProgress
         ? startMin
-        : clock!.hour * 60 + clock.minute;
+        : clock.hour * 60 + clock.minute;
     final elapsed = (effectiveNowMin - startMin).clamp(0, duration);
     final remaining = duration - elapsed;
     final completedRatio = elapsed / duration;
