@@ -69,7 +69,9 @@ class PostDetailNotifier extends Notifier<PostDetailState> {
         isSubscribed: isSubscribed,
         isLoading: false,
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      print('POST DETAIL PROVIDER ERROR: $e');
+      print(stackTrace);
       state = state.copyWith(isLoading: false);
     }
   }

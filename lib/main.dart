@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -12,7 +13,8 @@ import 'package:unec_assistant/presentation/theme/app_colors.dart';
 
 void main() => runApp(
   DevicePreview(
-    enabled: !kReleaseMode,
+    //enabled: !kReleaseMode, // ON
+    enabled: false, // OFF
     builder: (context) => const ProviderScope(child: UnecAssistantApp()),
   ),
 );
@@ -105,10 +107,19 @@ class AppScrollBehavior extends MaterialScrollBehavior {
 
   @override
   Widget buildOverscrollIndicator(
-    BuildContext context,
-    Widget child,
-    ScrollableDetails details,
-  ) {
+      BuildContext context,
+      Widget child,
+      ScrollableDetails details,
+      ) {
     return child;
   }
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.trackpad,
+    PointerDeviceKind.stylus,
+    PointerDeviceKind.unknown,
+  };
 }

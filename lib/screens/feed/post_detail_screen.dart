@@ -13,7 +13,6 @@ import '../../../providers/post_detail_provider.dart';
 import '../../../providers/current_user_provider.dart';
 import '../../../utils/app_toast.dart';
 
-// Top-level constant — decoupled from widget state.
 const _kMockUsers = {
   'u2': UserAccount(userId: 'u2', displayName: 'Elşad V.', initials: 'EM'),
   'u3': UserAccount(userId: 'u3', displayName: 'Vəfa B.', initials: 'VB'),

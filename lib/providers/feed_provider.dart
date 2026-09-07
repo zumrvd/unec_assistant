@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/post.dart';
 import '../data/feed_repository.dart';
-import '../data/mock_feed_repository.dart';
+import '../data/api_feed_provider.dart';
 
 final feedRepositoryProvider = Provider<FeedRepository>((ref) {
-  return MockFeedRepository();
+  return ApiFeedRepository();
 });
 
 class FeedState {

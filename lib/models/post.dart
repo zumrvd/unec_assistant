@@ -12,6 +12,21 @@ class Post {
   final int shareCount;
   final bool isLikedByCurrentUser;
 
+  factory Post.fromJson(Map<String, dynamic> json) {
+    return Post(
+      postId: json['postId'] as String,
+      channelId: json['channelId'] as String,
+      bodyText: json['bodyText'] as String,
+      imageUrl: json['imageUrl'] as String?,
+      feedType: PostFeedType.values.byName(json['feedType'] as String),
+      postedAt: DateTime.parse(json['postedAt'] as String),
+      likeCount: json['likeCount'] as int,
+      commentCount: json['commentCount'] as int,
+      shareCount: json['shareCount'] as int,
+      isLikedByCurrentUser: json['isLikedByCurrentUser'] as bool,
+    );
+  }
+
   const Post({
     required this.postId,
     required this.channelId,
