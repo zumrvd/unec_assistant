@@ -25,6 +25,20 @@ class Comment {
     this.isEdited = false,
   });
 
+  factory Comment.fromJson(Map<String, dynamic> json) {
+    return Comment(
+      commentId: json['commentId'] as String,
+      postId: json['postId'] as String,
+      parentCommentId: json['parentCommentId'] as String?,
+      authorUserId: json['authorUserId'] as String,
+      bodyText: json['bodyText'] as String,
+      postedAt: DateTime.parse(json['postedAt'] as String),
+      likeCount: json['likeCount'] as int,
+      isLikedByCurrentUser: json['isLikedByCurrentUser'] as bool,
+      replyCount: json['replyCount'] as int,
+    );
+  }
+
   Comment copyWith({
     int? likeCount,
     bool? isLikedByCurrentUser,

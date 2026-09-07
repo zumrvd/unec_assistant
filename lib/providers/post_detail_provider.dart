@@ -47,9 +47,34 @@ class PostDetailState {
 }
 
 class PostDetailNotifier extends Notifier<PostDetailState> {
+
+  // parent/reply grouping
+  (List<Comment>, Map<String, List<Comment>>) _groupComments(List<Comment> allComments) {
+    final rootComments = allComments.where((c) => c.parentCommentId == null).toList();
+    final Map<String, List<Comment>> repliesMap = {};
+
+    for (final comment in allComments.where((c) => c.parentCommentId != null)) {
+      repliesMap.putIfAbsent(comment.parentCommentId!, () => []).add(comment);
+    }
+
+    return (rootComments, repliesMap);
+  }
+
   @override
   PostDetailState build() {
     return const PostDetailState(isLoading: true);
+  }
+
+  Future<void> loadComments(String postId) async {
+    final repo = ref.read(feedRepositoryProvider);
+    try {
+      final allComments = await repo.fetchComments(postId, sort: state.sort);
+      final (roots, replies) = _groupComments(allComments);
+      state = state.copyWith(comments: roots, replies: replies);
+    } catch (e, stackTrace) {
+      print('POST DETAIL PROVIDER ERROR: $e');
+      print(stackTrace);
+    }
   }
 
   Future<void> loadPostData(String postId) async {
@@ -58,14 +83,16 @@ class PostDetailNotifier extends Notifier<PostDetailState> {
     try {
       final post = await repo.fetchPostById(postId);
       final channel = await repo.fetchChannelById(post.channelId);
-      final comments = await repo.fetchComments(postId, sort: state.sort);
+      final allComments = await repo.fetchComments(postId, sort: state.sort);
       final subscribedChannels = await repo.fetchSubscribedChannels();
       final isSubscribed = subscribedChannels.any((c) => c.channelId == channel.channelId);
+      final (roots, replies) = _groupComments(allComments);
 
       state = state.copyWith(
         post: post,
         channel: channel,
-        comments: comments,
+        comments: roots,
+        replies: replies,
         isSubscribed: isSubscribed,
         isLoading: false,
       );
@@ -317,7 +344,7 @@ class PostDetailNotifier extends Notifier<PostDetailState> {
         );
       }
     } catch (e) {
-      // Handle error
+      print('DELETE COMMENT ERROR: $e');
     }
   }
 

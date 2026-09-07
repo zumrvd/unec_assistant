@@ -55,7 +55,17 @@ class ApiFeedRepository implements FeedRepository {
       String postId, {
         CommentSort sort = CommentSort.mostRecent,
       }) async {
-    return [];
+    final url = Uri.parse('$_baseUrl/feed/$postId/comments');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> rawList = jsonDecode(response.body);
+      return rawList
+          .map((item) => Comment.fromJson(item as Map<String, dynamic>))
+          .toList();
+    } else {
+      throw Exception('Failed to load comments');
+    }
   }
 
   @override
