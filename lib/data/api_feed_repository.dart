@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../models/comment.dart';
 import '../models/post.dart';
 import '../models/channel.dart';
-import 'feed_repository.dart';
+import 'feed_repository(old).dart';
 
 class ApiFeedRepository implements FeedRepository {
   static const String _baseUrl = 'http://10.0.2.2:8000';
@@ -80,5 +80,18 @@ class ApiFeedRepository implements FeedRepository {
         isVerified: true,
       ),
     ];
+  }
+
+  @override
+  Future<Post> toggleLikePost(String postId) async {
+    final url = Uri.parse('$_baseUrl/feed/$postId/like');
+    final response = await http.post(url);
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> rawJson = jsonDecode(response.body);
+      return Post.fromJson(rawJson);
+    } else {
+      throw Exception('Failed to toggle like on post $postId');
+    }
   }
 }

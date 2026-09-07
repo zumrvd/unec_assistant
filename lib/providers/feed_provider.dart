@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/post.dart';
-import '../data/feed_repository.dart';
+import '../data/feed_repository(old).dart';
 import '../data/api_feed_repository.dart';
 
 final feedRepositoryProvider = Provider<FeedRepository>((ref) {
@@ -118,7 +118,6 @@ class FeedNotifier extends Notifier<FeedState> {
     final post = oldPosts[index];
     final updatedPost = post.copyWith(shareCount: post.shareCount + 1);
 
-    // Optimistic update
     state = state.copyWith(
       posts: [
         for (var i = 0; i < oldPosts.length; i++)
