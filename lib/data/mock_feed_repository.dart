@@ -2,7 +2,7 @@ import '../models/post.dart';
 import '../models/channel.dart';
 import '../models/comment.dart';
 import '../models/subscription.dart';
-import 'feed_repository(old).dart';
+import 'feed_repository(abstract).dart';
 
 class MockFeedRepository implements FeedRepository {
   final List<Channel> _channels = [

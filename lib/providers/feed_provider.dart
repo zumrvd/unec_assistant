@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/post.dart';
-import '../data/feed_repository(old).dart';
+import '../data/feed_repository(abstract).dart';
 import '../data/api_feed_repository.dart';
 
 final feedRepositoryProvider = Provider<FeedRepository>((ref) {

@@ -325,17 +325,38 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                             ),
                             const Icon(Icons.arrow_drop_down_rounded, color: Color(0xFF0569FF)),
                           ],
+                        ),itemBuilder: (context) => [
+                        PopupMenuItem(
+                          value: CommentSort.mostRecent,
+                          child: Text(
+                            'Most recent',
+                            style: GoogleFonts.redditSans(
+                              fontSize: 13,
+                              fontWeight: state.sort == CommentSort.mostRecent
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
+                              color: state.sort == CommentSort.mostRecent
+                                  ? const Color(0xFF0569FF)
+                                  : const Color(0xFF1F1F1F),
+                            ),
+                          ),
                         ),
-                        itemBuilder: (context) => [
-                          const PopupMenuItem(
-                            value: CommentSort.mostRecent,
-                            child: Text('Most recent'),
+                        PopupMenuItem(
+                          value: CommentSort.mostLiked,
+                          child: Text(
+                            'Most liked',
+                            style: GoogleFonts.redditSans(
+                              fontSize: 13,
+                              fontWeight: state.sort == CommentSort.mostLiked
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
+                              color: state.sort == CommentSort.mostLiked
+                                  ? const Color(0xFF0569FF)
+                                  : const Color(0xFF1F1F1F),
+                            ),
                           ),
-                          const PopupMenuItem(
-                            value: CommentSort.mostLiked,
-                            child: Text('Most liked'),
-                          ),
-                        ],
+                        ),
+                      ],
                       ),
                     ],
                   ),

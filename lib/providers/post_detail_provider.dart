@@ -148,12 +148,17 @@ class PostDetailNotifier extends Notifier<PostDetailState> {
     }
   }
 
-  void setSort(CommentSort sort) {
-    if (state.sort == sort) return;
-    state = state.copyWith(sort: sort);
-    if (state.post != null) {
-      loadPostData(state.post!.postId);
+  void setSort(CommentSort newSort) {
+    if (state.sort == newSort) return;
+
+    final sortedRoots = List<Comment>.from(state.comments);
+    if (newSort == CommentSort.mostRecent) {
+      sortedRoots.sort((a, b) => b.postedAt.compareTo(a.postedAt));
+    } else {
+      sortedRoots.sort((a, b) => b.likeCount.compareTo(a.likeCount));
     }
+
+    state = state.copyWith(sort: newSort, comments: sortedRoots);
   }
 
   Future<void> loadReplies(String commentId) async {
@@ -172,25 +177,20 @@ class PostDetailNotifier extends Notifier<PostDetailState> {
     if (state.post == null) return;
     final repo = ref.read(feedRepositoryProvider);
     
-    // Check if we are replying to a reply (nested reply)
     String? actualParentId = parentCommentId;
     String finalBodyText = bodyText;
 
     if (parentCommentId != null) {
-      // Find the parent comment in the flat list of top-level comments
       final isTopLevel = state.comments.any((c) => c.commentId == parentCommentId);
       if (!isTopLevel) {
-        // If it's not top-level, it must be a reply. 
-        // We need to find its parent to keep everything under one level.
         for (final entry in state.replies.entries) {
           if (entry.value.any((r) => r.commentId == parentCommentId)) {
-            actualParentId = entry.key; // Set parent to the top-level comment
+            actualParentId = entry.key;
             break;
           }
         }
       }
 
-      // Prepend @user tag if it's a specific reply
       if (replyToUserId != null && users != null) {
         final user = users[replyToUserId];
         if (user != null) {
@@ -209,7 +209,6 @@ class PostDetailNotifier extends Notifier<PostDetailState> {
         bodyText: finalBodyText,
       );
 
-      // Update post comment count in state
       final updatedPost = state.post!.copyWith(commentCount: state.post!.commentCount + 1);
 
       if (actualParentId == null) {
