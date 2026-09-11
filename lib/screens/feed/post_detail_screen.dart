@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unec_assistant/providers/locale_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../../models/channel.dart';
 import '../../../models/comment.dart';
 import '../../../models/user_account.dart';
@@ -11,7 +11,6 @@ import '../../../presentation/components/cards/comment_tile.dart';
 import '../../../presentation/components/lists/labels.dart';
 import '../../../providers/post_detail_provider.dart';
 import '../../../providers/current_user_provider.dart';
-import '../../../utils/app_toast.dart';
 
 const _kMockUsers = {
   'u2': UserAccount(userId: 'u2', displayName: 'Elşad V.', initials: 'EM'),
@@ -61,10 +60,6 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
     }
   }
 
-  void _copyToClipboard() {
-    Clipboard.setData(const ClipboardData(text: 'https://unec.edu.az/post'));
-    AppToast.show(context, 'Link copied to clipboard');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -276,19 +271,28 @@ class _PostDetailScreenState extends ConsumerState<PostDetailScreen> {
                           size: 24,
                         ),
                       ),
+
                       const SizedBox(width: 25),
                       const Icon(Icons.chat_bubble_outline_rounded, color: Color(0xFF838A97), size: 22),
                       const SizedBox(width: 25),
+
                       GestureDetector(
-                        onTap: () {
-                          _copyToClipboard();
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () async {
+                          await Share.share(
+                            'https://unec-assistant.app/feed/post/${post.postId}',
+                          );
                           ref.read(postDetailProvider.notifier).sharePost();
                         },
-                        behavior: HitTestBehavior.opaque,
-                        child: const Icon(Icons.ios_share_rounded, color: Color(0xFF838A97), size: 22),
-                      ),
+                        child: const Icon(
+                          Icons.ios_share_rounded,
+                          size: 18,
+                          color: Color(0xFF838A97),
+                        ),
+                      )
                     ],
                   ),
+
                   const SizedBox(height: 15),
                   const Divider(color: Color(0xFFE0E4F0), thickness: 1),
                   const SizedBox(height: 25),

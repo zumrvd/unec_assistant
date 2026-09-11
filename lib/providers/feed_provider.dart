@@ -111,25 +111,29 @@ class FeedNotifier extends Notifier<FeedState> {
   }
 
   Future<void> sharePost(String postId) async {
-    final oldPosts = state.posts;
-    final index = oldPosts.indexWhere((p) => p.postId == postId);
-    if (index == -1) return;
-
-    final post = oldPosts[index];
-    final updatedPost = post.copyWith(shareCount: post.shareCount + 1);
-
+    // 1. Optimistic update
     state = state.copyWith(
-      posts: [
-        for (var i = 0; i < oldPosts.length; i++)
-          if (i == index) updatedPost else oldPosts[i]
-      ],
+      posts: state.posts.map((p) {
+        if (p.postId == postId) {
+          return p.copyWith(shareCount: p.shareCount + 1);
+        }
+        return p;
+      }).toList(),
     );
 
     try {
-      await ref.read(feedRepositoryProvider).sharePost(postId);
+      final repo = ref.read(feedRepositoryProvider);
+      await repo.sharePost(postId);
     } catch (e) {
-      // Rollback
-      state = state.copyWith(posts: oldPosts);
+      // rollback
+      state = state.copyWith(
+        posts: state.posts.map((p) {
+          if (p.postId == postId) {
+            return p.copyWith(shareCount: p.shareCount - 1);
+          }
+          return p;
+        }).toList(),
+      );
     }
   }
 }

@@ -138,12 +138,16 @@ class PostDetailNotifier extends Notifier<PostDetailState> {
     if (state.post == null) return;
     final repo = ref.read(feedRepositoryProvider);
     final oldPost = state.post!;
-    final newPost = oldPost.copyWith(shareCount: oldPost.shareCount + 1);
+    final optimisticPost = oldPost.copyWith(shareCount: oldPost.shareCount + 1);
 
-    state = state.copyWith(post: newPost);
+    //Optimistic update
+    state = state.copyWith(post: optimisticPost);
+
     try {
-      await repo.sharePost(oldPost.postId);
+      final serverPost = await repo.sharePost(oldPost.postId);
+      state = state.copyWith(post: serverPost);
     } catch (e) {
+      //Rollback
       state = state.copyWith(post: oldPost);
     }
   }
@@ -234,8 +238,9 @@ class PostDetailNotifier extends Notifier<PostDetailState> {
           replies: newReplies,
         );
       }
-    } catch (e) {
-      // Handle error
+    } catch (e, stackTrace) {
+      print('SUBMIT COMMENT ERROR: $e');
+      print(stackTrace);
     }
   }
 

@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:unec_assistant/providers/theme_provider.dart';
 import 'package:unec_assistant/providers/locale_provider.dart';
 import 'package:unec_assistant/l10n/translations.dart';
 import '../../../models/post.dart';
 import '../../../models/channel.dart';
-import '../../../utils/app_toast.dart';
-
-// Category label lookup — collapses the old switch to one line.
-// Category labels are now localized via strProvider
-
-
-
+import '../../../providers/feed_provider.dart';
 
 
 class PostCard extends ConsumerStatefulWidget {
@@ -38,7 +33,6 @@ class PostCard extends ConsumerStatefulWidget {
 class _PostCardState extends ConsumerState<PostCard> {
   bool _isExpanded = false;
 
-  /// Fixed: was returning "hours ago" for day-level diffs.
   String _timeAgo(DateTime dateTime, AppStrings tr) {
     final diff = DateTime.now().difference(dateTime);
     if (diff.inDays > 0) return tr.feedTimeAgoDay(diff.inDays);
@@ -71,7 +65,6 @@ class _PostCardState extends ConsumerState<PostCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header — no redundant inner GestureDetector; outer card handles nav.
             Row(
               children: [
                 Container(
@@ -244,13 +237,17 @@ class _PostCardState extends ConsumerState<PostCard> {
                     ],
                   ),
                 ),
+
                 const Spacer(),
+
                 GestureDetector(
-                  onTap: () {
-                    AppToast.show(context, 'Link copied to clipboard');
-                    widget.onShareTap();
-                  },
                   behavior: HitTestBehavior.opaque,
+                  onTap: () async {
+                    ref.read(feedProvider.notifier).sharePost(widget.data.postId);
+                    await Share.share(
+                      'https://unec-assistant.app/feed/post/${widget.data.postId}',
+                    );
+                  },
                   child: Icon(
                     Icons.ios_share_rounded,
                     size: 18,

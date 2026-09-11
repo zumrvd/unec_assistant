@@ -95,5 +95,39 @@ class ApiFeedRepository implements FeedRepository {
     }
   }
 
-  @
+  @override
+  Future<Post> sharePost(String postId) async {
+    final url = Uri.parse('$_baseUrl/feed/$postId/share');
+    final response = await http.post(url);
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> rawJson = jsonDecode(response.body);
+      return Post.fromJson(rawJson);
+    } else {
+      throw Exception('Failed to show share count for post $postId');
+    }
+  }
+
+  @override
+  Future<Comment> postComment({
+    required String postId,
+    required String bodyText,
+    String? parentCommentId,
+}) async {
+    final url = Uri.parse('$_baseUrl/feed/$postId/comments');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'bodyText': bodyText,
+        'parentCommentId': parentCommentId,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return Comment.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to post comment');
+    }
+  }
 }
